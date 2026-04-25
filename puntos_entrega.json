@@ -1,0 +1,82 @@
+[
+  {
+    "id": "guadalajara_factor",
+    "nombre": "\"Guadalajara\" Factor",
+    "hora": "4:00 pm",
+    "lat": 24.0387258,
+    "lng": -104.6728458,
+    "maps_url": "https://maps.app.goo.gl/S5Rf4VzhrjDkAnDe6"
+  },
+  {
+    "id": "catedral",
+    "nombre": "Zona Centro \"Catedral\"",
+    "hora": "4:30 pm",
+    "lat": 24.0249647,
+    "lng": -104.6703358,
+    "maps_url": "https://maps.app.goo.gl/99kjyTA6yEKn3c737"
+  },
+  {
+    "id": "santuario_libro",
+    "nombre": "Santuario \"Libro\"",
+    "hora": "5:00 pm",
+    "lat": 24.038349,
+    "lng": -104.677702,
+    "maps_url": "https://maps.app.goo.gl/c6xkrWRUiBZtoHgaA"
+  },
+  {
+    "id": "plaza_galas",
+    "nombre": "Plaza Galas \"Office Depot\"",
+    "hora": "5:30 pm",
+    "lat": 24.0330501,
+    "lng": -104.6409599,
+    "maps_url": "https://maps.app.goo.gl/1kfNca72vWncHhm48"
+  },
+  {
+    "id": "oxxo_luz_esperanza",
+    "nombre": "\"Oxxo\" Luz y Esperanza",
+    "hora": "5:30 pm",
+    "lat": 24.057977,
+    "lng": -104.6808404,
+    "maps_url": "https://maps.app.goo.gl/BqtiNzuEhs1AGMqa6"
+  },
+  {
+    "id": "oxxo_morga",
+    "nombre": "\"Oxxo\" Morga",
+    "hora": "6:00 pm",
+    "lat": 24.0491206,
+    "lng": -104.6859087,
+    "maps_url": "https://maps.app.goo.gl/zcHsmC8ZJMC4Njs47"
+  },
+  {
+    "id": "guadalajara_puentes",
+    "nombre": "\"Guadalajara\" Puentes Gemelos",
+    "hora": "6:30 pm",
+    "lat": 24.0353939,
+    "lng": -104.6834907,
+    "maps_url": "https://maps.app.goo.gl/9EDMhMzFvNnot8116"
+  },
+  {
+    "id": "alsuper_ojo_agua",
+    "nombre": "\"Alsúper\" Ojo de Agua",
+    "hora": "7:00 pm",
+    "lat": 24.0303956,
+    "lng": -104.6878718,
+    "maps_url": "https://maps.app.goo.gl/j5kWsf4Qyo88yV6T6"
+  },
+  {
+    "id": "oxxo_santa_maria",
+    "nombre": "\"Oxxo\" Santa María",
+    "hora": "7:30 pm",
+    "lat": 24.0398366,
+    "lng": -104.686162,
+    "maps_url": "https://maps.app.goo.gl/2es8XfLCFhMnxpvx9"
+  },
+  {
+    "id": "oxxo_zacatecas",
+    "nombre": "\"Oxxo\" Calle Zacatecas",
+    "hora": "8:00 pm",
+    "lat": 24.0424935,
+    "lng": -104.6799262,
+    "maps_url": "https://maps.app.goo.gl/RTqGAe8Y6gtEfvD97"
+  }
+]

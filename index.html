@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Puntos de Entrega - Alushe Store</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      padding: 20px 15px;
+      background-color: #F7F6DE;
+    }
+
+    .header-title {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+      font-weight: 800;
+      font-size: 26px;
+      text-transform: uppercase;
+    }
+
+    .info-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 15px 20px;
+      max-width: 1000px;
+      margin: 0 auto 25px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      border-left: 5px solid #ff6b6b;
+      font-size: 14px;
+      color: #444;
+      line-height: 1.6;
+    }
+    .info-box.delivery {
+      border-left-color: #25D366;
+      margin-top: 10px;
+      margin-bottom: 40px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      padding-bottom: 20px;
+      transition: transform 0.2s;
+    }
+    .card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+
+    .images-wrap { display: flex; border-bottom: 1px solid #eee; background: #fafafa; }
+    .images-wrap > div { flex: 1; padding: 10px; }
+    .images-wrap img {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      background-color: #eaeaea;
+      cursor: pointer;
+    }
+
+    .img-label {
+      font-size: 11px;
+      color: #777;
+      margin-top: 8px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .title { font-size: 17px; font-weight: 800; margin: 15px 15px 5px; color: #333; }
+    .desc  { font-size: 14px; color: #ff3366; margin: 0 15px 15px; font-weight: 800; }
+
+    .btn-maps {
+      background: #1A73E8;
+      color: white;
+      text-decoration: none;
+      padding: 10px 15px;
+      margin: auto 20px 0;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      transition: background 0.2s;
+    }
+    .btn-maps:hover { background: #1557b0; }
+
+    @media (max-width: 480px) {
+      .grid { grid-template-columns: 1fr; }
+      .header-title { font-size: 22px; }
+      .images-wrap img { height: 120px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header-title">📍 Puntos de Entrega</div>
+
+  <div class="info-box">
+    <strong>⚠️ INFORMACIÓN IMPORTANTE</strong><br>
+    💳 Pagos en efectivo o tarjeta. El costo del artículo es el exhibido en la publicación.<br>
+    🕒 Todas las entregas de <strong>Lunes a Sábado</strong> son programadas con <strong>1 día de anticipación</strong>.<br>
+    🔍 *Haz clic en las fotos para ampliarlas.*
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="images-wrap">
+        <div>
+          <a href="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/referencia/guadalajara_factor.jpg" data-lightbox="entregas" data-title="Referencia - "Guadalajara" Factor">
+            <img src="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/referencia/guadalajara_factor.jpg" alt="Referencia "Guadalajara" Factor" loading="lazy">
+          </a>
+          <div class="img-label">Referencia</div>
+        </div>
+        <div>
+          <a href="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/croquis/guadalajara_factor.png" data-lightbox="entregas" data-title="Croquis - "Guadalajara" Factor">
+            <img src="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/croquis/guadalajara_factor.png" alt="Croquis "Guadalajara" Factor" loading="lazy">
+          </a>
+          <div class="img-label">Croquis</div>
+        </div>
+      </div>
+      <div class="title">"Guadalajara" Factor</div>
+      <div class="desc">🕒 4:00 pm</div>
+      <a href="https://maps.app.goo.gl/S5Rf4VzhrjDkAnDe6" target="_blank" class="btn-maps">🗺️ Ver en Google Maps</a>
+    </div>
+
+    <div class="card">
+      <div class="images-wrap">
+        <div>
+          <a href="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/referencia/catedral.jpg" data-lightbox="entregas" data-title="Referencia - Zona Centro "Catedral"">
+            <img src="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/referencia/catedral.jpg" alt="Referencia Zona Centro "Catedral"" loading="lazy">
+          </a>
+          <div class="img-label">Referencia</div>
+        </div>
+        <div>
+          <a href="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/croquis/catedral.png" data-lightbox="entregas" data-title="Croquis - Zona Centro "Catedral"">
+            <img src="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/croquis/catedral.png" alt="Croquis Zona Centro "Catedral"" loading="lazy">
+          </a>
+          <div class="img-label">Croquis</div>
+        </div>
+      </div>
+      <div class="title">Zona Centro "Catedral"</div>
+      <div class="desc">🕒 4:30 pm</div>
+      <a href="https://maps.app.goo.gl/99kjyTA6yEKn3c737" target="_blank" class="btn-maps">🗺️ Ver en Google Maps</a>
+    </div>
+
+    <div class="card">
+      <div class="images-wrap">
+        <div>
+          <a href="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/referencia/santuario_libro.jpg" data-lightbox="entregas" data-title="Referencia - Santuario "Libro"">
+            <img src="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/referencia/santuario_libro.jpg" alt="Referencia Santuario "Libro"" loading="lazy">
+          </a>
+          <div class="img-label">Referencia</div>
+        </div>
+        <div>
+          <a href="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/croquis/santuario_libro.png" data-lightbox="entregas" data-title="Croquis - Santuario "Libro"">
+            <img src="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/croquis/santuario_libro.png" alt="Croquis Santuario "Libro"" loading="lazy">
+          </a>
+          <div class="img-label">Croquis</div>
+        </div>
+      </div>
+      <div class="title">Santuario "Libro"</div>
+      <div class="desc">🕒 5:00 pm</div>
+      <a href="https://maps.app.goo.gl/c6xkrWRUiBZtoHgaA" target="_blank" class="btn-maps">🗺️ Ver en Google Maps</a>
+    </div>
+
+    <div class="card">
+      <div class="images-wrap">
+        <div>
+          <a href="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/referencia/plaza_galas.jpg" data-lightbox="entregas" data-title="Referencia - Plaza Galas "Office Depot"">
+            <img src="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/referencia/plaza_galas.jpg" alt="Referencia Plaza Galas "Office Depot"" loading="lazy">
+          </a>
+          <div class="img-label">Referencia</div>
+        </div>
+        <div>
+          <a href="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/croquis/plaza_galas.png" data-lightbox="entregas" data-title="Croquis - Plaza Galas "Office Depot"">
+            <img src="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/croquis/plaza_galas.png" alt="Croquis Plaza Galas "Office Depot"" loading="lazy">
+          </a>
+          <div class="img-label">Croquis</div>
+        </div>
+      </div>
+      <div class="title">Plaza Galas "Office Depot"</div>
+      <div class="desc">🕒 5:30 pm</div>
+      <a href="https://maps.app.goo.gl/1kfNca72vWncHhm48" target="_blank" class="btn-maps">🗺️ Ver en Google Maps</a>
+    </div>
+
+    <div class="card">
+      <div class="images-wrap">
+        <div>
+          <a href="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/referencia/oxxo_luz_esperanza.jpg" data-lightbox="entregas" data-title="Referencia - "Oxxo" Luz y Esperanza">
+            <img src="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/referencia/oxxo_luz_esperanza.jpg" alt="Referencia "Oxxo" Luz y Esperanza" loading="lazy">
+          </a>
+          <div class="img-label">Referencia</div>
+        </div>
+        <div>
+          <a href="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/croquis/oxxo_luz_esperanza.png" data-lightbox="entregas" data-title="Croquis - "Oxxo" Luz y Esperanza">
+            <img src="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/croquis/oxxo_luz_esperanza.png" alt="Croquis "Oxxo" Luz y Esperanza" loading="lazy">
+          </a>
+          <div class="img-label">Croquis</div>
+        </div>
+      </div>
+      <div class="title">"Oxxo" Luz y Esperanza</div>
+      <div class="desc">🕒 5:30 pm</div>
+      <a href="https://maps.app.goo.gl/BqtiNzuEhs1AGMqa6" target="_blank" class="btn-maps">🗺️ Ver en Google Maps</a>
+    </div>
+
+    <div class="card">
+      <div class="images-wrap">
+        <div>
+          <a href="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/referencia/oxxo_morga.jpg" data-lightbox="entregas" data-title="Referencia - "Oxxo" Morga">
+            <img src="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/referencia/oxxo_morga.jpg" alt="Referencia "Oxxo" Morga" loading="lazy">
+          </a>
+          <div class="img-label">Referencia</div>
+        </div>
+        <div>
+          <a href="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/croquis/oxxo_morga.png" data-lightbox="entregas" data-title="Croquis - "Oxxo" Morga">
+            <img src="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/croquis/oxxo_morga.png" alt="Croquis "Oxxo" Morga" loading="lazy">
+          </a>
+          <div class="img-label">Croquis</div>
+        </div>
+      </div>
+      <div class="title">"Oxxo" Morga</div>
+      <div class="desc">🕒 6:00 pm</div>
+      <a href="https://maps.app.goo.gl/zcHsmC8ZJMC4Njs47" target="_blank" class="btn-maps">🗺️ Ver en Google Maps</a>
+    </div>
+
+    <div class="card">
+      <div class="images-wrap">
+        <div>
+          <a href="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/referencia/guadalajara_puentes.jpg" data-lightbox="entregas" data-title="Referencia - "Guadalajara" Puentes Gemelos">
+            <img src="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/referencia/guadalajara_puentes.jpg" alt="Referencia "Guadalajara" Puentes Gemelos" loading="lazy">
+          </a>
+          <div class="img-label">Referencia</div>
+        </div>
+        <div>
+          <a href="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/croquis/guadalajara_puentes.png" data-lightbox="entregas" data-title="Croquis - "Guadalajara" Puentes Gemelos">
+            <img src="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/croquis/guadalajara_puentes.png" alt="Croquis "Guadalajara" Puentes Gemelos" loading="lazy">
+          </a>
+          <div class="img-label">Croquis</div>
+        </div>
+      </div>
+      <div class="title">"Guadalajara" Puentes Gemelos</div>
+      <div class="desc">🕒 6:30 pm</div>
+      <a href="https://maps.app.goo.gl/9EDMhMzFvNnot8116" target="_blank" class="btn-maps">🗺️ Ver en Google Maps</a>
+    </div>
+
+    <div class="card">
+      <div class="images-wrap">
+        <div>
+          <a href="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/referencia/alsuper_ojo_agua.jpg" data-lightbox="entregas" data-title="Referencia - "Alsúper" Ojo de Agua">
+            <img src="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/referencia/alsuper_ojo_agua.jpg" alt="Referencia "Alsúper" Ojo de Agua" loading="lazy">
+          </a>
+          <div class="img-label">Referencia</div>
+        </div>
+        <div>
+          <a href="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/croquis/alsuper_ojo_agua.png" data-lightbox="entregas" data-title="Croquis - "Alsúper" Ojo de Agua">
+            <img src="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/croquis/alsuper_ojo_agua.png" alt="Croquis "Alsúper" Ojo de Agua" loading="lazy">
+          </a>
+          <div class="img-label">Croquis</div>
+        </div>
+      </div>
+      <div class="title">"Alsúper" Ojo de Agua</div>
+      <div class="desc">🕒 7:00 pm</div>
+      <a href="https://maps.app.goo.gl/j5kWsf4Qyo88yV6T6" target="_blank" class="btn-maps">🗺️ Ver en Google Maps</a>
+    </div>
+
+    <div class="card">
+      <div class="images-wrap">
+        <div>
+          <a href="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/referencia/oxxo_santa_maria.jpg" data-lightbox="entregas" data-title="Referencia - "Oxxo" Santa María">
+            <img src="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/referencia/oxxo_santa_maria.jpg" alt="Referencia "Oxxo" Santa María" loading="lazy">
+          </a>
+          <div class="img-label">Referencia</div>
+        </div>
+        <div>
+          <a href="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/croquis/oxxo_santa_maria.png" data-lightbox="entregas" data-title="Croquis - "Oxxo" Santa María">
+            <img src="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/croquis/oxxo_santa_maria.png" alt="Croquis "Oxxo" Santa María" loading="lazy">
+          </a>
+          <div class="img-label">Croquis</div>
+        </div>
+      </div>
+      <div class="title">"Oxxo" Santa María</div>
+      <div class="desc">🕒 7:30 pm</div>
+      <a href="https://maps.app.goo.gl/2es8XfLCFhMnxpvx9" target="_blank" class="btn-maps">🗺️ Ver en Google Maps</a>
+    </div>
+
+    <div class="card">
+      <div class="images-wrap">
+        <div>
+          <a href="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/referencia/oxxo_zacatecas.jpg" data-lightbox="entregas" data-title="Referencia - "Oxxo" Calle Zacatecas">
+            <img src="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/referencia/oxxo_zacatecas.jpg" alt="Referencia "Oxxo" Calle Zacatecas" loading="lazy">
+          </a>
+          <div class="img-label">Referencia</div>
+        </div>
+        <div>
+          <a href="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/croquis/oxxo_zacatecas.png" data-lightbox="entregas" data-title="Croquis - "Oxxo" Calle Zacatecas">
+            <img src="https://raw.githubusercontent.com/JalexSamaniego/alushe-store/main/assets/images/croquis/oxxo_zacatecas.png" alt="Croquis "Oxxo" Calle Zacatecas" loading="lazy">
+          </a>
+          <div class="img-label">Croquis</div>
+        </div>
+      </div>
+      <div class="title">"Oxxo" Calle Zacatecas</div>
+      <div class="desc">🕒 8:00 pm</div>
+      <a href="https://maps.app.goo.gl/RTqGAe8Y6gtEfvD97" target="_blank" class="btn-maps">🗺️ Ver en Google Maps</a>
+    </div>
+  </div>
+
+  <div class="info-box delivery">
+    🛵 <strong>ENTREGA A DOMICILIO:</strong> Contamos con servicio a domicilio con costo extra dependiendo de la zona. ¡Mándanos mensaje para cotizar tu envío!
+  </div>
+
+</body>
+</html>
