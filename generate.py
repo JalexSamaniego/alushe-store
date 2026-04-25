@@ -26,7 +26,7 @@ GOOGLE_API_KEY = "AIzaSyB28UB3DlW5tfn7M_1mM0RKlbBXfuJuxCk"
 
 GITHUB_USER    = "JalexSamaniego"
 GITHUB_REPO    = "alushe-store"
-GITHUB_BRANCH  = "main"
+GITHUB_BRANCH  = "master"
 
 # Base URL para las imágenes en GitHub (raw)
 IMG_BASE = f"https://raw.githubusercontent.com/{GITHUB_USER}/{GITHUB_REPO}/{GITHUB_BRANCH}/assets/images"
