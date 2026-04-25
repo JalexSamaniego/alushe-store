@@ -22,7 +22,7 @@ import requests
 #  CONFIGURACIÓN — edita solo esta sección
 # ============================================================
 
-GOOGLE_API_KEY = "AIzaSyB28UB3DlW5tfn7M_1mM0RKlbBXfuJuxCk"
+GOOGLE_API_KEY = 
 
 GITHUB_USER    = "JalexSamaniego"
 GITHUB_REPO    = "alushe-store"
