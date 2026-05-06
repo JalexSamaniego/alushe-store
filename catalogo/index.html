@@ -27,7 +27,11 @@
     @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
     /* GRID */
-    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(145px,1fr)); gap:12px; max-width:1200px; margin:0 auto; padding-bottom:90px; }
+    .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; max-width:1200px; margin:0 auto; padding-bottom:90px; }
+    @media (min-width:480px)  { .grid { grid-template-columns:repeat(3,1fr); } }
+    @media (min-width:700px)  { .grid { grid-template-columns:repeat(4,1fr); } }
+    @media (min-width:900px)  { .grid { grid-template-columns:repeat(5,1fr); } }
+    @media (min-width:1100px) { .grid { grid-template-columns:repeat(6,1fr); } }
 
     /* CARDS */
     .card { background:white; border-radius:12px; box-shadow:0 4px 8px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; text-align:center; padding-bottom:12px; position:relative; opacity:0; transform:translateY(16px); animation:cardEntrada .35s ease forwards; }
@@ -169,10 +173,12 @@
 
     @media (max-width:480px) {
       body { padding:8px 6px; }
-      .grid { gap:8px; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); }
-      .card img,.img-fallback,.skeleton-img { height:140px; }
-      .title { font-size:11px; }
-      .price { font-size:15px; }
+      .grid { gap:8px; }
+      .card img,.img-fallback,.skeleton-img { height:150px; }
+      .title { font-size:12px; }
+      .price { font-size:16px; }
+      .btn-wa,.btn-agotado { font-size:11px; padding:8px 6px; }
+      .btn-carrito { font-size:10px; }
       .modal-img,.modal-img-fallback { height:210px; }
       .modal-precio { font-size:22px; }
       .modal-nav { top:80px; }
