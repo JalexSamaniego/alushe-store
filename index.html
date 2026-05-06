@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Alushe Store — Productos locales e importados. Entregas y envíos a domicilio en Durango, Dgo.">
+  <meta property="og:title" content="Alushe Store">
+  <meta property="og:description" content="Productos locales e importados. Entregas y envíos a domicilio en Durango.">
+  <meta property="og:url" content="https://alushe.store">
+  <title>Alushe Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream:   #f6f5ca;
+      --cream-d: #e8e7a8;
+      --ink:     #1a1a18;
+      --ink-mid: #3a3a35;
+      --ink-lt:  #7a7a6e;
+      --green:   #25D366;
+      --green-d: #1ebe57;
+      --white:   #ffffff;
+      --radius:  14px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ─────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 32px;
+      background: rgba(246,245,202,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(26,26,24,0.08);
+      transition: padding 0.3s;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px; font-weight: 700;
+      color: var(--ink); text-decoration: none;
+      letter-spacing: -0.3px;
+    }
+    .nav-links { display: flex; gap: 28px; align-items: center; }
+    .nav-links a {
+      font-size: 13px; font-weight: 400; color: var(--ink-mid);
+      text-decoration: none; letter-spacing: 0.3px;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-cta {
+      background: var(--ink) !important; color: var(--cream) !important;
+      padding: 9px 18px; border-radius: 50px;
+      font-weight: 500 !important; font-size: 13px !important;
+      transition: background 0.2s, transform 0.15s !important;
+    }
+    .nav-cta:hover { background: var(--ink-mid) !important; transform: scale(1.03); }
+
+    /* ── HERO ─────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative; overflow: hidden;
+    }
+
+    /* decoración geométrica de fondo */
+    .hero::before {
+      content: '';
+      position: absolute; top: -60px; right: -80px;
+      width: 420px; height: 420px; border-radius: 50%;
+      background: rgba(37,211,102,0.07);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; bottom: -80px; left: -60px;
+      width: 300px; height: 300px; border-radius: 50%;
+      background: rgba(26,26,24,0.04);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11px; font-weight: 500; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--ink-lt);
+      border: 1px solid rgba(26,26,24,0.15);
+      padding: 6px 16px; border-radius: 50px;
+      margin-bottom: 32px;
+      opacity: 0; animation: fadeUp 0.7s 0.1s ease forwards;
+    }
+    .hero-eyebrow span { color: var(--green); font-size: 14px; }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(48px, 9vw, 96px);
+      font-weight: 700; line-height: 1.05;
+      letter-spacing: -2px; color: var(--ink);
+      margin-bottom: 24px;
+      opacity: 0; animation: fadeUp 0.7s 0.25s ease forwards;
+    }
+    .hero-title em {
+      font-style: italic; color: var(--ink-lt);
+    }
+
+    .hero-sub {
+      font-size: clamp(15px, 2.5vw, 18px);
+      font-weight: 300; color: var(--ink-mid);
+      max-width: 480px; line-height: 1.7;
+      margin-bottom: 48px;
+      opacity: 0; animation: fadeUp 0.7s 0.4s ease forwards;
+    }
+
+    .hero-btns {
+      display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+      opacity: 0; animation: fadeUp 0.7s 0.55s ease forwards;
+    }
+    .btn-primary {
+      background: var(--ink); color: var(--cream);
+      padding: 16px 32px; border-radius: 50px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px; font-weight: 500;
+      text-decoration: none; letter-spacing: 0.2px;
+      transition: background 0.2s, transform 0.15s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary:hover { background: var(--ink-mid); transform: translateY(-2px); }
+    .btn-secondary {
+      background: transparent; color: var(--ink);
+      padding: 16px 32px; border-radius: 50px;
+      border: 1.5px solid rgba(26,26,24,0.25);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px; font-weight: 500;
+      text-decoration: none; letter-spacing: 0.2px;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-secondary:hover { border-color: var(--ink); background: rgba(26,26,24,0.04); transform: translateY(-2px); }
+
+    /* scroll indicator */
+    .hero-scroll {
+      position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      opacity: 0; animation: fadeUp 0.7s 1s ease forwards;
+    }
+    .hero-scroll span {
+      font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--ink-lt); font-weight: 500;
+    }
+    .scroll-line {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, var(--ink-lt), transparent);
+      animation: scrollPulse 1.8s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%,100% { opacity: 0.4; transform: scaleY(1); }
+      50%      { opacity: 1;   transform: scaleY(1.2); }
+    }
+
+    /* ── STATS ───────────────────────────────────────── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(26,26,24,0.1);
+      border-top: 1px solid rgba(26,26,24,0.1);
+      border-bottom: 1px solid rgba(26,26,24,0.1);
+    }
+    .stat {
+      background: var(--cream);
+      padding: 40px 24px;
+      text-align: center;
+    }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 40px; font-weight: 700;
+      color: var(--ink); line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-label {
+      font-size: 12px; font-weight: 400;
+      color: var(--ink-lt); letter-spacing: 0.5px;
+    }
+
+    /* ── SECCIONES ──────────────────────────────────── */
+    section { padding: 96px 24px; max-width: 1100px; margin: 0 auto; }
+
+    .section-tag {
+      display: inline-block;
+      font-size: 10px; font-weight: 500; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--ink-lt);
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 700; line-height: 1.1;
+      letter-spacing: -1px; color: var(--ink);
+      margin-bottom: 20px;
+    }
+    .section-body {
+      font-size: 16px; font-weight: 300;
+      color: var(--ink-mid); line-height: 1.8;
+      max-width: 560px;
+    }
+
+    /* ── SOBRE NOSOTROS ─────────────────────────────── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px; align-items: center;
+    }
+    .about-visual {
+      position: relative; aspect-ratio: 4/5;
+      border-radius: 24px;
+      background: var(--ink);
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .about-visual-inner {
+      font-size: 80px; opacity: 0.15;
+      user-select: none;
+    }
+    .about-visual-badge {
+      position: absolute; bottom: 24px; left: 24px;
+      background: var(--cream); border-radius: 12px;
+      padding: 14px 18px;
+    }
+    .about-visual-badge p {
+      font-size: 11px; color: var(--ink-lt); font-weight: 400; margin-bottom: 2px;
+    }
+    .about-visual-badge strong {
+      font-size: 14px; color: var(--ink); font-weight: 500;
+    }
+    .about-pills {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px;
+    }
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 500; color: var(--ink-mid);
+      border: 1px solid rgba(26,26,24,0.15);
+      padding: 7px 14px; border-radius: 50px;
+      background: var(--white);
+    }
+    .pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+
+    /* ── CATEGORÍAS ─────────────────────────────────── */
+    .cats-section { background: var(--ink); padding: 96px 0; }
+    .cats-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    .cats-section .section-tag { color: rgba(246,245,202,0.45); }
+    .cats-section .section-title { color: var(--cream); }
+
+    .cats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px; margin-top: 48px;
+    }
+    .cat-card {
+      background: rgba(246,245,202,0.06);
+      border: 1px solid rgba(246,245,202,0.1);
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      text-align: center;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+      display: block;
+    }
+    .cat-card:hover {
+      background: rgba(246,245,202,0.12);
+      border-color: rgba(246,245,202,0.25);
+      transform: translateY(-4px);
+    }
+    .cat-emoji { font-size: 32px; margin-bottom: 12px; display: block; }
+    .cat-name {
+      font-size: 12px; font-weight: 500; color: var(--cream);
+      letter-spacing: 0.3px; line-height: 1.4;
+    }
+
+    /* ── CTA CATÁLOGO ──────────────────────────────── */
+    .cta-band {
+      background: var(--green);
+      padding: 80px 24px;
+      text-align: center;
+    }
+    .cta-band h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 700; color: var(--white);
+      letter-spacing: -1px; margin-bottom: 12px;
+    }
+    .cta-band p {
+      font-size: 16px; font-weight: 300; color: rgba(255,255,255,0.85);
+      margin-bottom: 36px;
+    }
+    .btn-white {
+      background: var(--white); color: var(--ink);
+      padding: 16px 36px; border-radius: 50px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px; font-weight: 500;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-white:hover { background: var(--cream); transform: translateY(-2px); }
+
+    /* ── PUNTOS DE ENTREGA ─────────────────────────── */
+    .entrega-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 48px; align-items: center; margin-top: 56px;
+    }
+    .entrega-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 32px;
+      border: 1px solid rgba(26,26,24,0.08);
+      display: flex; gap: 16px; align-items: flex-start;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .entrega-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(26,26,24,0.08); }
+    .entrega-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: var(--cream); display: flex;
+      align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .entrega-card h3 { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+    .entrega-card p { font-size: 13px; font-weight: 300; color: var(--ink-lt); line-height: 1.6; }
+
+    .entrega-cta { margin-top: 40px; }
+
+    /* ── CONTACTO / REDES ──────────────────────────── */
+    .contact-section {
+      background: var(--cream-d);
+      padding: 96px 24px;
+      text-align: center;
+    }
+    .contact-inner { max-width: 600px; margin: 0 auto; }
+    .contact-section .section-title { margin-bottom: 12px; }
+    .contact-section .section-body { margin: 0 auto 48px; text-align: center; }
+
+    .social-grid {
+      display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;
+    }
+    .social-card {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--white); border-radius: 50px;
+      padding: 12px 22px;
+      text-decoration: none; color: var(--ink);
+      font-size: 13px; font-weight: 500;
+      border: 1px solid rgba(26,26,24,0.1);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .social-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(26,26,24,0.1); }
+    .social-icon { font-size: 20px; }
+
+    .wa-card {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--green); color: var(--white);
+      border-radius: 50px; padding: 14px 28px;
+      text-decoration: none; font-size: 14px; font-weight: 500;
+      margin-top: 32px;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .wa-card:hover { background: var(--green-d); transform: translateY(-2px); }
+
+    /* ── FOOTER ─────────────────────────────────────── */
+    footer {
+      background: var(--ink); color: rgba(246,245,202,0.5);
+      padding: 32px 24px; text-align: center;
+      font-size: 12px; font-weight: 300; letter-spacing: 0.3px;
+    }
+    footer a { color: var(--cream); text-decoration: none; }
+    footer strong { color: var(--cream); font-weight: 500; }
+
+    /* ── ANIMACIONES ─────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ─────────────────────────────────── */
+    @media (max-width: 768px) {
+      nav { padding: 14px 20px; }
+      .nav-links { gap: 16px; }
+      .nav-links a:not(.nav-cta) { display: none; }
+      .stats { grid-template-columns: repeat(3, 1fr); }
+      .stat { padding: 28px 12px; }
+      .stat-num { font-size: 28px; }
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .about-visual { aspect-ratio: 3/2; }
+      .entrega-grid { grid-template-columns: 1fr; gap: 16px; }
+      section { padding: 64px 20px; }
+    }
+    @media (max-width: 480px) {
+      .hero-btns { flex-direction: column; align-items: center; }
+      .btn-primary, .btn-secondary { width: 100%; max-width: 300px; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="/">Alushe Store</a>
+    <div class="nav-links">
+      <a href="#nosotros">Nosotros</a>
+      <a href="#categorias">Categorías</a>
+      <a href="#entregas">Entregas</a>
+      <a href="./catalogo" class="nav-cta">Ver catálogo →</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-eyebrow"><span>📍</span> Durango, Dgo.</div>
+    <h1 class="hero-title">Tu tienda<br><em>favorita,</em><br>en línea.</h1>
+    <p class="hero-sub">Productos locales e importados con entregas y envíos a domicilio en toda la ciudad.</p>
+    <div class="hero-btns">
+      <a href="./catalogo" class="btn-primary">Ver catálogo →</a>
+      <a href="#entregas" class="btn-secondary">Puntos de entrega</a>
+    </div>
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat reveal">
+      <div class="stat-num">10</div>
+      <div class="stat-label">Puntos de entrega</div>
+    </div>
+    <div class="stat reveal">
+      <div class="stat-num">100+</div>
+      <div class="stat-label">Productos disponibles</div>
+    </div>
+    <div class="stat reveal">
+      <div class="stat-num">7</div>
+      <div class="stat-label">Categorías</div>
+    </div>
+  </div>
+
+  <!-- SOBRE NOSOTROS -->
+  <section id="nosotros">
+    <div class="about-grid">
+      <div class="about-visual reveal">
+        <div class="about-visual-inner">🛍️</div>
+        <div class="about-visual-badge">
+          <p>Ubicación</p>
+          <strong>Durango, Dgo. 📦</strong>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="section-tag">Quiénes somos</div>
+        <h2 class="section-title">Productos que llegan<br>hasta tu puerta.</h2>
+        <p class="section-body">
+          Somos Alushe Store, una tienda duranguense con productos locales e importados seleccionados para ti. Desde insumos del día a día hasta artículos especiales — todo con la comodidad de entregas a domicilio en Durango.
+        </p>
+        <div class="about-pills">
+          <div class="pill"><span class="pill-dot"></span>Productos importados</div>
+          <div class="pill"><span class="pill-dot"></span>Envíos a domicilio</div>
+          <div class="pill"><span class="pill-dot"></span>Durango, Dgo.</div>
+          <div class="pill"><span class="pill-dot"></span>Atención por WhatsApp</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORÍAS -->
+  <div class="cats-section" id="categorias">
+    <div class="cats-inner">
+      <div class="section-tag reveal">Lo que encontrarás</div>
+      <h2 class="section-title reveal" style="color:var(--cream);">Todo en un<br>solo lugar.</h2>
+      <div class="cats-grid">
+        <a href="./catalogo" class="cat-card reveal">
+          <span class="cat-emoji">👗</span>
+          <span class="cat-name">Ropa y accesorios</span>
+        </a>
+        <a href="./catalogo" class="cat-card reveal">
+          <span class="cat-emoji">💄</span>
+          <span class="cat-name">Belleza y cuidado personal</span>
+        </a>
+        <a href="./catalogo" class="cat-card reveal">
+          <span class="cat-emoji">🏠</span>
+          <span class="cat-name">Hogar y cocina</span>
+        </a>
+        <a href="./catalogo" class="cat-card reveal">
+          <span class="cat-emoji">📱</span>
+          <span class="cat-name">Electrónica</span>
+        </a>
+        <a href="./catalogo" class="cat-card reveal">
+          <span class="cat-emoji">👜</span>
+          <span class="cat-name">Bolsas y carteras</span>
+        </a>
+        <a href="./catalogo" class="cat-card reveal">
+          <span class="cat-emoji">🧸</span>
+          <span class="cat-name">Juguetes y bebés</span>
+        </a>
+        <a href="./catalogo" class="cat-card reveal">
+          <span class="cat-emoji">🏋️</span>
+          <span class="cat-name">Deporte y fitness</span>
+        </a>
+        <a href="./catalogo" class="cat-card reveal">
+          <span class="cat-emoji">✨</span>
+          <span class="cat-name">Ver todo</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA CATÁLOGO -->
+  <div class="cta-band">
+    <h2>¿Lista para explorar?</h2>
+    <p>Más de 100 productos esperándote en el catálogo.</p>
+    <a href="./catalogo" class="btn-white">Ir al catálogo →</a>
+  </div>
+
+  <!-- PUNTOS DE ENTREGA -->
+  <section id="entregas">
+    <div class="reveal">
+      <div class="section-tag">Dónde encontrarnos</div>
+      <h2 class="section-title">Entrega rápida<br>en Durango.</h2>
+      <p class="section-body">Contamos con 10 puntos de entrega distribuidos en la ciudad para que recibas tu pedido donde más te convenga.</p>
+    </div>
+    <div class="entrega-grid">
+      <div class="entrega-card reveal">
+        <div class="entrega-icon">🚚</div>
+        <div>
+          <h3>Envío a domicilio</h3>
+          <p>Llevamos tu pedido directamente a la puerta de tu casa en Durango.</p>
+        </div>
+      </div>
+      <div class="entrega-card reveal">
+        <div class="entrega-icon">📍</div>
+        <div>
+          <h3>10 puntos de entrega</h3>
+          <p>Recoge en el punto más cercano a ti. Coordinamos por WhatsApp.</p>
+        </div>
+      </div>
+      <div class="entrega-card reveal">
+        <div class="entrega-icon">💬</div>
+        <div>
+          <h3>Coordinación fácil</h3>
+          <p>Escríbenos por WhatsApp y te confirmamos disponibilidad y entrega en minutos.</p>
+        </div>
+      </div>
+      <div class="entrega-card reveal">
+        <div class="entrega-icon">🗺️</div>
+        <div>
+          <h3>Ver mapa de puntos</h3>
+          <p>Consulta las ubicaciones exactas, horarios y referencias de cada punto.</p>
+        </div>
+      </div>
+    </div>
+    <div class="entrega-cta reveal">
+      <a href="./puntos_entrega" class="btn-primary">Ver todos los puntos →</a>
+    </div>
+  </section>
+
+  <!-- CONTACTO / REDES -->
+  <div class="contact-section" id="contacto">
+    <div class="contact-inner">
+      <div class="section-tag reveal">Encuéntranos</div>
+      <h2 class="section-title reveal">Síguenos y<br>escríbenos.</h2>
+      <p class="section-body reveal">Estamos activos en redes sociales y respondemos rápido por WhatsApp. ¡Escríbenos!</p>
+      <div class="social-grid reveal">
+        <a href="https://www.facebook.com/profile.php?id=61564918395377" target="_blank" class="social-card">
+          <span class="social-icon">📘</span> Facebook
+        </a>
+        <a href="https://www.instagram.com/alushe.store/" target="_blank" class="social-card">
+          <span class="social-icon">📸</span> Instagram
+        </a>
+      </div>
+      <div class="reveal">
+        <a href="https://wa.me/526183973897?text=Hola,%20me%20interesa%20saber%20más%20sobre%20Alushe%20Store" target="_blank" class="wa-card">
+          💬 Contáctanos por WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p><strong>Alushe Store</strong> &nbsp;·&nbsp; Durango, Dgo. &nbsp;·&nbsp;
+    <a href="./catalogo">Catálogo</a> &nbsp;·&nbsp;
+    <a href="./puntos_entrega">Puntos de entrega</a></p>
+    <p style="margin-top:8px;">© 2026 Alushe Store. Todos los derechos reservados.</p>
+  </footer>
+
+  <script>
+    // Reveal on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 60);
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Nav compacto al hacer scroll
+    window.addEventListener('scroll', () => {
+      document.querySelector('nav').style.padding =
+        window.scrollY > 50 ? '12px 32px' : '18px 32px';
+    });
+  </script>
+</body>
+</html>
