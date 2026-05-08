@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin · Alushe Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream:    #f6f5ca;
+      --cream-d:  #e8e7a8;
+      --bg:       #fafaf6;
+      --ink:      #1a1a18;
+      --ink-mid:  #3a3a35;
+      --ink-lt:   #7a7a6e;
+      --line:     #e5e4d6;
+      --green:    #25D366;
+      --green-d:  #1ebe57;
+      --red:      #ff3366;
+      --white:    #ffffff;
+      --r:        12px;
+      --r-lg:     16px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+    }
+    button { font-family: inherit; cursor: pointer; border: none; }
+    input, select, textarea { font-family: inherit; }
+
+    /* ════════════════════════════════════════
+       LOGIN
+    ════════════════════════════════════════ */
+    .login-screen {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+      background: linear-gradient(135deg, var(--cream) 0%, var(--cream-d) 100%);
+    }
+    .login-card {
+      background: white;
+      border-radius: 20px;
+      padding: 40px 28px;
+      max-width: 380px; width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+    .login-logo {
+      width: 64px; height: 64px;
+      margin: 0 auto 16px;
+      border-radius: 16px;
+      object-fit: contain;
+    }
+    .login-card h1 {
+      font-size: 20px; font-weight: 800;
+      color: var(--ink); margin-bottom: 4px;
+    }
+    .login-card p {
+      font-size: 13px; color: var(--ink-lt);
+      margin-bottom: 28px; font-weight: 500;
+    }
+    .login-input {
+      width: 100%; padding: 14px 16px;
+      border: 1.5px solid var(--line);
+      border-radius: var(--r);
+      font-size: 14px; font-weight: 500;
+      outline: none; text-align: center;
+      letter-spacing: 0.3px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .login-input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(37,211,102,0.12);
+    }
+    .login-btn {
+      width: 100%; padding: 14px;
+      background: var(--ink); color: var(--cream);
+      border-radius: var(--r);
+      font-size: 14px; font-weight: 700;
+      margin-top: 12px;
+      transition: background .2s, transform .15s;
+    }
+    .login-btn:hover { background: var(--ink-mid); }
+    .login-btn:active { transform: scale(0.98); }
+    .login-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .login-error {
+      font-size: 12px; color: var(--red);
+      margin-top: 12px; min-height: 16px; font-weight: 600;
+    }
+    .login-bloqueo {
+      font-size: 12px; color: var(--ink-lt);
+      margin-top: 10px; font-weight: 500;
+    }
+
+    /* ════════════════════════════════════════
+       APP LAYOUT
+    ════════════════════════════════════════ */
+    .app { display: none; }
+    .app.activo { display: block; }
+
+    .app-header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(250,250,246,0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+      padding: 12px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .app-brand {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .app-brand img { width: 32px; height: 32px; border-radius: 8px; object-fit: contain; }
+    .app-brand-text { font-size: 13px; font-weight: 800; color: var(--ink); }
+    .app-brand-text small {
+      display: block;
+      font-size: 9px; font-weight: 600;
+      color: var(--ink-lt); letter-spacing: 1px;
+      text-transform: uppercase; margin-top: 1px;
+    }
+    .logout {
+      font-size: 11px; font-weight: 600;
+      color: var(--ink-lt);
+      padding: 6px 10px; border-radius: 8px;
+      background: transparent;
+      transition: background .15s, color .15s;
+    }
+    .logout:hover { background: var(--line); color: var(--ink); }
+
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 20px 16px 100px;
+    }
+
+    /* ════════════════════════════════════════
+       VISTAS
+    ════════════════════════════════════════ */
+    .vista { display: none; }
+    .vista.activa { display: block; animation: fadeIn .25s ease; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .titulo-vista {
+      font-size: 22px; font-weight: 800;
+      color: var(--ink); margin-bottom: 4px;
+      letter-spacing: -0.3px;
+    }
+    .subtitulo-vista {
+      font-size: 13px; color: var(--ink-lt);
+      font-weight: 500; margin-bottom: 24px;
+    }
+
+    /* ── DASHBOARD ── */
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 10px; margin-bottom: 20px;
+    }
+    .stat-tile {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: var(--r);
+      padding: 14px 12px;
+      text-align: center;
+    }
+    .stat-tile-num {
+      font-size: 22px; font-weight: 800;
+      color: var(--ink); line-height: 1;
+    }
+    .stat-tile-label {
+      font-size: 10px; font-weight: 600;
+      color: var(--ink-lt); margin-top: 4px;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .stat-tile.disponibles .stat-tile-num { color: var(--green); }
+    .stat-tile.agotados   .stat-tile-num { color: var(--red); }
+
+    .accion-grande {
+      background: var(--ink); color: var(--cream);
+      width: 100%; padding: 18px;
+      border-radius: var(--r-lg);
+      font-size: 14px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      margin-bottom: 12px;
+      transition: background .2s, transform .15s;
+    }
+    .accion-grande:hover { background: var(--ink-mid); }
+    .accion-grande:active { transform: scale(0.99); }
+    .accion-grande svg { width: 18px; height: 18px; }
+
+    .accion-secundaria {
+      background: white; color: var(--ink);
+      border: 1px solid var(--line);
+      width: 100%; padding: 14px;
+      border-radius: var(--r);
+      font-size: 13px; font-weight: 600;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 8px;
+      transition: border-color .15s, background .15s;
+      text-align: left;
+    }
+    .accion-secundaria:hover { border-color: var(--ink-lt); background: var(--bg); }
+    .accion-secundaria-izq { display: flex; align-items: center; gap: 12px; }
+    .accion-secundaria-icono {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--cream);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .accion-secundaria-flecha { color: var(--ink-lt); font-size: 18px; }
+
+    .seccion-label {
+      font-size: 10px; font-weight: 700;
+      color: var(--ink-lt); letter-spacing: 1px;
+      text-transform: uppercase;
+      margin: 24px 0 12px;
+    }
+
+    /* ── FORMULARIO NUEVO PRODUCTO ── */
+    .form-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: var(--r-lg);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .field { margin-bottom: 16px; }
+    .field:last-child { margin-bottom: 0; }
+    .field-label {
+      display: block;
+      font-size: 11px; font-weight: 700;
+      color: var(--ink-mid); margin-bottom: 6px;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .field-label .req { color: var(--red); margin-left: 2px; }
+    .field-input, .field-select {
+      width: 100%; padding: 12px 14px;
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      font-size: 14px; font-weight: 500;
+      background: white; color: var(--ink);
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .field-input:focus, .field-select:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(37,211,102,0.12);
+    }
+    .field-hint {
+      font-size: 11px; color: var(--ink-lt);
+      margin-top: 4px; font-weight: 500;
+    }
+
+    /* tabs imagen */
+    .img-tabs {
+      display: flex; gap: 4px;
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 3px; margin-bottom: 12px;
+    }
+    .img-tab {
+      flex: 1; padding: 8px;
+      font-size: 11px; font-weight: 700;
+      color: var(--ink-lt);
+      background: transparent;
+      border-radius: 7px;
+      transition: all .15s;
+    }
+    .img-tab.activo { background: white; color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+
+    /* preview imagen */
+    .img-preview-area {
+      border: 2px dashed var(--line);
+      border-radius: var(--r);
+      aspect-ratio: 1;
+      max-width: 280px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .img-preview-area.con-imagen { border-style: solid; border-color: var(--green); }
+    .img-preview-canvas {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+    .img-preview-area.con-imagen .img-preview-canvas { display: block; }
+    .img-preview-placeholder {
+      text-align: center;
+      color: var(--ink-lt);
+      padding: 16px;
+    }
+    .img-preview-area.con-imagen .img-preview-placeholder { display: none; }
+    .img-preview-icon { font-size: 32px; margin-bottom: 8px; opacity: 0.5; }
+    .img-preview-text { font-size: 12px; font-weight: 600; }
+    .img-quitar {
+      position: absolute; top: 8px; right: 8px;
+      background: rgba(0,0,0,0.6); color: white;
+      width: 28px; height: 28px; border-radius: 50%;
+      display: none; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700;
+      transition: background .15s;
+    }
+    .img-preview-area.con-imagen .img-quitar { display: flex; }
+    .img-quitar:hover { background: rgba(0,0,0,0.85); }
+
+    .file-input-wrap { position: relative; }
+    .file-input-real {
+      position: absolute; inset: 0;
+      opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .file-input-fake {
+      width: 100%; padding: 12px 14px;
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      background: white;
+      font-size: 13px; font-weight: 600;
+      color: var(--ink-mid);
+      text-align: center;
+      transition: border-color .2s;
+    }
+    .file-input-real:focus + .file-input-fake { border-color: var(--green); }
+
+    /* preview de la card */
+    .card-preview-wrap {
+      background: var(--cream);
+      border-radius: var(--r);
+      padding: 16px;
+      margin-top: 16px;
+    }
+    .card-preview-title {
+      font-size: 10px; font-weight: 700;
+      color: var(--ink-lt); letter-spacing: 1px;
+      text-transform: uppercase; margin-bottom: 8px;
+      text-align: center;
+    }
+    .card-preview {
+      max-width: 160px; margin: 0 auto;
+      background: white; border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+      overflow: hidden; padding-bottom: 10px;
+      text-align: center;
+    }
+    .card-preview-img {
+      width: 100%; aspect-ratio: 1;
+      background: linear-gradient(135deg, #F7F6DE, #e8e7c8);
+      object-fit: cover;
+      display: flex; align-items: center; justify-content: center;
+      color: #bbb; font-size: 24px;
+    }
+    .card-preview-img img { width: 100%; height: 100%; object-fit: cover; }
+    .card-preview-cat {
+      display: inline-block;
+      background: rgba(0,0,0,0.45); color: white;
+      font-size: 9px; font-weight: 600;
+      padding: 3px 7px; border-radius: 12px;
+      margin: 8px 0 0;
+    }
+    .card-preview-title-prod {
+      font-size: 11px; font-weight: 600;
+      margin: 6px 8px 4px; color: #333;
+      display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .card-preview-precio {
+      font-size: 14px; font-weight: 800; color: #000;
+    }
+
+    /* botones de acción del form */
+    .form-acciones {
+      display: flex; gap: 10px; margin-top: 20px;
+    }
+    .btn-guardar {
+      flex: 2; padding: 14px;
+      background: var(--green); color: white;
+      border-radius: var(--r);
+      font-size: 13px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background .2s, transform .15s;
+    }
+    .btn-guardar:hover { background: var(--green-d); }
+    .btn-guardar:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-guardar svg { width: 16px; height: 16px; }
+    .btn-cancelar {
+      flex: 1; padding: 14px;
+      background: white; color: var(--ink-mid);
+      border: 1px solid var(--line);
+      border-radius: var(--r);
+      font-size: 13px; font-weight: 600;
+      transition: border-color .15s;
+    }
+    .btn-cancelar:hover { border-color: var(--ink-lt); }
+
+    /* toast notificación */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      background: var(--ink); color: white;
+      padding: 12px 20px; border-radius: 50px;
+      font-size: 13px; font-weight: 600;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+      z-index: 100;
+      transition: transform .3s cubic-bezier(0.34,1.56,0.64,1);
+      display: flex; align-items: center; gap: 8px;
+      max-width: 90%;
+    }
+    .toast.visible { transform: translateX(-50%) translateY(0); }
+    .toast.success { background: var(--green); }
+    .toast.error   { background: var(--red); }
+
+    /* loader inline */
+    .spinner {
+      width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* placeholder de "próximamente" */
+    .proximamente {
+      background: white;
+      border: 2px dashed var(--line);
+      border-radius: var(--r-lg);
+      padding: 40px 24px;
+      text-align: center;
+    }
+    .proximamente-emoji { font-size: 40px; margin-bottom: 12px; }
+    .proximamente h3 {
+      font-size: 15px; font-weight: 700;
+      color: var(--ink); margin-bottom: 4px;
+    }
+    .proximamente p {
+      font-size: 12px; color: var(--ink-lt);
+      font-weight: 500;
+    }
+
+    /* responsive */
+    @media (max-width: 380px) {
+      .stats-grid { gap: 6px; }
+      .stat-tile { padding: 10px 6px; }
+      .stat-tile-num { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ════════════════════════════════════════
+       LOGIN
+  ═══════════════════════════════════════ -->
+  <div class="login-screen" id="login-screen">
+    <div class="login-card">
+      <img src="/assets/images/favicon.png" alt="Alushe Store" class="login-logo">
+      <h1>Panel de Administración</h1>
+      <p>Ingresa tu contraseña para continuar</p>
+      <form id="login-form" autocomplete="off">
+        <input type="password" id="login-pwd" class="login-input"
+               placeholder="••••••••" autocomplete="current-password" required>
+        <button type="submit" class="login-btn" id="login-btn">Entrar</button>
+        <div class="login-error" id="login-error"></div>
+        <div class="login-bloqueo" id="login-bloqueo"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       APP
+  ═══════════════════════════════════════ -->
+  <div class="app" id="app">
+    <header class="app-header">
+      <div class="app-brand">
+        <img src="/assets/images/favicon.png" alt="Alushe Store">
+        <div class="app-brand-text">
+          Alushe Store
+          <small>Panel admin</small>
+        </div>
+      </div>
+      <button class="logout" id="btn-logout">Salir</button>
+    </header>
+
+    <main>
+
+      <!-- ───── DASHBOARD ───── -->
+      <section class="vista activa" id="vista-dashboard">
+        <h1 class="titulo-vista">Hola 👋</h1>
+        <p class="subtitulo-vista">¿Qué te gustaría hacer hoy?</p>
+
+        <div class="stats-grid">
+          <div class="stat-tile">
+            <div class="stat-tile-num" id="stat-total">—</div>
+            <div class="stat-tile-label">Total</div>
+          </div>
+          <div class="stat-tile disponibles">
+            <div class="stat-tile-num" id="stat-disp">—</div>
+            <div class="stat-tile-label">Disponibles</div>
+          </div>
+          <div class="stat-tile agotados">
+            <div class="stat-tile-num" id="stat-agot">—</div>
+            <div class="stat-tile-label">Agotados</div>
+          </div>
+        </div>
+
+        <button class="accion-grande" onclick="irA('nuevo')">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 5v14m-7-7h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          Nuevo producto
+        </button>
+
+        <div class="seccion-label">Más opciones</div>
+
+        <button class="accion-secundaria" onclick="alert('Próximamente — Fase 2')">
+          <div class="accion-secundaria-izq">
+            <div class="accion-secundaria-icono">📋</div>
+            <div>Gestionar productos</div>
+          </div>
+          <span class="accion-secundaria-flecha">›</span>
+        </button>
+
+        <button class="accion-secundaria" onclick="alert('Próximamente — Fase 3')">
+          <div class="accion-secundaria-izq">
+            <div class="accion-secundaria-icono">🤖</div>
+            <div>Sincronizar con Facebook</div>
+          </div>
+          <span class="accion-secundaria-flecha">›</span>
+        </button>
+
+        <button class="accion-secundaria" onclick="alert('Próximamente — Fase 4')">
+          <div class="accion-secundaria-izq">
+            <div class="accion-secundaria-icono">📢</div>
+            <div>Banners y promociones</div>
+          </div>
+          <span class="accion-secundaria-flecha">›</span>
+        </button>
+
+        <button class="accion-secundaria" onclick="alert('Próximamente — Fase 4')">
+          <div class="accion-secundaria-izq">
+            <div class="accion-secundaria-icono">📍</div>
+            <div>Puntos de entrega</div>
+          </div>
+          <span class="accion-secundaria-flecha">›</span>
+        </button>
+      </section>
+
+      <!-- ───── NUEVO PRODUCTO ───── -->
+      <section class="vista" id="vista-nuevo">
+        <h1 class="titulo-vista">Nuevo producto</h1>
+        <p class="subtitulo-vista">Llena los datos y guárdalo en el catálogo</p>
+
+        <form id="form-producto" class="form-card" autocomplete="off">
+
+          <!-- TÍTULO -->
+          <div class="field">
+            <label class="field-label">Título <span class="req">*</span></label>
+            <input type="text" id="f-titulo" class="field-input"
+                   placeholder="Ej. Audífonos Bluetooth Negros" maxlength="120" required>
+          </div>
+
+          <!-- PRECIO -->
+          <div class="field">
+            <label class="field-label">Precio <span class="req">*</span></label>
+            <input type="text" id="f-precio" class="field-input"
+                   placeholder="MX$80" required>
+            <div class="field-hint">Ej. <strong>MX$80</strong> · <strong>3x$100</strong> · <strong>MX$1,200</strong></div>
+          </div>
+
+          <!-- CATEGORÍA -->
+          <div class="field">
+            <label class="field-label">Categoría <span class="req">*</span></label>
+            <select id="f-categoria" class="field-select" required>
+              <option value="">Selecciona una categoría</option>
+              <option value="Ropa y accesorios">Ropa y accesorios</option>
+              <option value="Electrónica">Electrónica</option>
+              <option value="Hogar y cocina">Hogar y cocina</option>
+              <option value="Bolsas y carteras">Bolsas y carteras</option>
+              <option value="Juguetes y bebés">Juguetes y bebés</option>
+              <option value="Deporte y fitness">Deporte y fitness</option>
+              <option value="Belleza y cuidado personal">Belleza y cuidado personal</option>
+              <option value="Otros">Otros</option>
+            </select>
+          </div>
+
+          <!-- ESTADO -->
+          <div class="field">
+            <label class="field-label">Estado</label>
+            <select id="f-estado" class="field-select">
+              <option value="Disponible">Disponible</option>
+              <option value="Agotado">Agotado</option>
+            </select>
+          </div>
+
+          <!-- IMAGEN -->
+          <div class="field">
+            <label class="field-label">Imagen <span class="req">*</span></label>
+
+            <div class="img-tabs">
+              <button type="button" class="img-tab activo" id="tab-archivo" onclick="cambiarTab('archivo')">📷 Subir foto</button>
+              <button type="button" class="img-tab" id="tab-url" onclick="cambiarTab('url')">🔗 Pegar URL</button>
+            </div>
+
+            <!-- archivo -->
+            <div id="modo-archivo">
+              <div class="file-input-wrap">
+                <input type="file" id="f-archivo" accept="image/*" class="file-input-real">
+                <div class="file-input-fake">📁 Toca para elegir foto</div>
+              </div>
+            </div>
+
+            <!-- url -->
+            <div id="modo-url" style="display:none;">
+              <input type="url" id="f-url" class="field-input"
+                     placeholder="https://...">
+              <div class="field-hint">Pega la URL de una imagen pública</div>
+            </div>
+
+            <!-- preview cuadrado -->
+            <div class="img-preview-area" id="img-preview" style="margin-top:14px;">
+              <canvas class="img-preview-canvas" id="img-canvas" width="600" height="600"></canvas>
+              <div class="img-preview-placeholder">
+                <div class="img-preview-icon">🖼️</div>
+                <div class="img-preview-text">La imagen se recortará a cuadrado</div>
+              </div>
+              <button type="button" class="img-quitar" onclick="quitarImagen()" title="Quitar">✕</button>
+            </div>
+          </div>
+
+          <!-- VISTA PREVIA DE LA CARD -->
+          <div class="card-preview-wrap" id="card-preview-wrap" style="display:none;">
+            <div class="card-preview-title">Así se verá en el catálogo</div>
+            <div class="card-preview">
+              <div class="card-preview-img" id="prev-img">🛍️</div>
+              <div class="card-preview-cat" id="prev-cat" style="display:none;">Cat</div>
+              <div class="card-preview-title-prod" id="prev-titulo">Título del producto</div>
+              <div class="card-preview-precio" id="prev-precio">MX$0</div>
+            </div>
+          </div>
+
+          <!-- ACCIONES -->
+          <div class="form-acciones">
+            <button type="button" class="btn-cancelar" onclick="irA('dashboard')">Cancelar</button>
+            <button type="submit" class="btn-guardar" id="btn-guardar">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <span id="btn-guardar-texto">Guardar producto</span>
+            </button>
+          </div>
+        </form>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ═══════════════════════════════════════
+    // CONFIGURACIÓN
+    // ═══════════════════════════════════════
+
+    // ⚠️ CONTRASEÑA — esta es solo para fase 1 (placeholder)
+    // En la fase de conexión con backend la cambiaremos a un hash SHA-256
+    // y agregaremos rate-limiting del lado del servidor (Apps Script)
+    const PWD_PLACEHOLDER = 'alushe2026';
+
+    // URL del Google Sheets publicado (para leer estadísticas)
+    const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSFVkVwygu8wOUzX2ji862ooqSuMPET7XRsKpoYnpIY6UkuGWIrTbyZXokA5aI-jfHwDOZ_BIaHq2PQ/pub?gid=523685927&single=true&output=csv';
+
+    // Sesión: 24h de duración
+    const SESION_HORAS = 24;
+    const SESION_KEY = 'alushe_admin_sesion';
+
+    // Rate limit: 5 intentos, 15 min de bloqueo
+    const MAX_INTENTOS = 5;
+    const BLOQUEO_MIN = 15;
+    const RL_KEY = 'alushe_admin_rl';
+
+    // ═══════════════════════════════════════
+    // LOGIN + RATE LIMITING (lado cliente, fase 1)
+    // ═══════════════════════════════════════
+
+    function getRL() {
+      try { return JSON.parse(sessionStorage.getItem(RL_KEY)) || { intentos: 0, bloqueoHasta: 0 }; }
+      catch { return { intentos: 0, bloqueoHasta: 0 }; }
+    }
+    function setRL(rl) { sessionStorage.setItem(RL_KEY, JSON.stringify(rl)); }
+
+    function actualizarBloqueoUI() {
+      const rl = getRL();
+      const ahora = Date.now();
+      const bloqueoEl = document.getElementById('login-bloqueo');
+      const btn = document.getElementById('login-btn');
+      const input = document.getElementById('login-pwd');
+
+      if (rl.bloqueoHasta > ahora) {
+        const min = Math.ceil((rl.bloqueoHasta - ahora) / 60000);
+        bloqueoEl.textContent = `🔒 Bloqueado. Intenta de nuevo en ${min} min.`;
+        btn.disabled = true;
+        input.disabled = true;
+        setTimeout(actualizarBloqueoUI, 1000);
+      } else {
+        bloqueoEl.textContent = '';
+        btn.disabled = false;
+        input.disabled = false;
+      }
+    }
+
+    function tieneSesionValida() {
+      try {
+        const s = JSON.parse(sessionStorage.getItem(SESION_KEY));
+        return s && s.expira > Date.now();
+      } catch { return false; }
+    }
+
+    function iniciarSesion() {
+      const expira = Date.now() + SESION_HORAS * 60 * 60 * 1000;
+      sessionStorage.setItem(SESION_KEY, JSON.stringify({ expira }));
+      mostrarApp();
+    }
+
+    function cerrarSesion() {
+      sessionStorage.removeItem(SESION_KEY);
+      document.getElementById('app').classList.remove('activo');
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('login-pwd').value = '';
+    }
+
+    function mostrarApp() {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('app').classList.add('activo');
+      cargarStats();
+    }
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const rl = getRL();
+      if (rl.bloqueoHasta > Date.now()) return;
+
+      const pwd = document.getElementById('login-pwd').value;
+      const errEl = document.getElementById('login-error');
+      const btn = document.getElementById('login-btn');
+
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner"></div>';
+
+      // Pequeño delay artificial para que se vea profesional + dificulta brute force
+      await new Promise(r => setTimeout(r, 400));
+
+      if (pwd === PWD_PLACEHOLDER) {
+        setRL({ intentos: 0, bloqueoHasta: 0 });
+        iniciarSesion();
+      } else {
+        const intentos = rl.intentos + 1;
+        if (intentos >= MAX_INTENTOS) {
+          setRL({ intentos: 0, bloqueoHasta: Date.now() + BLOQUEO_MIN * 60000 });
+          actualizarBloqueoUI();
+        } else {
+          setRL({ ...rl, intentos });
+          errEl.textContent = `Contraseña incorrecta · ${MAX_INTENTOS - intentos} intento${MAX_INTENTOS - intentos !== 1 ? 's' : ''} restante${MAX_INTENTOS - intentos !== 1 ? 's' : ''}`;
+        }
+        btn.disabled = false;
+        btn.textContent = 'Entrar';
+        document.getElementById('login-pwd').value = '';
+      }
+    });
+
+    document.getElementById('btn-logout').addEventListener('click', cerrarSesion);
+
+    // Verificar sesión al cargar
+    if (tieneSesionValida()) mostrarApp();
+    actualizarBloqueoUI();
+
+    // ═══════════════════════════════════════
+    // NAVEGACIÓN ENTRE VISTAS
+    // ═══════════════════════════════════════
+    function irA(vista) {
+      document.querySelectorAll('.vista').forEach(v => v.classList.remove('activa'));
+      document.getElementById('vista-' + vista).classList.add('activa');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ═══════════════════════════════════════
+    // ESTADÍSTICAS DEL DASHBOARD
+    // ═══════════════════════════════════════
+    async function cargarStats() {
+      try {
+        const r = await fetch(csvUrl);
+        const text = await r.text();
+        const filas = text.split('\n').slice(1).filter(l => l.trim());
+        const total = filas.length;
+        const agotados = filas.filter(l => l.includes('Agotado')).length;
+        animarNum('stat-total', total);
+        animarNum('stat-disp', total - agotados);
+        animarNum('stat-agot', agotados);
+      } catch {
+        document.getElementById('stat-total').textContent = '—';
+      }
+    }
+
+    function animarNum(id, destino) {
+      const el = document.getElementById(id);
+      const ini = parseInt(el.textContent) || 0;
+      const start = performance.now();
+      (function paso(now) {
+        const t = Math.min((now - start) / 600, 1);
+        el.textContent = Math.round(ini + (destino - ini) * (1 - Math.pow(1 - t, 3)));
+        if (t < 1) requestAnimationFrame(paso);
+      })(performance.now());
+    }
+
+    // ═══════════════════════════════════════
+    // FORMULARIO NUEVO PRODUCTO
+    // ═══════════════════════════════════════
+    let imagenBlob = null; // imagen procesada (cuadrada)
+
+    function cambiarTab(modo) {
+      document.getElementById('tab-archivo').classList.toggle('activo', modo === 'archivo');
+      document.getElementById('tab-url').classList.toggle('activo', modo === 'url');
+      document.getElementById('modo-archivo').style.display = modo === 'archivo' ? 'block' : 'none';
+      document.getElementById('modo-url').style.display     = modo === 'url'     ? 'block' : 'none';
+      quitarImagen();
+    }
+
+    // Recorte cuadrado al centro (estilo Instagram)
+    function recortarCuadrado(imgEl) {
+      const canvas = document.getElementById('img-canvas');
+      const ctx = canvas.getContext('2d');
+      const tam = 600;
+      canvas.width = tam; canvas.height = tam;
+
+      const min = Math.min(imgEl.naturalWidth, imgEl.naturalHeight);
+      const sx = (imgEl.naturalWidth  - min) / 2;
+      const sy = (imgEl.naturalHeight - min) / 2;
+
+      ctx.drawImage(imgEl, sx, sy, min, min, 0, 0, tam, tam);
+
+      canvas.toBlob(b => {
+        imagenBlob = b;
+        document.getElementById('img-preview').classList.add('con-imagen');
+        actualizarPreviewCard();
+      }, 'image/jpeg', 0.85);
+    }
+
+    function quitarImagen() {
+      imagenBlob = null;
+      document.getElementById('img-preview').classList.remove('con-imagen');
+      document.getElementById('f-archivo').value = '';
+      document.getElementById('f-url').value = '';
+      actualizarPreviewCard();
+    }
+
+    // Cargar imagen desde archivo
+    document.getElementById('f-archivo').addEventListener('change', (e) => {
+      const f = e.target.files[0];
+      if (!f) return;
+      if (!f.type.startsWith('image/')) {
+        toast('Solo se permiten imágenes', 'error');
+        return;
+      }
+      if (f.size > 10 * 1024 * 1024) {
+        toast('Imagen muy grande (máx 10MB)', 'error');
+        return;
+      }
+      const img = new Image();
+      img.onload = () => recortarCuadrado(img);
+      img.onerror = () => toast('No se pudo cargar la imagen', 'error');
+      img.src = URL.createObjectURL(f);
+    });
+
+    // Cargar imagen desde URL
+    document.getElementById('f-url').addEventListener('input', (e) => {
+      const url = e.target.value.trim();
+      if (!url) { quitarImagen(); return; }
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => recortarCuadrado(img);
+      img.onerror = () => {
+        // intentar sin CORS (no se podrá recortar pero al menos validamos que cargue)
+        const img2 = new Image();
+        img2.onload = () => recortarCuadrado(img2);
+        img2.onerror = () => toast('No se pudo cargar la imagen desde esa URL', 'error');
+        img2.src = url;
+      };
+      img.src = url;
+    });
+
+    // Vista previa en vivo de la card
+    ['f-titulo', 'f-precio', 'f-categoria'].forEach(id => {
+      document.getElementById(id).addEventListener('input', actualizarPreviewCard);
+    });
+
+    function actualizarPreviewCard() {
+      const wrap = document.getElementById('card-preview-wrap');
+      const titulo = document.getElementById('f-titulo').value.trim();
+      const precio = document.getElementById('f-precio').value.trim();
+      const cat    = document.getElementById('f-categoria').value;
+
+      // mostrar el preview solo si hay algo
+      if (!titulo && !precio && !imagenBlob) {
+        wrap.style.display = 'none';
+        return;
+      }
+      wrap.style.display = 'block';
+
+      document.getElementById('prev-titulo').textContent = titulo || 'Título del producto';
+      document.getElementById('prev-precio').textContent = precio || 'MX$0';
+
+      const catEl = document.getElementById('prev-cat');
+      if (cat) {
+        catEl.textContent = cat.split(' ')[0];
+        catEl.style.display = 'inline-block';
+      } else {
+        catEl.style.display = 'none';
+      }
+
+      const imgEl = document.getElementById('prev-img');
+      if (imagenBlob) {
+        imgEl.innerHTML = `<img src="${URL.createObjectURL(imagenBlob)}" alt="">`;
+      } else {
+        imgEl.innerHTML = '🛍️';
+      }
+    }
+
+    // SUBMIT del formulario (en fase 1: solo simulamos)
+    document.getElementById('form-producto').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      if (!imagenBlob) {
+        toast('Falta agregar una imagen', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('btn-guardar');
+      const btnTxt = document.getElementById('btn-guardar-texto');
+      btn.disabled = true;
+      btnTxt.textContent = 'Guardando...';
+
+      // ⚠️ FASE 1: simulación. En la siguiente fase aquí enviamos a Apps Script.
+      await new Promise(r => setTimeout(r, 1500));
+
+      toast('✅ Producto guardado (modo demo — falta conectar backend)', 'success');
+
+      btn.disabled = false;
+      btnTxt.textContent = 'Guardar producto';
+
+      // limpiar y volver al dashboard
+      document.getElementById('form-producto').reset();
+      quitarImagen();
+      setTimeout(() => irA('dashboard'), 800);
+    });
+
+    // ═══════════════════════════════════════
+    // TOAST
+    // ═══════════════════════════════════════
+    function toast(msg, tipo = 'success') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast visible ' + tipo;
+      setTimeout(() => t.classList.remove('visible'), 3500);
+    }
+  </script>
+</body>
+</html>
