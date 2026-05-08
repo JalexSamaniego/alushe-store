@@ -125,6 +125,24 @@
       color: var(--ink-lt); letter-spacing: 1px;
       text-transform: uppercase; margin-top: 1px;
     }
+    .app-reloj {
+      display: flex; flex-direction: column; align-items: flex-end;
+      margin-right: 12px;
+      line-height: 1.2;
+    }
+    .app-reloj-hora {
+      font-size: 13px; font-weight: 800; color: var(--ink);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.3px;
+    }
+    .app-reloj-fecha {
+      font-size: 9px; font-weight: 600;
+      color: var(--ink-lt); text-transform: uppercase;
+      letter-spacing: 0.5px; margin-top: 1px;
+    }
+    @media (max-width: 380px) {
+      .app-reloj-fecha { display: none; }
+    }
     .logout {
       font-size: 11px; font-weight: 600;
       color: var(--ink-lt);
@@ -488,7 +506,13 @@
           <small>Panel admin</small>
         </div>
       </div>
-      <button class="logout" id="btn-logout">Salir</button>
+      <div style="display:flex;align-items:center;">
+        <div class="app-reloj">
+          <div class="app-reloj-hora" id="reloj-hora">--:--</div>
+          <div class="app-reloj-fecha" id="reloj-fecha">—</div>
+        </div>
+        <button class="logout" id="btn-logout">Salir</button>
+      </div>
     </header>
 
     <main>
@@ -970,6 +994,24 @@
       t.className = 'toast visible ' + tipo;
       setTimeout(() => t.classList.remove('visible'), 3500);
     }
+
+    // ═══════════════════════════════════════
+    // RELOJ EN HEADER
+    // ═══════════════════════════════════════
+    function actualizarReloj() {
+      const ahora = new Date();
+      const hh = String(ahora.getHours()).padStart(2, '0');
+      const mm = String(ahora.getMinutes()).padStart(2, '0');
+      const ss = String(ahora.getSeconds()).padStart(2, '0');
+      document.getElementById('reloj-hora').textContent = `${hh}:${mm}:${ss}`;
+
+      const dias  = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+      const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+      const fecha = `${dias[ahora.getDay()]}, ${ahora.getDate()} ${meses[ahora.getMonth()]} ${ahora.getFullYear()}`;
+      document.getElementById('reloj-fecha').textContent = fecha;
+    }
+    setInterval(actualizarReloj, 1000);
+    actualizarReloj();
   </script>
 </body>
 </html>
