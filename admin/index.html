@@ -143,6 +143,16 @@
     @media (max-width: 380px) {
       .app-reloj-fecha { display: none; }
     }
+    .ver-cat {
+      font-size: 11px; font-weight: 700;
+      color: var(--ink); background: var(--cream);
+      padding: 6px 12px; border-radius: 8px;
+      margin-right: 6px; text-decoration: none;
+      transition: background .15s, transform .15s;
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .ver-cat:hover { background: var(--cream-d); transform: translateY(-1px); }
+    .ver-cat svg { width: 11px; height: 11px; }
     .logout {
       font-size: 11px; font-weight: 600;
       color: var(--ink-lt);
@@ -279,6 +289,85 @@
       margin-top: 4px; font-weight: 500;
     }
 
+
+    /* Toggle multipack */
+    .toggle-multipack {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 14px;
+      background: var(--bg);
+      border-radius: 10px;
+      margin-bottom: 12px;
+      border: 1px solid var(--line);
+    }
+    .toggle-texto strong {
+      display: block;
+      font-size: 12px; font-weight: 700;
+      color: var(--ink);
+    }
+    .toggle-texto small {
+      font-size: 10px; font-weight: 500;
+      color: var(--ink-lt);
+    }
+    .switch {
+      position: relative; display: inline-block;
+      width: 40px; height: 22px; flex-shrink: 0;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .switch-slider {
+      position: absolute; cursor: pointer;
+      inset: 0; background: #ccc;
+      transition: .25s; border-radius: 22px;
+    }
+    .switch-slider:before {
+      position: absolute; content: "";
+      height: 16px; width: 16px;
+      left: 3px; bottom: 3px;
+      background: white; border-radius: 50%;
+      transition: .25s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .switch input:checked + .switch-slider { background: var(--green); }
+    .switch input:checked + .switch-slider:before { transform: translateX(18px); }
+
+    /* Multipack grid: cant × precio */
+    .multipack-grid {
+      display: grid;
+      grid-template-columns: 70px 24px 1fr;
+      gap: 8px;
+      align-items: start;
+    }
+    .multipack-equis {
+      font-size: 20px; font-weight: 800;
+      color: var(--ink-lt);
+      text-align: center;
+      padding-top: 12px;
+    }
+    .multipack-input { text-align: center; }
+    .multipack-label {
+      font-size: 9px; font-weight: 700;
+      color: var(--ink-lt); margin-top: 4px;
+      text-align: center;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    /* Precio con prefijo MX$ */
+    .precio-wrap {
+      position: relative;
+    }
+    .precio-prefijo {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink-mid);
+      pointer-events: none;
+      letter-spacing: 0.3px;
+    }
+    .precio-input {
+      padding-left: 48px !important;
+      font-weight: 700 !important;
+    }
     /* tabs imagen */
     .img-tabs {
       display: flex; gap: 4px;
@@ -511,6 +600,10 @@
           <div class="app-reloj-hora" id="reloj-hora">--:--</div>
           <div class="app-reloj-fecha" id="reloj-fecha">—</div>
         </div>
+        <a href="https://alushe.store/catalogo" target="_blank" class="ver-cat" title="Ver catálogo público">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Ver web
+        </a>
         <button class="logout" id="btn-logout">Salir</button>
       </div>
     </header>
@@ -596,9 +689,49 @@
           <!-- PRECIO -->
           <div class="field">
             <label class="field-label">Precio <span class="req">*</span></label>
-            <input type="text" id="f-precio" class="field-input"
-                   placeholder="MX$80" required>
-            <div class="field-hint">Ej. <strong>MX$80</strong> · <strong>3x$100</strong> · <strong>MX$1,200</strong></div>
+
+            <!-- Toggle promo multipack -->
+            <div class="toggle-multipack">
+              <label class="switch">
+                <input type="checkbox" id="f-multipack" onchange="toggleMultipack(this.checked)">
+                <span class="switch-slider"></span>
+              </label>
+              <div class="toggle-texto">
+                <strong>Promo multipack</strong>
+                <small>Ej. 3 piezas por MX$100</small>
+              </div>
+            </div>
+
+            <!-- Modo precio normal -->
+            <div id="modo-precio-normal">
+              <div class="precio-wrap">
+                <span class="precio-prefijo">MX$</span>
+                <input type="text" inputmode="numeric" id="f-precio" class="field-input precio-input"
+                       placeholder="80" maxlength="6">
+              </div>
+              <div class="field-hint">Solo escribe el número.</div>
+            </div>
+
+            <!-- Modo multipack -->
+            <div id="modo-precio-multipack" style="display:none;">
+              <div class="multipack-grid">
+                <div>
+                  <input type="text" inputmode="numeric" id="f-multi-cant" class="field-input multipack-input"
+                         placeholder="3" maxlength="2">
+                  <div class="multipack-label">Cantidad</div>
+                </div>
+                <div class="multipack-equis">×</div>
+                <div>
+                  <div class="precio-wrap">
+                    <span class="precio-prefijo">MX$</span>
+                    <input type="text" inputmode="numeric" id="f-multi-precio" class="field-input precio-input multipack-input"
+                           placeholder="100" maxlength="6">
+                  </div>
+                  <div class="multipack-label">Precio total</div>
+                </div>
+              </div>
+              <div class="field-hint">Vista previa: <strong id="multipack-preview">3xMX$100</strong></div>
+            </div>
           </div>
 
           <!-- CATEGORÍA -->
@@ -770,6 +903,11 @@
       document.getElementById('app').classList.remove('activo');
       document.getElementById('login-screen').style.display = 'flex';
       document.getElementById('login-pwd').value = '';
+      // Resetear el botón del login (evita que quede cargando)
+      const btn = document.getElementById('login-btn');
+      btn.disabled = false;
+      btn.textContent = 'Entrar';
+      document.getElementById('login-error').textContent = '';
     }
 
     function mostrarApp() {
@@ -944,15 +1082,16 @@
       img.src = url;
     });
 
-    // Vista previa en vivo de la card
-    ['f-titulo', 'f-precio', 'f-categoria'].forEach(id => {
+    // Vista previa en vivo de la card (título y categoría; precio se actualiza desde su listener)
+    ['f-titulo', 'f-categoria'].forEach(id => {
       document.getElementById(id).addEventListener('input', actualizarPreviewCard);
     });
+    document.getElementById('f-categoria').addEventListener('change', actualizarPreviewCard);
 
     function actualizarPreviewCard() {
       const wrap = document.getElementById('card-preview-wrap');
       const titulo = document.getElementById('f-titulo').value.trim();
-      const precio = document.getElementById('f-precio').value.trim();
+      const precio = obtenerPrecioFinal();
       const cat    = document.getElementById('f-categoria').value;
 
       // mostrar el preview solo si hay algo
@@ -963,7 +1102,8 @@
       wrap.style.display = 'block';
 
       document.getElementById('prev-titulo').textContent = titulo || 'Título del producto';
-      document.getElementById('prev-precio').textContent = precio || 'MX$0';
+      const precioFinal = obtenerPrecioFinal();
+      document.getElementById('prev-precio').textContent = precioFinal || 'MX$0';
 
       const catEl = document.getElementById('prev-cat');
       if (cat) {
@@ -1003,6 +1143,10 @@
         toast('Falta agregar una imagen', 'error');
         return;
       }
+      if (!obtenerPrecioFinal()) {
+        toast('Falta capturar el precio', 'error');
+        return;
+      }
 
       const s = getSesion();
       if (!s || !s.token) {
@@ -1025,7 +1169,7 @@
           accion: 'agregar_producto',
           token: s.token,
           producto:  document.getElementById('f-titulo').value.trim(),
-          precio:    document.getElementById('f-precio').value.trim(),
+          precio:    obtenerPrecioFinal(),
           categoria: document.getElementById('f-categoria').value,
           estado:    document.getElementById('f-estado').value,
           imagenBase64: imagenBase64
@@ -1061,6 +1205,64 @@
       t.className = 'toast visible ' + tipo;
       setTimeout(() => t.classList.remove('visible'), 3500);
     }
+
+
+    // ═══════════════════════════════════════
+    // PRECIO: normal o multipack
+    // ═══════════════════════════════════════
+    function formatearPrecio(valor) {
+      const num = parseFloat(String(valor).replace(/[^0-9.]/g, ''));
+      if (isNaN(num) || num <= 0) return '';
+      return 'MX$' + num.toLocaleString('en-US');
+    }
+
+    function formatearMultipack(cant, precio) {
+      const c = parseInt(String(cant).replace(/[^0-9]/g, ''));
+      const p = parseFloat(String(precio).replace(/[^0-9.]/g, ''));
+      if (isNaN(c) || c <= 1 || isNaN(p) || p <= 0) return '';
+      return c + 'xMX$' + p.toLocaleString('en-US');
+    }
+
+    function obtenerPrecioFinal() {
+      const esMultipack = document.getElementById('f-multipack').checked;
+      if (esMultipack) {
+        return formatearMultipack(
+          document.getElementById('f-multi-cant').value,
+          document.getElementById('f-multi-precio').value
+        );
+      }
+      return formatearPrecio(document.getElementById('f-precio').value);
+    }
+
+    function toggleMultipack(activo) {
+      document.getElementById('modo-precio-normal').style.display    = activo ? 'none'  : 'block';
+      document.getElementById('modo-precio-multipack').style.display = activo ? 'block' : 'none';
+      // Limpiar el campo del modo opuesto
+      if (activo) {
+        document.getElementById('f-precio').value = '';
+      } else {
+        document.getElementById('f-multi-cant').value = '';
+        document.getElementById('f-multi-precio').value = '';
+      }
+      actualizarPreviewCard();
+    }
+
+    // Solo dígitos en los 3 inputs de precio
+    ['f-precio', 'f-multi-cant', 'f-multi-precio'].forEach(id => {
+      document.getElementById(id).addEventListener('input', (e) => {
+        const limpio = e.target.value.replace(/[^0-9]/g, '');
+        if (limpio !== e.target.value) e.target.value = limpio;
+        // Actualizar preview multipack
+        if (id.startsWith('f-multi')) {
+          const prev = formatearMultipack(
+            document.getElementById('f-multi-cant').value,
+            document.getElementById('f-multi-precio').value
+          );
+          document.getElementById('multipack-preview').textContent = prev || '—';
+        }
+        actualizarPreviewCard();
+      });
+    });
 
     // ═══════════════════════════════════════
     // RELOJ EN HEADER
