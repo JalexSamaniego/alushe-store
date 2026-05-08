@@ -694,22 +694,30 @@
     // CONFIGURACIÓN
     // ═══════════════════════════════════════
 
-    // ⚠️ CONTRASEÑA — esta es solo para fase 1 (placeholder)
-    // En la fase de conexión con backend la cambiaremos a un hash SHA-256
-    // y agregaremos rate-limiting del lado del servidor (Apps Script)
-    const PWD_PLACEHOLDER = 'alushe2026';
+    // URL del backend Apps Script
+    const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzAWexJtZkj5Jf56iJg8huX2BAuoaHK3qXHpSK-9xBKXyYySQ1iG-xEGQ7_sM1yG2W4/exec';
 
-    // URL del Google Sheets publicado (para leer estadísticas)
-    const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSFVkVwygu8wOUzX2ji862ooqSuMPET7XRsKpoYnpIY6UkuGWIrTbyZXokA5aI-jfHwDOZ_BIaHq2PQ/pub?gid=523685927&single=true&output=csv';
-
-    // Sesión: 24h de duración
-    const SESION_HORAS = 24;
+    // Sesión local: 24h
     const SESION_KEY = 'alushe_admin_sesion';
+    const SESION_HORAS = 24;
 
-    // Rate limit: 5 intentos, 15 min de bloqueo
+    // Rate limit local (apoyo extra al del backend)
     const MAX_INTENTOS = 5;
     const BLOQUEO_MIN = 15;
     const RL_KEY = 'alushe_admin_rl';
+
+    // ─── Llamada genérica al backend ────────────
+    async function llamarBackend(payload) {
+      const res = await fetch(BACKEND_URL, {
+        method: 'POST',
+        // Apps Script no acepta application/json directo, usamos text/plain
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload),
+        redirect: 'follow'
+      });
+      if (!res.ok) throw new Error('Error HTTP ' + res.status);
+      return await res.json();
+    }
 
     // ═══════════════════════════════════════
     // LOGIN + RATE LIMITING (lado cliente, fase 1)
@@ -741,16 +749,19 @@
       }
     }
 
-    function tieneSesionValida() {
-      try {
-        const s = JSON.parse(sessionStorage.getItem(SESION_KEY));
-        return s && s.expira > Date.now();
-      } catch { return false; }
+    function getSesion() {
+      try { return JSON.parse(sessionStorage.getItem(SESION_KEY)); }
+      catch { return null; }
     }
 
-    function iniciarSesion() {
+    function tieneSesionValida() {
+      const s = getSesion();
+      return s && s.token && s.expira > Date.now();
+    }
+
+    function iniciarSesion(token) {
       const expira = Date.now() + SESION_HORAS * 60 * 60 * 1000;
-      sessionStorage.setItem(SESION_KEY, JSON.stringify({ expira }));
+      sessionStorage.setItem(SESION_KEY, JSON.stringify({ token, expira }));
       mostrarApp();
     }
 
@@ -776,27 +787,40 @@
       const errEl = document.getElementById('login-error');
       const btn = document.getElementById('login-btn');
 
+      errEl.textContent = '';
       btn.disabled = true;
       btn.innerHTML = '<div class="spinner"></div>';
 
-      // Pequeño delay artificial para que se vea profesional + dificulta brute force
-      await new Promise(r => setTimeout(r, 400));
+      try {
+        const r = await llamarBackend({ accion: 'login', pwd });
 
-      if (pwd === PWD_PLACEHOLDER) {
-        setRL({ intentos: 0, bloqueoHasta: 0 });
-        iniciarSesion();
-      } else {
-        const intentos = rl.intentos + 1;
-        if (intentos >= MAX_INTENTOS) {
-          setRL({ intentos: 0, bloqueoHasta: Date.now() + BLOQUEO_MIN * 60000 });
-          actualizarBloqueoUI();
+        if (r.ok && r.token) {
+          setRL({ intentos: 0, bloqueoHasta: 0 });
+          iniciarSesion(r.token);
         } else {
-          setRL({ ...rl, intentos });
-          errEl.textContent = `Contraseña incorrecta · ${MAX_INTENTOS - intentos} intento${MAX_INTENTOS - intentos !== 1 ? 's' : ''} restante${MAX_INTENTOS - intentos !== 1 ? 's' : ''}`;
+          // Manejo de errores del backend (rate limit del servidor)
+          if (r.error && r.error.includes('Demasiados intentos')) {
+            setRL({ intentos: 0, bloqueoHasta: Date.now() + BLOQUEO_MIN * 60000 });
+            actualizarBloqueoUI();
+          } else {
+            const intentos = rl.intentos + 1;
+            if (intentos >= MAX_INTENTOS) {
+              setRL({ intentos: 0, bloqueoHasta: Date.now() + BLOQUEO_MIN * 60000 });
+              actualizarBloqueoUI();
+            } else {
+              setRL({ ...rl, intentos });
+              errEl.textContent = (r.error || 'Contraseña incorrecta') +
+                ` · ${MAX_INTENTOS - intentos} intento${MAX_INTENTOS - intentos !== 1 ? 's' : ''} restante${MAX_INTENTOS - intentos !== 1 ? 's' : ''}`;
+            }
+          }
+          btn.disabled = false;
+          btn.textContent = 'Entrar';
+          document.getElementById('login-pwd').value = '';
         }
+      } catch (err) {
+        errEl.textContent = 'Error de conexión. Intenta de nuevo.';
         btn.disabled = false;
         btn.textContent = 'Entrar';
-        document.getElementById('login-pwd').value = '';
       }
     });
 
@@ -820,14 +844,14 @@
     // ═══════════════════════════════════════
     async function cargarStats() {
       try {
-        const r = await fetch(csvUrl);
-        const text = await r.text();
-        const filas = text.split('\n').slice(1).filter(l => l.trim());
-        const total = filas.length;
-        const agotados = filas.filter(l => l.includes('Agotado')).length;
-        animarNum('stat-total', total);
-        animarNum('stat-disp', total - agotados);
-        animarNum('stat-agot', agotados);
+        const s = getSesion();
+        if (!s || !s.token) return;
+        const r = await llamarBackend({ accion: 'stats', token: s.token });
+        if (r.ok) {
+          animarNum('stat-total', r.total);
+          animarNum('stat-disp', r.disponibles);
+          animarNum('stat-agot', r.agotados);
+        }
       } catch {
         document.getElementById('stat-total').textContent = '—';
       }
@@ -957,7 +981,21 @@
       }
     }
 
-    // SUBMIT del formulario (en fase 1: solo simulamos)
+    // Convertir Blob a Base64
+    function blobABase64(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          // quitar el prefijo "data:image/jpeg;base64,"
+          const result = reader.result;
+          resolve(result.substring(result.indexOf(',') + 1));
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    // SUBMIT del formulario — envía al backend
     document.getElementById('form-producto').addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -966,23 +1004,52 @@
         return;
       }
 
+      const s = getSesion();
+      if (!s || !s.token) {
+        toast('Sesión expirada. Inicia sesión de nuevo.', 'error');
+        cerrarSesion();
+        return;
+      }
+
       const btn = document.getElementById('btn-guardar');
       const btnTxt = document.getElementById('btn-guardar-texto');
       btn.disabled = true;
       btnTxt.textContent = 'Guardando...';
 
-      // ⚠️ FASE 1: simulación. En la siguiente fase aquí enviamos a Apps Script.
-      await new Promise(r => setTimeout(r, 1500));
+      try {
+        // 1) imagen a base64
+        const imagenBase64 = await blobABase64(imagenBlob);
 
-      toast('✅ Producto guardado (modo demo — falta conectar backend)', 'success');
+        // 2) enviar al backend
+        const r = await llamarBackend({
+          accion: 'agregar_producto',
+          token: s.token,
+          producto:  document.getElementById('f-titulo').value.trim(),
+          precio:    document.getElementById('f-precio').value.trim(),
+          categoria: document.getElementById('f-categoria').value,
+          estado:    document.getElementById('f-estado').value,
+          imagenBase64: imagenBase64
+        });
 
-      btn.disabled = false;
-      btnTxt.textContent = 'Guardar producto';
-
-      // limpiar y volver al dashboard
-      document.getElementById('form-producto').reset();
-      quitarImagen();
-      setTimeout(() => irA('dashboard'), 800);
+        if (r.ok) {
+          toast('✅ Producto agregado al catálogo', 'success');
+          document.getElementById('form-producto').reset();
+          quitarImagen();
+          setTimeout(() => { irA('dashboard'); cargarStats(); }, 800);
+        } else {
+          if (r.error && r.error.includes('Sesión inválida')) {
+            toast('Sesión expirada', 'error');
+            cerrarSesion();
+          } else {
+            toast('Error: ' + (r.error || 'desconocido'), 'error');
+          }
+        }
+      } catch (err) {
+        toast('Error de conexión: ' + err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btnTxt.textContent = 'Guardar producto';
+      }
     });
 
     // ═══════════════════════════════════════
