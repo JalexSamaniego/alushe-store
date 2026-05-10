@@ -36,6 +36,124 @@
     input, select, textarea { font-family: inherit; }
 
 
+
+    /* ════════════════════════════════════════
+       VISTA SINCRONIZACIÓN
+    ════════════════════════════════════════ */
+    .sync-instrucciones {
+      background: var(--ink);
+      border-radius: var(--r-lg);
+      padding: 20px;
+      margin-bottom: 20px;
+      color: var(--cream);
+    }
+    .sync-instrucciones h3 {
+      font-size: 14px; font-weight: 800;
+      margin-bottom: 12px; color: white;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .sync-paso {
+      display: flex; gap: 12px; align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .sync-paso:last-child { margin-bottom: 0; }
+    .sync-num {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 800;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .sync-paso-txt {
+      font-size: 12px; font-weight: 500;
+      color: rgba(246,245,202,0.85); line-height: 1.5;
+    }
+    .sync-paso-txt code {
+      background: rgba(255,255,255,0.12);
+      padding: 2px 6px; border-radius: 4px;
+      font-size: 11px; font-family: monospace;
+      color: var(--cream);
+    }
+    .sync-copy-btn {
+      width: 100%; margin-top: 12px;
+      background: rgba(255,255,255,0.12);
+      color: var(--cream); border-radius: 8px;
+      padding: 10px; font-size: 12px; font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: background .15s;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .sync-copy-btn:hover { background: rgba(255,255,255,0.2); }
+
+    /* Historial */
+    .historial-header {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 12px;
+    }
+    .historial-titulo {
+      font-size: 13px; font-weight: 800; color: var(--ink);
+    }
+    .btn-refresh {
+      font-size: 11px; font-weight: 700;
+      color: var(--ink-mid); background: var(--bg);
+      border: 1px solid var(--line); border-radius: 8px;
+      padding: 5px 10px; transition: all .15s;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .btn-refresh:hover { background: var(--line); }
+
+    .sync-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: var(--r);
+      padding: 14px 16px;
+      margin-bottom: 8px;
+    }
+    .sync-card-header {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 10px;
+    }
+    .sync-fecha {
+      font-size: 12px; font-weight: 700; color: var(--ink);
+    }
+    .sync-hora {
+      font-size: 11px; color: var(--ink-lt); font-weight: 500;
+    }
+    .sync-estado {
+      font-size: 10px; font-weight: 800;
+      padding: 3px 8px; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .sync-estado.ok    { background: #e8f8ef; color: #1a9c45; }
+    .sync-estado.error { background: #fff0f3; color: var(--red); }
+
+    .sync-stats {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .sync-stat {
+      text-align: center;
+      background: var(--bg);
+      border-radius: 8px; padding: 8px 4px;
+    }
+    .sync-stat-num {
+      font-size: 16px; font-weight: 800; color: var(--ink);
+      line-height: 1;
+    }
+    .sync-stat-num.verde  { color: var(--green); }
+    .sync-stat-num.naranja{ color: #f07030; }
+    .sync-stat-num.rojo   { color: var(--red); }
+    .sync-stat-label {
+      font-size: 9px; font-weight: 600; color: var(--ink-lt);
+      margin-top: 3px; text-transform: uppercase; letter-spacing: 0.3px;
+    }
+
+    .historial-vacio {
+      text-align: center; padding: 32px;
+      color: var(--ink-lt); font-size: 13px; font-weight: 600;
+    }
+    .historial-vacio-emoji { font-size: 32px; margin-bottom: 8px; }
+
     /* ════════════════════════════════════════
        GESTIONAR PRODUCTOS
     ════════════════════════════════════════ */
@@ -877,7 +995,7 @@
           <span class="accion-secundaria-flecha">›</span>
         </button>
 
-        <button class="accion-secundaria" onclick="alert('Próximamente — Fase 3')">
+        <button class="accion-secundaria" onclick="irASync()">
           <div class="accion-secundaria-izq">
             <div class="accion-secundaria-icono">🤖</div>
             <div>Sincronizar con Facebook</div>
@@ -1046,6 +1164,59 @@
         </form>
       </section>
 
+
+
+      <!-- ───── SINCRONIZAR CON FACEBOOK ───── -->
+      <section class="vista" id="vista-sync">
+        <h1 class="titulo-vista">Sincronizar</h1>
+        <p class="subtitulo-vista">Mantén el catálogo actualizado con Facebook Marketplace</p>
+
+        <!-- Instrucciones -->
+        <div class="sync-instrucciones">
+          <h3>🤖 Cómo sincronizar</h3>
+          <div class="sync-paso">
+            <div class="sync-num">1</div>
+            <div class="sync-paso-txt">Abre <strong>CMD</strong> en tu computadora (búscalo como "Símbolo del sistema")</div>
+          </div>
+          <div class="sync-paso">
+            <div class="sync-num">2</div>
+            <div class="sync-paso-txt">Navega a la carpeta del script:<br>
+              <code>cd C:\AlusheStore\Scripts\dist</code>
+            </div>
+          </div>
+          <div class="sync-paso">
+            <div class="sync-num">3</div>
+            <div class="sync-paso-txt">Ejecuta el script:<br>
+              <code>python script_alushe_git.py</code>
+            </div>
+          </div>
+          <div class="sync-paso">
+            <div class="sync-num">4</div>
+            <div class="sync-paso-txt">Inicia sesión en Facebook si te lo pide, navega a Marketplace → Tus ventas y presiona <strong>ENTER</strong> en la terminal</div>
+          </div>
+          <div class="sync-paso">
+            <div class="sync-num">5</div>
+            <div class="sync-paso-txt">Al terminar recibirás una <strong>notificación por WhatsApp</strong> 📱 y el historial se actualizará aquí automáticamente</div>
+          </div>
+          <button class="sync-copy-btn" onclick="copiarComando()">
+            📋 Copiar comando
+          </button>
+        </div>
+
+        <!-- Historial -->
+        <div class="historial-header">
+          <div class="historial-titulo">Historial de sincronizaciones</div>
+          <button class="btn-refresh" onclick="cargarHistorial()">
+            🔄 Actualizar
+          </button>
+        </div>
+        <div id="historial-lista">
+          <div class="historial-vacio">
+            <div class="historial-vacio-emoji">⏳</div>
+            Cargando historial...
+          </div>
+        </div>
+      </section>
 
       <!-- ───── GESTIONAR PRODUCTOS ───── -->
       <section class="vista" id="vista-gestionar">
@@ -1659,6 +1830,93 @@
       });
     });
 
+
+
+    // ═══════════════════════════════════════
+    // SINCRONIZACIÓN — Vista y Historial
+    // ═══════════════════════════════════════
+    const COMANDO_SYNC = 'cd C:\\AlusheStore\\Scripts\\dist && python script_alushe_git.py';
+
+    function copiarComando() {
+      navigator.clipboard.writeText(COMANDO_SYNC).then(() => {
+        toast('📋 Comando copiado al portapapeles', 'success');
+      }).catch(() => {
+        toast('No se pudo copiar. Cópialo manualmente.', 'error');
+      });
+    }
+
+    async function irASync() {
+      irA('sync');
+      await cargarHistorial();
+    }
+
+    async function cargarHistorial() {
+      const lista = document.getElementById('historial-lista');
+      lista.innerHTML = '<div class="historial-vacio"><div class="historial-vacio-emoji">⏳</div>Cargando...</div>';
+
+      try {
+        const s = getSesion();
+        const r = await llamarBackend({ accion: 'obtener_historial', token: s.token });
+        if (!r.ok) throw new Error(r.error);
+
+        if (!r.historial.length) {
+          lista.innerHTML = `<div class="historial-vacio">
+            <div class="historial-vacio-emoji">🤖</div>
+            Aún no hay sincronizaciones registradas.<br>
+            <span style="font-size:11px;margin-top:4px;display:block;">Corre el script y aparecerá aquí.</span>
+          </div>`;
+          return;
+        }
+
+        lista.innerHTML = r.historial.map(h => {
+          const esError = h.estado !== 'OK';
+          // Formatear fecha legible
+          let fechaLeg = h.fecha;
+          try {
+            const [y,m,d] = h.fecha.split('-');
+            const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+            fechaLeg = `${d} ${meses[parseInt(m)-1]} ${y}`;
+          } catch {}
+
+          return `
+          <div class="sync-card">
+            <div class="sync-card-header">
+              <div>
+                <div class="sync-fecha">${fechaLeg}</div>
+                <div class="sync-hora">🕒 ${h.hora}</div>
+              </div>
+              <div class="sync-estado ${esError ? 'error' : 'ok'}">
+                ${esError ? '⚠️ Error' : '✓ OK'}
+              </div>
+            </div>
+            <div class="sync-stats">
+              <div class="sync-stat">
+                <div class="sync-stat-num verde">${h.nuevos}</div>
+                <div class="sync-stat-label">Nuevos</div>
+              </div>
+              <div class="sync-stat">
+                <div class="sync-stat-num naranja">${h.actualizados}</div>
+                <div class="sync-stat-label">Actualizados</div>
+              </div>
+              <div class="sync-stat">
+                <div class="sync-stat-num rojo">${h.eliminados}</div>
+                <div class="sync-stat-label">Eliminados</div>
+              </div>
+              <div class="sync-stat">
+                <div class="sync-stat-num">${h.total}</div>
+                <div class="sync-stat-label">Total</div>
+              </div>
+            </div>
+          </div>`;
+        }).join('');
+
+      } catch (err) {
+        lista.innerHTML = `<div class="historial-vacio">
+          <div class="historial-vacio-emoji">⚠️</div>
+          Error al cargar historial: ${err.message}
+        </div>`;
+      }
+    }
 
     // ═══════════════════════════════════════
     // GESTIONAR PRODUCTOS — Estado
