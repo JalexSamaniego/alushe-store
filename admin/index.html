@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
-  <title>Admin · Alushe Store</title>
+  <title>Admin Â· Alushe Store</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -37,9 +37,9 @@
 
 
 
-    /* ════════════════════════════════════════
-       VISTA SINCRONIZACIÓN
-    ════════════════════════════════════════ */
+    /* ââââââââââââââââââââââââââââââââââââââââ
+       VISTA SINCRONIZACIÃN
+    ââââââââââââââââââââââââââââââââââââââââ */
     .sync-instrucciones {
       background: var(--ink);
       border-radius: var(--r-lg);
@@ -154,9 +154,9 @@
     }
     .historial-vacio-emoji { font-size: 32px; margin-bottom: 8px; }
 
-    /* ════════════════════════════════════════
+    /* ââââââââââââââââââââââââââââââââââââââââ
        GESTIONAR PRODUCTOS
-    ════════════════════════════════════════ */
+    ââââââââââââââââââââââââââââââââââââââââ */
     .buscador-admin {
       width: 100%; padding: 11px 14px 11px 38px;
       border: 1.5px solid var(--line);
@@ -264,7 +264,7 @@
     .prod-btn:hover { background: var(--line); }
     .prod-btn.danger:hover { background: #fff0f3; border-color: var(--red); }
 
-    /* Switch estado rápido */
+    /* Switch estado rÃ¡pido */
     .estado-switch {
       position: relative; display: inline-block;
       width: 34px; height: 19px; flex-shrink: 0;
@@ -383,9 +383,9 @@
       color: var(--ink-lt); font-size: 13px; font-weight: 600;
     }
 
-    /* ════════════════════════════════════════
+    /* ââââââââââââââââââââââââââââââââââââââââ
        LOGIN
-    ════════════════════════════════════════ */
+    ââââââââââââââââââââââââââââââââââââââââ */
     .login-screen {
       min-height: 100vh;
       display: flex; align-items: center; justify-content: center;
@@ -447,9 +447,9 @@
       margin-top: 10px; font-weight: 500;
     }
 
-    /* ════════════════════════════════════════
+    /* ââââââââââââââââââââââââââââââââââââââââ
        APP LAYOUT
-    ════════════════════════════════════════ */
+    ââââââââââââââââââââââââââââââââââââââââ */
     .app { display: none; }
     .app.activo { display: block; }
 
@@ -516,9 +516,9 @@
       padding: 20px 16px 100px;
     }
 
-    /* ════════════════════════════════════════
+    /* ââââââââââââââââââââââââââââââââââââââââ
        VISTAS
-    ════════════════════════════════════════ */
+    ââââââââââââââââââââââââââââââââââââââââ */
     .vista { display: none; }
     .vista.activa { display: block; animation: fadeIn .25s ease; }
     @keyframes fadeIn {
@@ -536,7 +536,7 @@
       font-weight: 500; margin-bottom: 24px;
     }
 
-    /* ── DASHBOARD ── */
+    /* ââ DASHBOARD ââ */
     .stats-grid {
       display: grid; grid-template-columns: repeat(3, 1fr);
       gap: 10px; margin-bottom: 20px;
@@ -601,7 +601,7 @@
       margin: 24px 0 12px;
     }
 
-    /* ── FORMULARIO NUEVO PRODUCTO ── */
+    /* ââ FORMULARIO NUEVO PRODUCTO ââ */
     .form-card {
       background: white;
       border: 1px solid var(--line);
@@ -677,7 +677,7 @@
     .switch input:checked + .switch-slider { background: var(--green); }
     .switch input:checked + .switch-slider:before { transform: translateX(18px); }
 
-    /* Multipack grid: cant × precio */
+    /* Multipack grid: cant Ã precio */
     .multipack-grid {
       display: grid;
       grid-template-columns: 70px 24px 1fr;
@@ -833,7 +833,7 @@
       font-size: 14px; font-weight: 800; color: #000;
     }
 
-    /* botones de acción del form */
+    /* botones de acciÃ³n del form */
     .form-acciones {
       display: flex; gap: 10px; margin-top: 20px;
     }
@@ -858,7 +858,7 @@
     }
     .btn-cancelar:hover { border-color: var(--ink-lt); }
 
-    /* toast notificación */
+    /* toast notificaciÃ³n */
     .toast {
       position: fixed; bottom: 24px; left: 50%;
       transform: translateX(-50%) translateY(120%);
@@ -885,7 +885,7 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* placeholder de "próximamente" */
+    /* placeholder de "prÃ³ximamente" */
     .proximamente {
       background: white;
       border: 2px dashed var(--line);
@@ -909,21 +909,152 @@
       .stat-tile { padding: 10px 6px; }
       .stat-tile-num { font-size: 18px; }
     }
+  
+    /* ════════════════════════════════════════
+       FASE 4 — BANNERS Y PUNTOS DE ENTREGA
+    ════════════════════════════════════════ */
+    .banner-editor-card {
+      background: white;
+      border: 1.5px solid var(--line);
+      border-radius: var(--r-lg);
+      padding: 16px;
+      margin-bottom: 14px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .banner-editor-card:hover { border-color: #bbb; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+    .banner-editor-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--ink); color: var(--cream);
+      font-size: 11px; font-weight: 800;
+      margin-right: 8px; flex-shrink: 0;
+    }
+    .banner-editor-header {
+      display: flex; align-items: center;
+      margin-bottom: 14px;
+      font-size: 13px; font-weight: 800; color: var(--ink);
+    }
+    .banner-editor-collapse {
+      margin-left: auto;
+      background: var(--bg); border: 1px solid var(--line);
+      border-radius: 8px; padding: 4px 10px;
+      font-size: 11px; font-weight: 700; color: var(--ink-lt);
+      transition: background .15s;
+    }
+    .banner-editor-collapse:hover { background: var(--line); }
+    .banner-preview-live {
+      border-radius: 12px; padding: 14px 16px;
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 14px; position: relative; overflow: hidden;
+      transition: all .3s ease;
+    }
+    .banner-preview-live::before {
+      content: ''; position: absolute;
+      top: -30px; right: -30px;
+      width: 100px; height: 100px; border-radius: 50%;
+      background: rgba(255,255,255,.12); pointer-events: none;
+    }
+    .banner-preview-live.promo { background: linear-gradient(120deg,#1a8f3f 0%,#25D366 100%); color: white; }
+    .banner-preview-live.aviso { background: linear-gradient(120deg,#2c3e6b 0%,#4a6fa5 100%); color: white; }
+    .banner-preview-live.nuevo { background: linear-gradient(120deg,#b8400a 0%,#f07030 100%); color: white; }
+    .banner-preview-emoji { font-size: 28px; flex-shrink: 0; }
+    .banner-preview-texto { flex: 1; }
+    .banner-preview-titulo { font-size: 13px; font-weight: 800; line-height: 1.3; margin-bottom: 2px; }
+    .banner-preview-sub { font-size: 11px; font-weight: 600; opacity: .85; }
+    .banner-preview-tag {
+      background: rgba(255,255,255,.22);
+      font-size: 10px; font-weight: 800;
+      padding: 4px 10px; border-radius: 20px;
+      white-space: nowrap; flex-shrink: 0;
+      text-transform: uppercase; letter-spacing: .5px;
+    }
+    .preview-label {
+      font-size: 9px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: var(--ink-lt); margin-bottom: 6px;
+    }
+    .punto-card {
+      background: white; border: 1.5px solid var(--line);
+      border-radius: var(--r); padding: 14px; margin-bottom: 10px;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .punto-card:hover { border-color: #bbb; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
+    .punto-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .punto-icono {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--cream); display: flex;
+      align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .punto-info { flex: 1; min-width: 0; }
+    .punto-nombre { font-size: 13px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .punto-hora { font-size: 11px; color: var(--ink-lt); font-weight: 600; margin-top: 2px; }
+    .punto-acciones { display: flex; gap: 6px; }
+    .punto-btn {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; background: var(--bg);
+      border: 1px solid var(--line);
+      transition: background .15s, border-color .15s;
+    }
+    .punto-btn:hover { background: var(--line); }
+    .punto-btn.danger:hover { background: #fff0f3; border-color: var(--red); }
+    .punto-maps-link {
+      font-size: 11px; font-weight: 600; color: #4a6fa5;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
+    }
+    .punto-maps-link:hover { text-decoration: underline; }
+    .punto-form {
+      background: var(--cream); border-radius: var(--r);
+      padding: 16px; margin-bottom: 14px;
+      border: 1.5px solid var(--cream-d); display: none;
+    }
+    .punto-form.visible { display: block; }
+    .punto-form-titulo {
+      font-size: 13px; font-weight: 800; color: var(--ink);
+      margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .btn-add-punto {
+      width: 100%; padding: 13px; background: white; color: var(--ink);
+      border: 2px dashed var(--line); border-radius: var(--r);
+      font-size: 13px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: all .2s; margin-top: 6px;
+    }
+    .btn-add-punto:hover { border-color: var(--green); color: var(--green); background: #f0fdf5; }
+    .code-export { background: var(--ink); border-radius: var(--r); padding: 14px 16px; margin-top: 16px; }
+    .code-export-label {
+      font-size: 10px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; color: rgba(246,245,202,.6); margin-bottom: 8px;
+    }
+    .code-export pre {
+      font-size: 10px; color: var(--cream); font-family: monospace;
+      white-space: pre-wrap; word-break: break-all;
+      max-height: 200px; overflow-y: auto; line-height: 1.5;
+    }
+    .code-copy-btn {
+      margin-top: 10px; width: 100%;
+      background: rgba(255,255,255,.12); color: var(--cream);
+      border-radius: 8px; padding: 9px; font-size: 12px; font-weight: 700;
+      border: 1px solid rgba(255,255,255,.2); transition: background .15s;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .code-copy-btn:hover { background: rgba(255,255,255,.22); }
+
   </style>
 </head>
 <body>
 
-  <!-- ════════════════════════════════════════
+  <!-- ââââââââââââââââââââââââââââââââââââââââ
        LOGIN
-  ═══════════════════════════════════════ -->
+  âââââââââââââââââââââââââââââââââââââââ -->
   <div class="login-screen" id="login-screen">
     <div class="login-card">
       <img src="/assets/images/favicon.png" alt="Alushe Store" class="login-logo">
-      <h1>Panel de Administración</h1>
-      <p>Ingresa tu contraseña para continuar</p>
+      <h1>Panel de AdministraciÃ³n</h1>
+      <p>Ingresa tu contraseÃ±a para continuar</p>
       <form id="login-form" autocomplete="off">
         <input type="password" id="login-pwd" class="login-input"
-               placeholder="••••••••" autocomplete="current-password" required>
+               placeholder="â¢â¢â¢â¢â¢â¢â¢â¢" autocomplete="current-password" required>
         <button type="submit" class="login-btn" id="login-btn">Entrar</button>
         <div class="login-error" id="login-error"></div>
         <div class="login-bloqueo" id="login-bloqueo"></div>
@@ -931,9 +1062,9 @@
     </div>
   </div>
 
-  <!-- ════════════════════════════════════════
+  <!-- ââââââââââââââââââââââââââââââââââââââââ
        APP
-  ═══════════════════════════════════════ -->
+  âââââââââââââââââââââââââââââââââââââââ -->
   <div class="app" id="app">
     <header class="app-header">
       <div class="app-brand">
@@ -946,9 +1077,9 @@
       <div style="display:flex;align-items:center;">
         <div class="app-reloj">
           <div class="app-reloj-hora" id="reloj-hora">--:--</div>
-          <div class="app-reloj-fecha" id="reloj-fecha">—</div>
+          <div class="app-reloj-fecha" id="reloj-fecha">â</div>
         </div>
-        <a href="https://alushe.store/catalogo" target="_blank" class="ver-cat" title="Ver catálogo público">
+        <a href="https://alushe.store/catalogo" target="_blank" class="ver-cat" title="Ver catÃ¡logo pÃºblico">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
           Ver web
         </a>
@@ -958,22 +1089,22 @@
 
     <main>
 
-      <!-- ───── DASHBOARD ───── -->
+      <!-- âââââ DASHBOARD âââââ -->
       <section class="vista activa" id="vista-dashboard">
-        <h1 class="titulo-vista">Hola 👋</h1>
-        <p class="subtitulo-vista">¿Qué te gustaría hacer hoy?</p>
+        <h1 class="titulo-vista">Hola ð</h1>
+        <p class="subtitulo-vista">Â¿QuÃ© te gustarÃ­a hacer hoy?</p>
 
         <div class="stats-grid">
           <div class="stat-tile">
-            <div class="stat-tile-num" id="stat-total">—</div>
+            <div class="stat-tile-num" id="stat-total">â</div>
             <div class="stat-tile-label">Total</div>
           </div>
           <div class="stat-tile disponibles">
-            <div class="stat-tile-num" id="stat-disp">—</div>
+            <div class="stat-tile-num" id="stat-disp">â</div>
             <div class="stat-tile-label">Disponibles</div>
           </div>
           <div class="stat-tile agotados">
-            <div class="stat-tile-num" id="stat-agot">—</div>
+            <div class="stat-tile-num" id="stat-agot">â</div>
             <div class="stat-tile-label">Agotados</div>
           </div>
         </div>
@@ -985,33 +1116,33 @@
           Nuevo producto
         </button>
 
-        <div class="seccion-label">Más opciones</div>
+        <div class="seccion-label">MÃ¡s opciones</div>
 
         <button class="accion-secundaria" onclick="irAGestionar()">
           <div class="accion-secundaria-izq">
-            <div class="accion-secundaria-icono">📋</div>
+            <div class="accion-secundaria-icono">ð</div>
             <div>Gestionar productos</div>
           </div>
-          <span class="accion-secundaria-flecha">›</span>
+          <span class="accion-secundaria-flecha">âº</span>
         </button>
 
         <button class="accion-secundaria" onclick="irASync()">
           <div class="accion-secundaria-izq">
-            <div class="accion-secundaria-icono">🤖</div>
+            <div class="accion-secundaria-icono">ð¤</div>
             <div>Sincronizar con Facebook</div>
           </div>
-          <span class="accion-secundaria-flecha">›</span>
+          <span class="accion-secundaria-flecha">âº</span>
         </button>
 
-        <button class="accion-secundaria" onclick="alert('Próximamente — Fase 4')">
+        <button class="accion-secundaria" onclick="irA('banners')">
           <div class="accion-secundaria-izq">
-            <div class="accion-secundaria-icono">📢</div>
+            <div class="accion-secundaria-icono">🍪</div>
             <div>Banners y promociones</div>
           </div>
           <span class="accion-secundaria-flecha">›</span>
         </button>
 
-        <button class="accion-secundaria" onclick="alert('Próximamente — Fase 4')">
+        <button class="accion-secundaria" onclick="irA('entrega')">
           <div class="accion-secundaria-izq">
             <div class="accion-secundaria-icono">📍</div>
             <div>Puntos de entrega</div>
@@ -1020,18 +1151,18 @@
         </button>
       </section>
 
-      <!-- ───── NUEVO PRODUCTO ───── -->
+      <!-- âââââ NUEVO PRODUCTO âââââ -->
       <section class="vista" id="vista-nuevo">
         <h1 class="titulo-vista">Nuevo producto</h1>
-        <p class="subtitulo-vista">Llena los datos y guárdalo en el catálogo</p>
+        <p class="subtitulo-vista">Llena los datos y guÃ¡rdalo en el catÃ¡logo</p>
 
         <form id="form-producto" class="form-card" autocomplete="off">
 
-          <!-- TÍTULO -->
+          <!-- TÃTULO -->
           <div class="field">
-            <label class="field-label">Título <span class="req">*</span></label>
+            <label class="field-label">TÃ­tulo <span class="req">*</span></label>
             <input type="text" id="f-titulo" class="field-input"
-                   placeholder="Ej. Audífonos Bluetooth Negros" maxlength="120" required>
+                   placeholder="Ej. AudÃ­fonos Bluetooth Negros" maxlength="120" required>
           </div>
 
           <!-- PRECIO -->
@@ -1057,7 +1188,7 @@
                 <input type="text" inputmode="numeric" id="f-precio" class="field-input precio-input"
                        placeholder="80" maxlength="6">
               </div>
-              <div class="field-hint">Solo escribe el número.</div>
+              <div class="field-hint">Solo escribe el nÃºmero.</div>
             </div>
 
             <!-- Modo multipack -->
@@ -1068,7 +1199,7 @@
                          placeholder="3" maxlength="2">
                   <div class="multipack-label">Cantidad</div>
                 </div>
-                <div class="multipack-equis">×</div>
+                <div class="multipack-equis">Ã</div>
                 <div>
                   <div class="precio-wrap">
                     <span class="precio-prefijo">MX$</span>
@@ -1082,16 +1213,16 @@
             </div>
           </div>
 
-          <!-- CATEGORÍA -->
+          <!-- CATEGORÃA -->
           <div class="field">
-            <label class="field-label">Categoría <span class="req">*</span></label>
+            <label class="field-label">CategorÃ­a <span class="req">*</span></label>
             <select id="f-categoria" class="field-select" required>
-              <option value="">Selecciona una categoría</option>
+              <option value="">Selecciona una categorÃ­a</option>
               <option value="Ropa y accesorios">Ropa y accesorios</option>
-              <option value="Electrónica">Electrónica</option>
+              <option value="ElectrÃ³nica">ElectrÃ³nica</option>
               <option value="Hogar y cocina">Hogar y cocina</option>
               <option value="Bolsas y carteras">Bolsas y carteras</option>
-              <option value="Juguetes y bebés">Juguetes y bebés</option>
+              <option value="Juguetes y bebÃ©s">Juguetes y bebÃ©s</option>
               <option value="Deporte y fitness">Deporte y fitness</option>
               <option value="Belleza y cuidado personal">Belleza y cuidado personal</option>
               <option value="Otros">Otros</option>
@@ -1112,15 +1243,15 @@
             <label class="field-label">Imagen <span class="req">*</span></label>
 
             <div class="img-tabs">
-              <button type="button" class="img-tab activo" id="tab-archivo" onclick="cambiarTab('archivo')">📷 Subir foto</button>
-              <button type="button" class="img-tab" id="tab-url" onclick="cambiarTab('url')">🔗 Pegar URL</button>
+              <button type="button" class="img-tab activo" id="tab-archivo" onclick="cambiarTab('archivo')">ð· Subir foto</button>
+              <button type="button" class="img-tab" id="tab-url" onclick="cambiarTab('url')">ð Pegar URL</button>
             </div>
 
             <!-- archivo -->
             <div id="modo-archivo">
               <div class="file-input-wrap">
                 <input type="file" id="f-archivo" accept="image/*" class="file-input-real">
-                <div class="file-input-fake">📁 Toca para elegir foto</div>
+                <div class="file-input-fake">ð Toca para elegir foto</div>
               </div>
             </div>
 
@@ -1128,27 +1259,27 @@
             <div id="modo-url" style="display:none;">
               <input type="url" id="f-url" class="field-input"
                      placeholder="https://...">
-              <div class="field-hint">Pega la URL de una imagen pública</div>
+              <div class="field-hint">Pega la URL de una imagen pÃºblica</div>
             </div>
 
             <!-- preview cuadrado -->
             <div class="img-preview-area" id="img-preview" style="margin-top:14px;">
               <canvas class="img-preview-canvas" id="img-canvas" width="600" height="600"></canvas>
               <div class="img-preview-placeholder">
-                <div class="img-preview-icon">🖼️</div>
-                <div class="img-preview-text">La imagen se recortará a cuadrado</div>
+                <div class="img-preview-icon">ð¼ï¸</div>
+                <div class="img-preview-text">La imagen se recortarÃ¡ a cuadrado</div>
               </div>
-              <button type="button" class="img-quitar" onclick="quitarImagen()" title="Quitar">✕</button>
+              <button type="button" class="img-quitar" onclick="quitarImagen()" title="Quitar">â</button>
             </div>
           </div>
 
           <!-- VISTA PREVIA DE LA CARD -->
           <div class="card-preview-wrap" id="card-preview-wrap" style="display:none;">
-            <div class="card-preview-title">Así se verá en el catálogo</div>
+            <div class="card-preview-title">AsÃ­ se verÃ¡ en el catÃ¡logo</div>
             <div class="card-preview">
-              <div class="card-preview-img" id="prev-img">🛍️</div>
+              <div class="card-preview-img" id="prev-img">ðï¸</div>
               <div class="card-preview-cat" id="prev-cat" style="display:none;">Cat</div>
-              <div class="card-preview-title-prod" id="prev-titulo">Título del producto</div>
+              <div class="card-preview-title-prod" id="prev-titulo">TÃ­tulo del producto</div>
               <div class="card-preview-precio" id="prev-precio">MX$0</div>
             </div>
           </div>
@@ -1166,17 +1297,17 @@
 
 
 
-      <!-- ───── SINCRONIZAR CON FACEBOOK ───── -->
+      <!-- âââââ SINCRONIZAR CON FACEBOOK âââââ -->
       <section class="vista" id="vista-sync">
         <h1 class="titulo-vista">Sincronizar</h1>
-        <p class="subtitulo-vista">Mantén el catálogo actualizado con Facebook Marketplace</p>
+        <p class="subtitulo-vista">MantÃ©n el catÃ¡logo actualizado con Facebook Marketplace</p>
 
         <!-- Instrucciones -->
         <div class="sync-instrucciones">
-          <h3>🤖 Cómo sincronizar</h3>
+          <h3>ð¤ CÃ³mo sincronizar</h3>
           <div class="sync-paso">
             <div class="sync-num">1</div>
-            <div class="sync-paso-txt">Abre <strong>CMD</strong> en tu computadora (búscalo como "Símbolo del sistema")</div>
+            <div class="sync-paso-txt">Abre <strong>CMD</strong> en tu computadora (bÃºscalo como "SÃ­mbolo del sistema")</div>
           </div>
           <div class="sync-paso">
             <div class="sync-num">2</div>
@@ -1192,14 +1323,14 @@
           </div>
           <div class="sync-paso">
             <div class="sync-num">4</div>
-            <div class="sync-paso-txt">Inicia sesión en Facebook si te lo pide, navega a Marketplace → Tus ventas y presiona <strong>ENTER</strong> en la terminal</div>
+            <div class="sync-paso-txt">Inicia sesiÃ³n en Facebook si te lo pide, navega a Marketplace â Tus ventas y presiona <strong>ENTER</strong> en la terminal</div>
           </div>
           <div class="sync-paso">
             <div class="sync-num">5</div>
-            <div class="sync-paso-txt">Al terminar recibirás una <strong>notificación por WhatsApp</strong> 📱 y el historial se actualizará aquí automáticamente</div>
+            <div class="sync-paso-txt">Al terminar recibirÃ¡s una <strong>notificaciÃ³n por WhatsApp</strong> ð± y el historial se actualizarÃ¡ aquÃ­ automÃ¡ticamente</div>
           </div>
           <button class="sync-copy-btn" onclick="copiarComando()">
-            📋 Copiar comando
+            ð Copiar comando
           </button>
         </div>
 
@@ -1207,25 +1338,25 @@
         <div class="historial-header">
           <div class="historial-titulo">Historial de sincronizaciones</div>
           <button class="btn-refresh" onclick="cargarHistorial()">
-            🔄 Actualizar
+            ð Actualizar
           </button>
         </div>
         <div id="historial-lista">
           <div class="historial-vacio">
-            <div class="historial-vacio-emoji">⏳</div>
+            <div class="historial-vacio-emoji">â³</div>
             Cargando historial...
           </div>
         </div>
       </section>
 
-      <!-- ───── GESTIONAR PRODUCTOS ───── -->
+      <!-- âââââ GESTIONAR PRODUCTOS âââââ -->
       <section class="vista" id="vista-gestionar">
         <h1 class="titulo-vista">Gestionar productos</h1>
         <p class="subtitulo-vista" id="gest-subtitulo">Cargando inventario...</p>
 
         <!-- Buscador -->
         <div class="buscador-wrap">
-          <span class="buscador-ico">🔍</span>
+          <span class="buscador-ico">ð</span>
           <input type="text" id="gest-buscador" class="buscador-admin"
                  placeholder="Buscar producto..." oninput="filtrarLista()">
         </div>
@@ -1239,21 +1370,102 @@
 
         <!-- Header lista -->
         <div class="lista-header">
-          <div class="lista-contador" id="gest-contador">—</div>
+          <div class="lista-contador" id="gest-contador">â</div>
           <button class="btn-lote" id="btn-modo-lote" onclick="toggleModoLote()">Seleccionar</button>
         </div>
 
         <!-- Lista de productos -->
-        <div id="gest-lista"><div class="cargando-lista">⏳ Cargando...</div></div>
+        <div id="gest-lista"><div class="cargando-lista">â³ Cargando...</div></div>
 
         <!-- Barra de acciones en lote -->
         <div class="barra-lote" id="barra-lote">
           <div class="barra-lote-txt" id="barra-lote-txt">0 seleccionados</div>
           <div class="barra-lote-acciones">
-            <button class="barra-lote-btn disponible" onclick="accionLote('Disponible')">✓ Disponible</button>
-            <button class="barra-lote-btn agotado"    onclick="accionLote('Agotado')">✕ Agotado</button>
+            <button class="barra-lote-btn disponible" onclick="accionLote('Disponible')">â Disponible</button>
+            <button class="barra-lote-btn agotado"    onclick="accionLote('Agotado')">â Agotado</button>
             <button class="barra-lote-btn cancelar"   onclick="cancelarLote()">Cancelar</button>
           </div>
+        </div>
+      </section>
+
+    
+
+      <!-- ───── BANNERS ───── -->
+      <section class="vista" id="vista-banners">
+        <button onclick="irA('dashboard')" style="display:flex;align-items:center;gap:6px;background:none;border:none;font-size:13px;font-weight:700;color:var(--ink-lt);margin-bottom:16px;padding:0;cursor:pointer;">
+          ← Volver
+        </button>
+        <h1 class="titulo-vista">🖼️ Banners</h1>
+        <p class="subtitulo-vista">Edita los 4 banners del catálogo — sin tocar el HTML</p>
+
+        <div id="banners-lista"></div>
+
+        <div class="code-export" id="banner-code-block" style="display:none;">
+          <div class="code-export-label">
+            <span>📋 HTML GENERADO — PEGAR EN catalogo/index.html (líneas 213–244)</span>
+          </div>
+          <pre id="banner-code-pre"></pre>
+          <button class="code-copy-btn" onclick="copiarBannerHTML()">📋 Copiar HTML</button>
+        </div>
+
+        <div style="margin-top:16px;">
+          <button class="btn-guardar" onclick="generarBannerHTML()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;">
+            📋 Generar HTML para copiar
+          </button>
+        </div>
+      </section>
+
+      <!-- ───── PUNTOS DE ENTREGA ───── -->
+      <section class="vista" id="vista-entrega">
+        <button onclick="irA('dashboard')" style="display:flex;align-items:center;gap:6px;background:none;border:none;font-size:13px;font-weight:700;color:var(--ink-lt);margin-bottom:16px;padding:0;cursor:pointer;">
+          ← Volver
+        </button>
+        <h1 class="titulo-vista">📍 Puntos de entrega</h1>
+        <p class="subtitulo-vista">Gestiona los puntos de entrega sin editar el JSON</p>
+
+        <div class="punto-form" id="punto-form">
+          <div class="punto-form-titulo">
+            <span id="punto-form-titulo-txt">Nuevo punto</span>
+            <button onclick="cerrarPuntoForm()" style="background:none;border:none;font-size:20px;color:var(--ink-lt);cursor:pointer;line-height:1;">×</button>
+          </div>
+          <div class="field">
+            <label class="field-label">Nombre <span class="req">*</span></label>
+            <input type="text" class="field-input" id="pf-nombre" placeholder='Ej: "Oxxo" Av. Principal'>
+          </div>
+          <div class="field">
+            <label class="field-label">Horario <span class="req">*</span></label>
+            <input type="text" class="field-input" id="pf-hora" placeholder="Ej: 5:00 pm">
+          </div>
+          <div class="field">
+            <label class="field-label">Link de Google Maps</label>
+            <input type="url" class="field-input" id="pf-maps" placeholder="https://maps.app.goo.gl/...">
+          </div>
+          <div style="display:flex;gap:10px;margin-top:14px;">
+            <button class="btn-guardar" onclick="guardarPunto()" style="flex:2;display:flex;align-items:center;justify-content:center;gap:6px;">
+              ✓ Guardar punto
+            </button>
+            <button class="btn-cancelar" onclick="cerrarPuntoForm()" style="flex:1;">Cancelar</button>
+          </div>
+        </div>
+
+        <div id="puntos-lista"></div>
+
+        <button class="btn-add-punto" onclick="abrirPuntoForm()">
+          + Agregar punto de entrega
+        </button>
+
+        <div class="code-export" id="punto-code-block" style="display:none;">
+          <div class="code-export-label">
+            <span>📋 JSON GENERADO — PEGAR EN puntos_entrega.json</span>
+          </div>
+          <pre id="punto-code-pre"></pre>
+          <button class="code-copy-btn" onclick="copiarPuntosJSON()">📋 Copiar JSON</button>
+        </div>
+
+        <div style="margin-top:16px;">
+          <button class="btn-guardar" onclick="generarPuntosJSON()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;">
+            📋 Generar JSON para copiar
+          </button>
         </div>
       </section>
 
@@ -1267,16 +1479,16 @@
       <div class="modal-edit-handle"></div>
       <div class="modal-edit-header">
         <div class="modal-edit-titulo">Editar producto</div>
-        <button class="modal-edit-cerrar" onclick="cerrarModalEditDirecto()">✕</button>
+        <button class="modal-edit-cerrar" onclick="cerrarModalEditDirecto()">â</button>
       </div>
 
-      <!-- Imagen actual + opción de cambiar -->
+      <!-- Imagen actual + opciÃ³n de cambiar -->
       <div class="edit-img-row">
         <img id="edit-img-actual" class="edit-img-actual" src="" alt="">
         <div class="edit-img-info">
           <small>IMAGEN ACTUAL</small>
           <button type="button" class="btn-cambiar-img" onclick="document.getElementById('edit-img-file').click()">
-            📷 Cambiar foto
+            ð· Cambiar foto
           </button>
           <input type="file" id="edit-img-file" accept="image/*" style="display:none;">
         </div>
@@ -1284,14 +1496,14 @@
       <div id="edit-img-nueva-wrap" style="display:none; margin-bottom:14px;">
         <canvas id="edit-img-canvas" width="600" height="600"
                 style="width:80px;height:80px;border-radius:10px;object-fit:cover;border:2px solid var(--green);display:block;"></canvas>
-        <div class="field-hint" style="margin-top:4px;">Nueva imagen lista ✅</div>
+        <div class="field-hint" style="margin-top:4px;">Nueva imagen lista â</div>
       </div>
 
       <form id="form-editar" autocomplete="off">
         <input type="hidden" id="edit-fila">
 
         <div class="field">
-          <label class="field-label">Título <span class="req">*</span></label>
+          <label class="field-label">TÃ­tulo <span class="req">*</span></label>
           <input type="text" id="edit-titulo" class="field-input" maxlength="120" required>
         </div>
 
@@ -1320,7 +1532,7 @@
                 <input type="text" inputmode="numeric" id="edit-multi-cant" class="field-input multipack-input" maxlength="2" placeholder="3">
                 <div class="multipack-label">Cantidad</div>
               </div>
-              <div class="multipack-equis">×</div>
+              <div class="multipack-equis">Ã</div>
               <div>
                 <div class="precio-wrap">
                   <span class="precio-prefijo">MX$</span>
@@ -1329,18 +1541,18 @@
                 <div class="multipack-label">Precio total</div>
               </div>
             </div>
-            <div class="field-hint">Vista previa: <strong id="edit-multipack-preview">—</strong></div>
+            <div class="field-hint">Vista previa: <strong id="edit-multipack-preview">â</strong></div>
           </div>
         </div>
 
         <div class="field">
-          <label class="field-label">Categoría</label>
+          <label class="field-label">CategorÃ­a</label>
           <select id="edit-categoria" class="field-select">
             <option value="Ropa y accesorios">Ropa y accesorios</option>
-            <option value="Electrónica">Electrónica</option>
+            <option value="ElectrÃ³nica">ElectrÃ³nica</option>
             <option value="Hogar y cocina">Hogar y cocina</option>
             <option value="Bolsas y carteras">Bolsas y carteras</option>
-            <option value="Juguetes y bebés">Juguetes y bebés</option>
+            <option value="Juguetes y bebÃ©s">Juguetes y bebÃ©s</option>
             <option value="Deporte y fitness">Deporte y fitness</option>
             <option value="Belleza y cuidado personal">Belleza y cuidado personal</option>
             <option value="Otros">Otros</option>
@@ -1371,14 +1583,14 @@
     <div class="modal-edit" style="max-height:auto;">
       <div class="modal-edit-handle"></div>
       <div style="text-align:center; padding:8px 0 20px;">
-        <div style="font-size:40px; margin-bottom:12px;">🗑️</div>
-        <div style="font-size:16px; font-weight:800; color:var(--ink); margin-bottom:8px;">¿Eliminar producto?</div>
-        <div style="font-size:13px; color:var(--ink-lt); font-weight:500; margin-bottom:24px;" id="modal-eliminar-nombre">—</div>
+        <div style="font-size:40px; margin-bottom:12px;">ðï¸</div>
+        <div style="font-size:16px; font-weight:800; color:var(--ink); margin-bottom:8px;">Â¿Eliminar producto?</div>
+        <div style="font-size:13px; color:var(--ink-lt); font-weight:500; margin-bottom:24px;" id="modal-eliminar-nombre">â</div>
         <div style="display:flex; gap:10px;">
           <button class="btn-cancelar" style="flex:1;" onclick="cerrarModalEliminar()">Cancelar</button>
           <button id="btn-confirmar-eliminar" class="btn-guardar" style="flex:1; background:var(--red);"
                   onclick="confirmarEliminar()">
-            Sí, eliminar
+            SÃ­, eliminar
           </button>
         </div>
       </div>
@@ -1389,14 +1601,14 @@
   <div class="toast" id="toast"></div>
 
   <script>
-    // ═══════════════════════════════════════
-    // CONFIGURACIÓN
-    // ═══════════════════════════════════════
+    // âââââââââââââââââââââââââââââââââââââââ
+    // CONFIGURACIÃN
+    // âââââââââââââââââââââââââââââââââââââââ
 
     // URL del backend Apps Script
     const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzAWexJtZkj5Jf56iJg8huX2BAuoaHK3qXHpSK-9xBKXyYySQ1iG-xEGQ7_sM1yG2W4/exec';
 
-    // Sesión local: 24h
+    // SesiÃ³n local: 24h
     const SESION_KEY = 'alushe_admin_sesion';
     const SESION_HORAS = 24;
 
@@ -1405,7 +1617,7 @@
     const BLOQUEO_MIN = 15;
     const RL_KEY = 'alushe_admin_rl';
 
-    // ─── Llamada genérica al backend ────────────
+    // âââ Llamada genÃ©rica al backend ââââââââââââ
     async function llamarBackend(payload) {
       const res = await fetch(BACKEND_URL, {
         method: 'POST',
@@ -1418,9 +1630,9 @@
       return await res.json();
     }
 
-    // ═══════════════════════════════════════
+    // âââââââââââââââââââââââââââââââââââââââ
     // LOGIN + RATE LIMITING (lado cliente, fase 1)
-    // ═══════════════════════════════════════
+    // âââââââââââââââââââââââââââââââââââââââ
 
     function getRL() {
       try { return JSON.parse(sessionStorage.getItem(RL_KEY)) || { intentos: 0, bloqueoHasta: 0 }; }
@@ -1437,7 +1649,7 @@
 
       if (rl.bloqueoHasta > ahora) {
         const min = Math.ceil((rl.bloqueoHasta - ahora) / 60000);
-        bloqueoEl.textContent = `🔒 Bloqueado. Intenta de nuevo en ${min} min.`;
+        bloqueoEl.textContent = `ð Bloqueado. Intenta de nuevo en ${min} min.`;
         btn.disabled = true;
         input.disabled = true;
         setTimeout(actualizarBloqueoUI, 1000);
@@ -1469,7 +1681,7 @@
       document.getElementById('app').classList.remove('activo');
       document.getElementById('login-screen').style.display = 'flex';
       document.getElementById('login-pwd').value = '';
-      // Resetear el botón del login (evita que quede cargando)
+      // Resetear el botÃ³n del login (evita que quede cargando)
       const btn = document.getElementById('login-btn');
       btn.disabled = false;
       btn.textContent = 'Entrar';
@@ -1513,8 +1725,8 @@
               actualizarBloqueoUI();
             } else {
               setRL({ ...rl, intentos });
-              errEl.textContent = (r.error || 'Contraseña incorrecta') +
-                ` · ${MAX_INTENTOS - intentos} intento${MAX_INTENTOS - intentos !== 1 ? 's' : ''} restante${MAX_INTENTOS - intentos !== 1 ? 's' : ''}`;
+              errEl.textContent = (r.error || 'ContraseÃ±a incorrecta') +
+                ` Â· ${MAX_INTENTOS - intentos} intento${MAX_INTENTOS - intentos !== 1 ? 's' : ''} restante${MAX_INTENTOS - intentos !== 1 ? 's' : ''}`;
             }
           }
           btn.disabled = false;
@@ -1522,7 +1734,7 @@
           document.getElementById('login-pwd').value = '';
         }
       } catch (err) {
-        errEl.textContent = 'Error de conexión. Intenta de nuevo.';
+        errEl.textContent = 'Error de conexiÃ³n. Intenta de nuevo.';
         btn.disabled = false;
         btn.textContent = 'Entrar';
       }
@@ -1530,22 +1742,22 @@
 
     document.getElementById('btn-logout').addEventListener('click', cerrarSesion);
 
-    // Verificar sesión al cargar
+    // Verificar sesiÃ³n al cargar
     if (tieneSesionValida()) mostrarApp();
     actualizarBloqueoUI();
 
-    // ═══════════════════════════════════════
-    // NAVEGACIÓN ENTRE VISTAS
-    // ═══════════════════════════════════════
+    // âââââââââââââââââââââââââââââââââââââââ
+    // NAVEGACIÃN ENTRE VISTAS
+    // âââââââââââââââââââââââââââââââââââââââ
     function irA(vista) {
       document.querySelectorAll('.vista').forEach(v => v.classList.remove('activa'));
       document.getElementById('vista-' + vista).classList.add('activa');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // ═══════════════════════════════════════
-    // ESTADÍSTICAS DEL DASHBOARD
-    // ═══════════════════════════════════════
+    // âââââââââââââââââââââââââââââââââââââââ
+    // ESTADÃSTICAS DEL DASHBOARD
+    // âââââââââââââââââââââââââââââââââââââââ
     async function cargarStats() {
       try {
         const s = getSesion();
@@ -1557,7 +1769,7 @@
           animarNum('stat-agot', r.agotados);
         }
       } catch {
-        document.getElementById('stat-total').textContent = '—';
+        document.getElementById('stat-total').textContent = 'â';
       }
     }
 
@@ -1572,9 +1784,9 @@
       })(performance.now());
     }
 
-    // ═══════════════════════════════════════
+    // âââââââââââââââââââââââââââââââââââââââ
     // FORMULARIO NUEVO PRODUCTO
-    // ═══════════════════════════════════════
+    // âââââââââââââââââââââââââââââââââââââââ
     let imagenBlob = null; // imagen procesada (cuadrada)
 
     function cambiarTab(modo) {
@@ -1618,11 +1830,11 @@
       const f = e.target.files[0];
       if (!f) return;
       if (!f.type.startsWith('image/')) {
-        toast('Solo se permiten imágenes', 'error');
+        toast('Solo se permiten imÃ¡genes', 'error');
         return;
       }
       if (f.size > 10 * 1024 * 1024) {
-        toast('Imagen muy grande (máx 10MB)', 'error');
+        toast('Imagen muy grande (mÃ¡x 10MB)', 'error');
         return;
       }
       const img = new Image();
@@ -1639,7 +1851,7 @@
       img.crossOrigin = 'anonymous';
       img.onload = () => recortarCuadrado(img);
       img.onerror = () => {
-        // intentar sin CORS (no se podrá recortar pero al menos validamos que cargue)
+        // intentar sin CORS (no se podrÃ¡ recortar pero al menos validamos que cargue)
         const img2 = new Image();
         img2.onload = () => recortarCuadrado(img2);
         img2.onerror = () => toast('No se pudo cargar la imagen desde esa URL', 'error');
@@ -1648,7 +1860,7 @@
       img.src = url;
     });
 
-    // Vista previa en vivo de la card (título y categoría; precio se actualiza desde su listener)
+    // Vista previa en vivo de la card (tÃ­tulo y categorÃ­a; precio se actualiza desde su listener)
     ['f-titulo', 'f-categoria'].forEach(id => {
       document.getElementById(id).addEventListener('input', actualizarPreviewCard);
     });
@@ -1667,7 +1879,7 @@
       }
       wrap.style.display = 'block';
 
-      document.getElementById('prev-titulo').textContent = titulo || 'Título del producto';
+      document.getElementById('prev-titulo').textContent = titulo || 'TÃ­tulo del producto';
       const precioFinal = obtenerPrecioFinal();
       document.getElementById('prev-precio').textContent = precioFinal || 'MX$0';
 
@@ -1683,7 +1895,7 @@
       if (imagenBlob) {
         imgEl.innerHTML = `<img src="${URL.createObjectURL(imagenBlob)}" alt="">`;
       } else {
-        imgEl.innerHTML = '🛍️';
+        imgEl.innerHTML = 'ðï¸';
       }
     }
 
@@ -1701,7 +1913,7 @@
       });
     }
 
-    // SUBMIT del formulario — envía al backend
+    // SUBMIT del formulario â envÃ­a al backend
     document.getElementById('form-producto').addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -1716,7 +1928,7 @@
 
       const s = getSesion();
       if (!s || !s.token) {
-        toast('Sesión expirada. Inicia sesión de nuevo.', 'error');
+        toast('SesiÃ³n expirada. Inicia sesiÃ³n de nuevo.', 'error');
         cerrarSesion();
         return;
       }
@@ -1742,29 +1954,29 @@
         });
 
         if (r.ok) {
-          toast('✅ Producto agregado al catálogo', 'success');
+          toast('â Producto agregado al catÃ¡logo', 'success');
           document.getElementById('form-producto').reset();
           quitarImagen();
           setTimeout(() => { irA('dashboard'); cargarStats(); }, 800);
         } else {
-          if (r.error && r.error.includes('Sesión inválida')) {
-            toast('Sesión expirada', 'error');
+          if (r.error && r.error.includes('SesiÃ³n invÃ¡lida')) {
+            toast('SesiÃ³n expirada', 'error');
             cerrarSesion();
           } else {
             toast('Error: ' + (r.error || 'desconocido'), 'error');
           }
         }
       } catch (err) {
-        toast('Error de conexión: ' + err.message, 'error');
+        toast('Error de conexiÃ³n: ' + err.message, 'error');
       } finally {
         btn.disabled = false;
         btnTxt.textContent = 'Guardar producto';
       }
     });
 
-    // ═══════════════════════════════════════
+    // âââââââââââââââââââââââââââââââââââââââ
     // TOAST
-    // ═══════════════════════════════════════
+    // âââââââââââââââââââââââââââââââââââââââ
     function toast(msg, tipo = 'success') {
       const t = document.getElementById('toast');
       t.textContent = msg;
@@ -1773,9 +1985,9 @@
     }
 
 
-    // ═══════════════════════════════════════
+    // âââââââââââââââââââââââââââââââââââââââ
     // PRECIO: normal o multipack
-    // ═══════════════════════════════════════
+    // âââââââââââââââââââââââââââââââââââââââ
     function formatearPrecio(valor) {
       const num = parseFloat(String(valor).replace(/[^0-9.]/g, ''));
       if (isNaN(num) || num <= 0) return '';
@@ -1813,7 +2025,7 @@
       actualizarPreviewCard();
     }
 
-    // Solo dígitos en los 3 inputs de precio
+    // Solo dÃ­gitos en los 3 inputs de precio
     ['f-precio', 'f-multi-cant', 'f-multi-precio'].forEach(id => {
       document.getElementById(id).addEventListener('input', (e) => {
         const limpio = e.target.value.replace(/[^0-9]/g, '');
@@ -1824,7 +2036,7 @@
             document.getElementById('f-multi-cant').value,
             document.getElementById('f-multi-precio').value
           );
-          document.getElementById('multipack-preview').textContent = prev || '—';
+          document.getElementById('multipack-preview').textContent = prev || 'â';
         }
         actualizarPreviewCard();
       });
@@ -1832,16 +2044,16 @@
 
 
 
-    // ═══════════════════════════════════════
-    // SINCRONIZACIÓN — Vista y Historial
-    // ═══════════════════════════════════════
+    // âââââââââââââââââââââââââââââââââââââââ
+    // SINCRONIZACIÃN â Vista y Historial
+    // âââââââââââââââââââââââââââââââââââââââ
     const COMANDO_SYNC = 'cd C:\\AlusheStore\\Scripts\\dist && python script_alushe_git.py';
 
     function copiarComando() {
       navigator.clipboard.writeText(COMANDO_SYNC).then(() => {
-        toast('📋 Comando copiado al portapapeles', 'success');
+        toast('ð Comando copiado al portapapeles', 'success');
       }).catch(() => {
-        toast('No se pudo copiar. Cópialo manualmente.', 'error');
+        toast('No se pudo copiar. CÃ³pialo manualmente.', 'error');
       });
     }
 
@@ -1852,7 +2064,7 @@
 
     async function cargarHistorial() {
       const lista = document.getElementById('historial-lista');
-      lista.innerHTML = '<div class="historial-vacio"><div class="historial-vacio-emoji">⏳</div>Cargando...</div>';
+      lista.innerHTML = '<div class="historial-vacio"><div class="historial-vacio-emoji">â³</div>Cargando...</div>';
 
       try {
         const s = getSesion();
@@ -1861,9 +2073,9 @@
 
         if (!r.historial.length) {
           lista.innerHTML = `<div class="historial-vacio">
-            <div class="historial-vacio-emoji">🤖</div>
-            Aún no hay sincronizaciones registradas.<br>
-            <span style="font-size:11px;margin-top:4px;display:block;">Corre el script y aparecerá aquí.</span>
+            <div class="historial-vacio-emoji">ð¤</div>
+            AÃºn no hay sincronizaciones registradas.<br>
+            <span style="font-size:11px;margin-top:4px;display:block;">Corre el script y aparecerÃ¡ aquÃ­.</span>
           </div>`;
           return;
         }
@@ -1883,10 +2095,10 @@
             <div class="sync-card-header">
               <div>
                 <div class="sync-fecha">${fechaLeg}</div>
-                <div class="sync-hora">🕒 ${h.hora}</div>
+                <div class="sync-hora">ð ${h.hora}</div>
               </div>
               <div class="sync-estado ${esError ? 'error' : 'ok'}">
-                ${esError ? '⚠️ Error' : '✓ OK'}
+                ${esError ? 'â ï¸ Error' : 'â OK'}
               </div>
             </div>
             <div class="sync-stats">
@@ -1912,15 +2124,15 @@
 
       } catch (err) {
         lista.innerHTML = `<div class="historial-vacio">
-          <div class="historial-vacio-emoji">⚠️</div>
+          <div class="historial-vacio-emoji">â ï¸</div>
           Error al cargar historial: ${err.message}
         </div>`;
       }
     }
 
-    // ═══════════════════════════════════════
-    // GESTIONAR PRODUCTOS — Estado
-    // ═══════════════════════════════════════
+    // âââââââââââââââââââââââââââââââââââââââ
+    // GESTIONAR PRODUCTOS â Estado
+    // âââââââââââââââââââââââââââââââââââââââ
     let todosLosProductos   = [];
     let productosFiltradosG = [];
     let filtroEstado        = 'todos';
@@ -1937,7 +2149,7 @@
 
     async function cargarProductos() {
       const lista = document.getElementById('gest-lista');
-      lista.innerHTML = '<div class="cargando-lista">⏳ Cargando productos...</div>';
+      lista.innerHTML = '<div class="cargando-lista">â³ Cargando productos...</div>';
       document.getElementById('gest-subtitulo').textContent = 'Cargando inventario...';
 
       try {
@@ -1950,10 +2162,10 @@
         if (!r.ok) throw new Error(r.error);
         todosLosProductos = r.productos;
         document.getElementById('gest-subtitulo').textContent =
-          `${r.total} producto${r.total !== 1 ? 's' : ''} en el catálogo`;
+          `${r.total} producto${r.total !== 1 ? 's' : ''} en el catÃ¡logo`;
         aplicarFiltrosGestion();
       } catch (err) {
-        lista.innerHTML = `<div class="sin-productos"><div class="sin-productos-emoji">⚠️</div>Error: ${err.message}</div>`;
+        lista.innerHTML = `<div class="sin-productos"><div class="sin-productos-emoji">â ï¸</div>Error: ${err.message}</div>`;
       }
     }
 
@@ -1990,8 +2202,8 @@
 
       if (!productosFiltradosG.length) {
         lista.innerHTML = `<div class="sin-productos">
-          <div class="sin-productos-emoji">😕</div>
-          Sin resultados para tu búsqueda
+          <div class="sin-productos-emoji">ð</div>
+          Sin resultados para tu bÃºsqueda
         </div>`;
         return;
       }
@@ -2001,8 +2213,8 @@
         const img = p.urlGitHub || p.urlImagen;
         const thumb = img
           ? `<img class="prod-thumb" src="${img}" alt="" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-             <div class="prod-thumb-placeholder" style="display:none;">🛍️</div>`
-          : `<div class="prod-thumb-placeholder">🛍️</div>`;
+             <div class="prod-thumb-placeholder" style="display:none;">ðï¸</div>`
+          : `<div class="prod-thumb-placeholder">ðï¸</div>`;
 
         const catCorta = (p.categoria || 'Otros').split(' ')[0];
 
@@ -2028,13 +2240,13 @@
                      onchange="cambiarEstadoRapido(${p.fila}, this.checked ? 'Disponible' : 'Agotado')">
               <span class="estado-slider"></span>
             </label>
-            <button class="prod-btn danger" onclick="pedirEliminar(${p.fila}, '${p.producto.replace(/'/g, "\'")}')">🗑️</button>
+            <button class="prod-btn danger" onclick="pedirEliminar(${p.fila}, '${p.producto.replace(/'/g, "\'")}')">ðï¸</button>
           </div>` : ''}
         </div>`;
       }).join('');
     }
 
-    // ── MODO LOTE ──────────────────────────────────
+    // ââ MODO LOTE ââââââââââââââââââââââââââââââââââ
     function toggleModoLote() {
       modoLote = !modoLote;
       seleccionados.clear();
@@ -2081,13 +2293,13 @@
         } catch {}
       }
 
-      toast(`✅ ${exitos} de ${n} actualizados a "${nuevoEstado}"`, 'success');
+      toast(`â ${exitos} de ${n} actualizados a "${nuevoEstado}"`, 'success');
       seleccionados.clear();
       toggleModoLote();
       aplicarFiltrosGestion();
     }
 
-    // ── CAMBIAR ESTADO RÁPIDO ──────────────────────
+    // ââ CAMBIAR ESTADO RÃPIDO ââââââââââââââââââââââ
     async function cambiarEstadoRapido(fila, nuevoEstado) {
       try {
         const s = getSesion();
@@ -2096,16 +2308,16 @@
           const prod = todosLosProductos.find(p => p.fila === fila);
           if (prod) prod.estado = nuevoEstado;
           aplicarFiltrosGestion();
-          toast(`${nuevoEstado === 'Agotado' ? '🔴' : '🟢'} Marcado como ${nuevoEstado}`, 'success');
+          toast(`${nuevoEstado === 'Agotado' ? 'ð´' : 'ð¢'} Marcado como ${nuevoEstado}`, 'success');
         } else {
           toast('Error al actualizar estado', 'error');
         }
       } catch {
-        toast('Error de conexión', 'error');
+        toast('Error de conexiÃ³n', 'error');
       }
     }
 
-    // ── ELIMINAR ───────────────────────────────────
+    // ââ ELIMINAR âââââââââââââââââââââââââââââââââââ
     function pedirEliminar(fila, nombre) {
       filaAEliminar = fila;
       document.getElementById('modal-eliminar-nombre').textContent = nombre;
@@ -2137,19 +2349,19 @@
           });
           cerrarModalEliminar();
           aplicarFiltrosGestion();
-          toast('🗑️ Producto eliminado', 'success');
+          toast('ðï¸ Producto eliminado', 'success');
           cargarStats();
         } else {
           toast('Error: ' + r.error, 'error');
         }
       } catch {
-        toast('Error de conexión', 'error');
+        toast('Error de conexiÃ³n', 'error');
       } finally {
-        btn.disabled = false; btn.textContent = 'Sí, eliminar';
+        btn.disabled = false; btn.textContent = 'SÃ­, eliminar';
       }
     }
 
-    // ── MODAL EDITAR ───────────────────────────────
+    // ââ MODAL EDITAR âââââââââââââââââââââââââââââââ
     function abrirModalEdit(fila) {
       const p = todosLosProductos.find(x => x.fila === fila);
       if (!p) return;
@@ -2206,7 +2418,7 @@
       document.getElementById('edit-modo-multipack').style.display = activo ? 'block' : 'none';
     }
 
-    // Solo dígitos en campos de precio del editor
+    // Solo dÃ­gitos en campos de precio del editor
     ['edit-precio','edit-multi-cant','edit-multi-precio'].forEach(id => {
       document.getElementById(id).addEventListener('input', (e) => {
         const limpio = e.target.value.replace(/[^0-9]/g,'');
@@ -2216,7 +2428,7 @@
             document.getElementById('edit-multi-cant').value,
             document.getElementById('edit-multi-precio').value
           );
-          document.getElementById('edit-multipack-preview').textContent = prev || '—';
+          document.getElementById('edit-multipack-preview').textContent = prev || 'â';
         }
       });
     });
@@ -2254,7 +2466,7 @@
       return formatearPrecio(document.getElementById('edit-precio').value);
     }
 
-    // Submit del formulario de edición
+    // Submit del formulario de ediciÃ³n
     document.getElementById('form-editar').addEventListener('submit', async (e) => {
       e.preventDefault();
       const precioFinal = obtenerPrecioEdit();
@@ -2293,20 +2505,20 @@
           }
           cerrarModalEditDirecto();
           aplicarFiltrosGestion();
-          toast('✅ Producto actualizado', 'success');
+          toast('â Producto actualizado', 'success');
         } else {
           toast('Error: ' + (r.error || 'desconocido'), 'error');
         }
       } catch (err) {
-        toast('Error de conexión: ' + err.message, 'error');
+        toast('Error de conexiÃ³n: ' + err.message, 'error');
       } finally {
         btn.disabled = false; txt.textContent = 'Guardar cambios';
       }
     });
 
-    // ═══════════════════════════════════════
+    // âââââââââââââââââââââââââââââââââââââââ
     // RELOJ EN HEADER
-    // ═══════════════════════════════════════
+    // âââââââââââââââââââââââââââââââââââââââ
     function actualizarReloj() {
       const ahora = new Date();
       const hh = String(ahora.getHours()).padStart(2, '0');
@@ -2314,13 +2526,256 @@
       const ss = String(ahora.getSeconds()).padStart(2, '0');
       document.getElementById('reloj-hora').textContent = `${hh}:${mm}:${ss}`;
 
-      const dias  = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+      const dias  = ['Domingo','Lunes','Martes','MiÃ©rcoles','Jueves','Viernes','SÃ¡bado'];
       const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
       const fecha = `${dias[ahora.getDay()]}, ${ahora.getDate()} ${meses[ahora.getMonth()]} ${ahora.getFullYear()}`;
       document.getElementById('reloj-fecha').textContent = fecha;
     }
     setInterval(actualizarReloj, 1000);
     actualizarReloj();
+  
+
+    // ════════════════════════════════════════
+    // FASE 4A — BANNERS
+    // ════════════════════════════════════════
+    let bannersData = JSON.parse(localStorage.getItem('alushe_banners') || 'null') || [
+      { emoji: '🎉', titulo: 'Insumos 3×$100', sub: 'Lleva 3 y paga solo $100 — stock limitado', tipo: 'promo', tag: 'Promo' },
+      { emoji: '📦', titulo: 'Entrega a domicilio en Durango', sub: '10 puntos de entrega disponibles en la ciudad', tipo: 'aviso', tag: 'Info' },
+      { emoji: '✨', titulo: '¡Nuevos productos cada semana!', sub: 'Síguenos en Facebook para ver las novedades', tipo: 'nuevo', tag: 'Nuevo' },
+      { emoji: '💬', titulo: '¿Dudas o preguntas?', sub: 'Escríbenos por WhatsApp — respondemos rápido', tipo: 'aviso', tag: 'Contacto' }
+    ];
+
+    function guardarBanners() { localStorage.setItem('alushe_banners', JSON.stringify(bannersData)); }
+
+    function renderBanners() {
+      const lista = document.getElementById('banners-lista');
+      if (!lista) return;
+      lista.innerHTML = '';
+      bannersData.forEach((b, i) => {
+        const card = document.createElement('div');
+        card.className = 'banner-editor-card';
+        const tipoOpts = ['promo','aviso','nuevo'].map(t =>
+          '<option value="'+t+'"'+(b.tipo===t?' selected':'')+'>'+
+          {promo:'🟢 Promo (verde)',aviso:'🔵 Aviso (azul)',nuevo:'🟠 Nuevo (naranja)'}[t]+'</option>'
+        ).join('');
+        card.innerHTML =
+          '<div class="banner-editor-header">'+
+            '<span class="banner-editor-num">'+(i+1)+'</span>'+
+            'Banner '+(i+1)+
+            '<button class="banner-editor-collapse" onclick="toggleBannerForm('+i+')">Editar ↕</button>'+
+          '</div>'+
+          '<p class="preview-label">VISTA PREVIA EN VIVO</p>'+
+          '<div class="banner-preview-live '+b.tipo+'" id="bprev-'+i+'">'+
+            '<div class="banner-preview-emoji" id="bprev-emoji-'+i+'">'+b.emoji+'</div>'+
+            '<div class="banner-preview-texto">'+
+              '<div class="banner-preview-titulo" id="bprev-titulo-'+i+'">'+b.titulo+'</div>'+
+              '<div class="banner-preview-sub" id="bprev-sub-'+i+'">'+b.sub+'</div>'+
+            '</div>'+
+            '<div class="banner-preview-tag" id="bprev-tag-'+i+'">'+b.tag+'</div>'+
+          '</div>'+
+          '<div id="bform-'+i+'" style="display:none;">'+
+            '<div class="field"><label class="field-label">Emoji</label>'+
+              '<input type="text" class="field-input" id="bf-emoji-'+i+'" value="'+b.emoji+'" oninput="updateBannerPreview('+i+')" style="font-size:22px;text-align:center;max-width:90px;"></div>'+
+            '<div class="field"><label class="field-label">Título</label>'+
+              '<input type="text" class="field-input" id="bf-titulo-'+i+'" value="'+b.titulo.replace(/"/g,'&quot;')+'" oninput="updateBannerPreview('+i+')" placeholder="Título del banner"></div>'+
+            '<div class="field"><label class="field-label">Subtítulo</label>'+
+              '<input type="text" class="field-input" id="bf-sub-'+i+'" value="'+b.sub.replace(/"/g,'&quot;')+'" oninput="updateBannerPreview('+i+')" placeholder="Texto secundario"></div>'+
+            '<div class="field"><label class="field-label">Tipo (color de fondo)</label>'+
+              '<select class="field-select" id="bf-tipo-'+i+'" onchange="updateBannerPreview('+i+')">'+tipoOpts+'</select></div>'+
+            '<div class="field"><label class="field-label">Tag (etiqueta)</label>'+
+              '<input type="text" class="field-input" id="bf-tag-'+i+'" value="'+b.tag.replace(/"/g,'&quot;')+'" oninput="updateBannerPreview('+i+')" placeholder="Promo, Info, Nuevo..."></div>'+
+            '<button class="btn-guardar" onclick="guardarBanner('+i+')" style="width:100%;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:6px;">✓ Guardar banner '+(i+1)+'</button>'+
+          '</div>';
+        lista.appendChild(card);
+      });
+    }
+
+    function toggleBannerForm(i) {
+      const f = document.getElementById('bform-'+i);
+      if (f) f.style.display = f.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function updateBannerPreview(i) {
+      const get = id => { const el = document.getElementById(id); return el ? el.value : ''; };
+      const emoji = get('bf-emoji-'+i);
+      const titulo = get('bf-titulo-'+i);
+      const sub = get('bf-sub-'+i);
+      const tipo = get('bf-tipo-'+i);
+      const tag = get('bf-tag-'+i);
+      const prev = document.getElementById('bprev-'+i);
+      if (prev) {
+        prev.className = 'banner-preview-live ' + tipo;
+        document.getElementById('bprev-emoji-'+i).textContent = emoji;
+        document.getElementById('bprev-titulo-'+i).textContent = titulo;
+        document.getElementById('bprev-sub-'+i).textContent = sub;
+        document.getElementById('bprev-tag-'+i).textContent = tag;
+      }
+    }
+
+    function guardarBanner(i) {
+      const get = id => { const el = document.getElementById(id); return el ? el.value : ''; };
+      bannersData[i] = {
+        emoji: get('bf-emoji-'+i), titulo: get('bf-titulo-'+i),
+        sub: get('bf-sub-'+i), tipo: get('bf-tipo-'+i), tag: get('bf-tag-'+i)
+      };
+      guardarBanners();
+      document.getElementById('bform-'+i).style.display = 'none';
+      mostrarToast('✓ Banner '+(i+1)+' guardado', 'success');
+    }
+
+    function generarBannerHTML() {
+      let html = '';
+      bannersData.forEach(b => {
+        html += '        <div class="banner-slide '+b.tipo+'">
+';
+        html += '          <div class="banner-emoji">'+b.emoji+'</div>
+';
+        html += '          <div class="banner-texto">
+';
+        html += '            <div class="banner-titulo">'+b.titulo+'</div>
+';
+        html += '            <div class="banner-sub">'+b.sub+'</div>
+';
+        html += '          </div>
+';
+        html += '          <div class="banner-tag">'+b.tag+'</div>
+';
+        html += '        </div>
+';
+      });
+      document.getElementById('banner-code-pre').textContent = html;
+      document.getElementById('banner-code-block').style.display = 'block';
+      document.getElementById('banner-code-block').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function copiarBannerHTML() {
+      const code = document.getElementById('banner-code-pre').textContent;
+      navigator.clipboard.writeText(code).then(() => mostrarToast('✓ HTML copiado al portapapeles', 'success'));
+    }
+
+    // ════════════════════════════════════════
+    // FASE 4B — PUNTOS DE ENTREGA
+    // ════════════════════════════════════════
+    let puntosData = JSON.parse(localStorage.getItem('alushe_puntos') || 'null') || [
+      { id:'guadalajara_factor', nombre:'"Guadalajara" Factor', hora:'4:00 pm', maps_url:'https://maps.app.goo.gl/S5Rf4VzhrjDkAnDe6' },
+      { id:'catedral', nombre:'Zona Centro "Catedral"', hora:'4:30 pm', maps_url:'https://maps.app.goo.gl/99kjyTA6yEKn3c737' },
+      { id:'santuario_libro', nombre:'Santuario "Libro"', hora:'5:00 pm', maps_url:'https://maps.app.goo.gl/c6xkrWRUiBZtoHgaA' },
+      { id:'plaza_galas', nombre:'Plaza Galas "Office Depot"', hora:'5:30 pm', maps_url:'https://maps.app.goo.gl/1kfNca72vWncHhm48' },
+      { id:'oxxo_luz_esperanza', nombre:'"Oxxo" Luz y Esperanza', hora:'5:30 pm', maps_url:'https://maps.app.goo.gl/BqtiNzuEhs1AGMqa6' },
+      { id:'oxxo_morga', nombre:'"Oxxo" Morga', hora:'6:00 pm', maps_url:'https://maps.app.goo.gl/zcHsmC8ZJMC4Njs47' },
+      { id:'guadalajara_puentes', nombre:'"Guadalajara" Puentes Gemelos', hora:'6:30 pm', maps_url:'https://maps.app.goo.gl/9EDMhMzFvNnot8116' },
+      { id:'alsuper_ojo_agua', nombre:'"Alsúoper" Ojo de Agua', hora:'7:00 pm', maps_url:'https://maps.app.goo.gl/j5kWsf4Qyo88yV6T6' },
+      { id:'oxxo_santa_maria', nombre:'"Oxxo" Santa María', hora:'7:30 pm', maps_url:'https://maps.app.goo.gl/2es8XfLCFhMnxpvx9' },
+      { id:'oxxo_zacatecas', nombre:'"Oxxo" Calle Zacatecas', hora:'8:00 pm', maps_url:'https://maps.app.goo.gl/RTqGAe8Y6gtEfvD97' }
+    ];
+    let editandoPunto = -1;
+
+    function guardarPuntos() { localStorage.setItem('alushe_puntos', JSON.stringify(puntosData)); }
+
+    function generarIdDesdeNombre(nombre) {
+      return nombre.toLowerCase()
+        .normalize('NFD').replace(/[̀-ͯ]/g,'')
+        .replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'');
+    }
+
+    function renderPuntos() {
+      const lista = document.getElementById('puntos-lista');
+      if (!lista) return;
+      lista.innerHTML = '';
+      if (!puntosData.length) {
+        lista.innerHTML = '<div class="historial-vacio"><div class="historial-vacio-emoji">📍</div>No hay puntos. Agrega el primero.</div>';
+        return;
+      }
+      puntosData.forEach((p, i) => {
+        const card = document.createElement('div');
+        card.className = 'punto-card';
+        card.innerHTML =
+          '<div class="punto-card-header">'+
+            '<div class="punto-icono">📍</div>'+
+            '<div class="punto-info">'+
+              '<div class="punto-nombre">'+p.nombre+'</div>'+
+              '<div class="punto-hora">🕐 '+p.hora+'</div>'+
+            '</div>'+
+            '<div class="punto-acciones">'+
+              '<button class="punto-btn" onclick="editarPunto('+i+')" title="Editar">✏️</button>'+
+              '<button class="punto-btn danger" onclick="eliminarPunto('+i+')" title="Eliminar">🗑</button>'+
+            '</div>'+
+          '</div>'+
+          (p.maps_url ? '<a class="punto-maps-link" href="'+p.maps_url+'" target="_blank">🗺 Ver en Google Maps</a>' : '');
+        lista.appendChild(card);
+      });
+    }
+
+    function abrirPuntoForm(editIdx) {
+      editandoPunto = (editIdx !== undefined) ? editIdx : -1;
+      const form = document.getElementById('punto-form');
+      if (editandoPunto >= 0) {
+        const p = puntosData[editandoPunto];
+        document.getElementById('pf-nombre').value = p.nombre;
+        document.getElementById('pf-hora').value = p.hora;
+        document.getElementById('pf-maps').value = p.maps_url || '';
+        document.getElementById('punto-form-titulo-txt').textContent = 'Editar punto';
+      } else {
+        document.getElementById('pf-nombre').value = '';
+        document.getElementById('pf-hora').value = '';
+        document.getElementById('pf-maps').value = '';
+        document.getElementById('punto-form-titulo-txt').textContent = 'Nuevo punto';
+      }
+      form.classList.add('visible');
+      form.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function cerrarPuntoForm() {
+      document.getElementById('punto-form').classList.remove('visible');
+      editandoPunto = -1;
+    }
+
+    function editarPunto(i) { abrirPuntoForm(i); }
+
+    function eliminarPunto(i) {
+      if (!confirm('¿Eliminar "'+puntosData[i].nombre+'"?')) return;
+      puntosData.splice(i, 1);
+      guardarPuntos();
+      renderPuntos();
+      mostrarToast('🗑 Punto eliminado', '');
+    }
+
+    function guardarPunto() {
+      const nombre = document.getElementById('pf-nombre').value.trim();
+      const hora = document.getElementById('pf-hora').value.trim();
+      const maps_url = document.getElementById('pf-maps').value.trim();
+      if (!nombre || !hora) { mostrarToast('⚠ Nombre y horario son obligatorios', 'error'); return; }
+      const punto = { id: generarIdDesdeNombre(nombre), nombre, hora, maps_url };
+      if (editandoPunto >= 0) { puntosData[editandoPunto] = punto; mostrarToast('✓ Punto actualizado', 'success'); }
+      else { puntosData.push(punto); mostrarToast('✓ Punto agregado', 'success'); }
+      guardarPuntos();
+      cerrarPuntoForm();
+      renderPuntos();
+    }
+
+    function generarPuntosJSON() {
+      const json = JSON.stringify(puntosData, null, 2);
+      document.getElementById('punto-code-pre').textContent = json;
+      document.getElementById('punto-code-block').style.display = 'block';
+      document.getElementById('punto-code-block').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function copiarPuntosJSON() {
+      const json = document.getElementById('punto-code-pre').textContent;
+      navigator.clipboard.writeText(json).then(() => mostrarToast('✓ JSON copiado al portapapeles', 'success'));
+    }
+
+    // Hook: render new vistas when they become active
+    document.addEventListener('DOMContentLoaded', function() {
+      // Override irA to call renders for new vistas
+      const _origIrA = window.irA;
+      window.irA = function(vista) {
+        _origIrA(vista);
+        if (vista === 'banners') setTimeout(renderBanners, 50);
+        if (vista === 'entrega') setTimeout(renderPuntos, 50);
+      };
+    });
+
   </script>
 </body>
 </html>
