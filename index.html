@@ -103,6 +103,7 @@
       width: 420px; height: 420px; border-radius: 50%;
       background: rgba(37,211,102,0.07);
       pointer-events: none;
+      animation: blobFloat 14s ease-in-out infinite;
     }
     .hero::after {
       content: '';
@@ -110,6 +111,7 @@
       width: 300px; height: 300px; border-radius: 50%;
       background: rgba(26,26,24,0.04);
       pointer-events: none;
+      animation: blobFloat 18s ease-in-out infinite reverse;
     }
 
     .hero-eyebrow {
@@ -129,11 +131,18 @@
       font-weight: 800; line-height: 1.05;
       letter-spacing: -2px; color: var(--ink);
       margin-bottom: 24px;
-      opacity: 0; animation: fadeUp 0.7s 0.25s ease forwards;
     }
     .hero-title em {
       font-style: italic; color: var(--ink-lt); font-weight: 600;
     }
+    .title-line {
+      display: block;
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+    .title-line:nth-child(1) { animation-delay: 0.25s; }
+    .title-line:nth-child(2) { animation-delay: 0.40s; }
+    .title-line:nth-child(3) { animation-delay: 0.55s; }
 
     .hero-sub {
       font-size: clamp(15px, 2.5vw, 18px);
@@ -304,6 +313,7 @@
       transform: translateY(-4px);
     }
     .cat-emoji { font-size: 32px; margin-bottom: 12px; display: block; }
+    .cat-card:hover .cat-emoji { animation: emojiBounce 0.45s ease; }
     .cat-name {
       font-size: 12px; font-weight: 500; color: var(--cream);
       letter-spacing: 0.3px; line-height: 1.4;
@@ -314,6 +324,17 @@
       background: var(--green);
       padding: 80px 24px;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-band::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -60%;
+      width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+      animation: shimmer 3.5s ease-in-out infinite;
+      pointer-events: none;
     }
     .cta-band h2 {
       font-family: 'Playfair Display', serif;
@@ -416,6 +437,60 @@
     }
     .reveal.visible { opacity: 1; transform: translateY(0); }
 
+    @keyframes blobFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33%       { transform: translate(28px, -18px) scale(1.07); }
+      66%       { transform: translate(-14px, 12px) scale(0.96); }
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    @keyframes shimmer {
+      from { left: -60%; }
+      to   { left: 130%; }
+    }
+    @keyframes emojiBounce {
+      0%   { transform: scale(1) rotate(0deg); }
+      30%  { transform: scale(1.35) rotate(-8deg); }
+      60%  { transform: scale(0.9) rotate(4deg); }
+      80%  { transform: scale(1.1) rotate(-2deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+
+    /* ── MARQUEE ─────────────────────────────────────── */
+    .marquee-wrap { overflow: hidden; background: var(--ink); padding: 13px 0; }
+    .marquee-track {
+      display: flex; width: max-content;
+      animation: marquee 28s linear infinite;
+    }
+    .marquee-item {
+      display: flex; align-items: center; gap: 28px;
+      padding: 0 28px; white-space: nowrap;
+      font-size: 10.5px; font-weight: 500;
+      letter-spacing: 2px; text-transform: uppercase;
+      color: rgba(246,245,202,0.55);
+    }
+    .marquee-sep { color: var(--green); font-size: 9px; }
+
+    /* ── NOISE ───────────────────────────────────────── */
+    .noise {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 9998; opacity: 0.04;
+      background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+      background-repeat: repeat; background-size: 200px 200px;
+    }
+
+    /* ── CAT CARD STAGGER ────────────────────────────── */
+    .cats-grid .cat-card:nth-child(1) { transition-delay:   0ms; }
+    .cats-grid .cat-card:nth-child(2) { transition-delay:  70ms; }
+    .cats-grid .cat-card:nth-child(3) { transition-delay: 140ms; }
+    .cats-grid .cat-card:nth-child(4) { transition-delay: 210ms; }
+    .cats-grid .cat-card:nth-child(5) { transition-delay: 280ms; }
+    .cats-grid .cat-card:nth-child(6) { transition-delay: 350ms; }
+    .cats-grid .cat-card:nth-child(7) { transition-delay: 420ms; }
+    .cats-grid .cat-card:nth-child(8) { transition-delay: 490ms; }
+
     /* ── RESPONSIVE ─────────────────────────────────── */
     @media (max-width: 768px) {
       nav { padding: 14px 20px; }
@@ -436,6 +511,7 @@
   </style>
 </head>
 <body>
+  <div class="noise" aria-hidden="true"></div>
 
   <!-- NAV -->
   <nav>
@@ -451,7 +527,11 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-eyebrow"><span>📍</span> Durango, Dgo.</div>
-    <h1 class="hero-title">Tu tienda<br><em>favorita,</em><br>en línea.</h1>
+    <h1 class="hero-title">
+      <span class="title-line">Tu tienda</span>
+      <em class="title-line">favorita,</em>
+      <span class="title-line">en línea.</span>
+    </h1>
     <p class="hero-sub">Productos locales e importados con entregas y envíos a domicilio en toda la ciudad.</p>
     <div class="hero-btns">
       <a href="./catalogo" class="btn-primary">Ver catálogo →</a>
@@ -462,6 +542,14 @@
       <div class="scroll-line"></div>
     </div>
   </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap" aria-hidden="true">
+    <div class="marquee-track">
+      <div class="marquee-item">Durango, Dgo. <span class="marquee-sep">✦</span> 100+ productos <span class="marquee-sep">✦</span> Envíos a domicilio <span class="marquee-sep">✦</span> Nuevas llegadas <span class="marquee-sep">✦</span> Atención por WhatsApp <span class="marquee-sep">✦</span> Productos importados <span class="marquee-sep">✦</span> 10 puntos de entrega <span class="marquee-sep">✦</span></div>
+      <div class="marquee-item" aria-hidden="true">Durango, Dgo. <span class="marquee-sep">✦</span> 100+ productos <span class="marquee-sep">✦</span> Envíos a domicilio <span class="marquee-sep">✦</span> Nuevas llegadas <span class="marquee-sep">✦</span> Atención por WhatsApp <span class="marquee-sep">✦</span> Productos importados <span class="marquee-sep">✦</span> 10 puntos de entrega <span class="marquee-sep">✦</span></div>
+    </div>
+  </div>
 
   <!-- STATS -->
   <div class="stats">
@@ -633,11 +721,12 @@
   </footer>
 
   <script>
-    // Reveal on scroll
+    // Reveal on scroll — cat-cards use CSS nth-child stagger, others use JS stagger
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((e, i) => {
         if (e.isIntersecting) {
-          setTimeout(() => e.target.classList.add('visible'), i * 60);
+          const delay = e.target.closest('.cats-grid') ? 0 : i * 60;
+          setTimeout(() => e.target.classList.add('visible'), delay);
           observer.unobserve(e.target);
         }
       });
@@ -650,6 +739,34 @@
       document.querySelector('nav').style.padding =
         window.scrollY > 50 ? '12px 32px' : '18px 32px';
     });
+
+    // Counter animation para stats
+    function animateCount(el, target, suffix, duration) {
+      const start = performance.now();
+      (function tick(now) {
+        const t = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = Math.round(eased * target) + suffix;
+        if (t < 1) requestAnimationFrame(tick);
+      })(start);
+    }
+
+    const statNums = document.querySelectorAll('.stat-num');
+    const statData = Array.from(statNums).map(el => {
+      const raw = el.textContent.trim();
+      return { num: parseInt(raw), suffix: raw.replace(/[0-9]/g, '') };
+    });
+
+    const counterObs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const idx = Array.from(statNums).indexOf(entry.target);
+        if (idx !== -1) animateCount(entry.target, statData[idx].num, statData[idx].suffix, 1400);
+        counterObs.unobserve(entry.target);
+      });
+    }, { threshold: 0.6 });
+
+    statNums.forEach(el => counterObs.observe(el));
   </script>
 </body>
 </html>
