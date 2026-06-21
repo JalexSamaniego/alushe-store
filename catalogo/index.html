@@ -416,10 +416,17 @@
       renderProductos(res);
     }
 
-    // ── RENDER PRODUCTOS ──────────────────────────────
+    // ── RENDER PRODUCTOS (por lotes / scroll infinito) ─
+    const LOTE_TAM = 30;     // cuántas tarjetas se pintan por tanda
+    let _renderIdx = 0;      // hasta dónde se ha pintado
+    let _io = null;          // IntersectionObserver del centinela
+
     function renderProductos(productos) {
-      container.innerHTML = '';
       productosFiltrados = productos;
+      container.innerHTML = '';
+      _renderIdx = 0;
+      if (_io) { _io.disconnect(); _io = null; }
+
       const disponibles = productos.filter(p => (p.Estado||'').trim() !== 'Agotado').length;
       actualizarContador(productos.length, disponibles);
 
@@ -427,46 +434,75 @@
         container.innerHTML = `<div class="sin-resultados">😕 Sin resultados. Intenta otra búsqueda.</div>`;
         return;
       }
+      renderLote();
+    }
 
-      productos.forEach((row, i) => {
-        const agotado  = (row.Estado||'').trim() === 'Agotado';
-        const nuevo    = esNuevo(row);
-        const src      = (row.URL_GitHub||'').trim() || (row.URL_Imagen||'').trim();
-        const catCorta = (row.Categoria||'').trim().split(' ')[0];
-        const enCart   = carritoContiene(row.Producto);
+    function _tarjetaHTML(row, i) {
+      const agotado  = (row.Estado||'').trim() === 'Agotado';
+      const nuevo    = esNuevo(row);
+      const src      = (row.URL_GitHub||'').trim() || (row.URL_Imagen||'').trim();
+      const catCorta = (row.Categoria||'').trim().split(' ')[0];
+      const enCart   = carritoContiene(row.Producto);
 
-        let imgHtml;
-        if (src) {
-          imgHtml = `<img src="${src}" class="${agotado?' img-agotado':''}" loading="lazy"
-            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-            <div class="img-fallback${agotado?' agotado':''}" style="display:none;"><span>🛍️</span>Sin imagen</div>`;
-        } else {
-          imgHtml = `<div class="img-fallback${agotado?' agotado':''}"><span>🛍️</span>Sin imagen</div>`;
-        }
+      let imgHtml;
+      if (src) {
+        imgHtml = `<img src="${src}" class="${agotado?' img-agotado':''}" loading="lazy" decoding="async"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+          <div class="img-fallback${agotado?' agotado':''}" style="display:none;"><span>🛍️</span>Sin imagen</div>`;
+      } else {
+        imgHtml = `<div class="img-fallback${agotado?' agotado':''}"><span>🛍️</span>Sin imagen</div>`;
+      }
 
-        let badgeIzq = agotado
-          ? `<div class="badge-agotado">Agotado</div>`
-          : (nuevo ? `<div class="badge-nuevo">✨ Nuevo</div>` : '');
+      const badgeIzq = agotado
+        ? `<div class="badge-agotado">Agotado</div>`
+        : (nuevo ? `<div class="badge-nuevo">✨ Nuevo</div>` : '');
 
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.style.animationDelay = `${i * 40}ms`;
-        card.dataset.idx = i;
-        card.innerHTML = `
-          ${badgeIzq}
-          ${catCorta ? `<div class="badge-cat">${catCorta}</div>` : ''}
-          <div class="img-wrap" onclick="abrirModal(${i})" title="Ver detalle">${imgHtml}</div>
-          <div class="title">${row.Producto}</div>
-          <div class="price">${row.Precio}</div>
-          ${agotado
-            ? `<div class="btn-agotado">Agotado</div>`
-            : `<a href="https://wa.me/${miWhatsApp}?text=${encodeURIComponent(`Hola, vi esto en el catálogo y me interesa: ${row.Producto} (${row.Precio})`)}" target="_blank" class="btn-wa">Pedir por WhatsApp</a>
-               <button class="btn-carrito${enCart?' en-carrito':''}" onclick="toggleCarritoCard(${i},this)">
-                 ${enCart ? '✓ En mi pedido' : '+ Agregar al pedido'}
-               </button>`}
-        `;
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.dataset.idx = i;
+      card.innerHTML = `
+        ${badgeIzq}
+        ${catCorta ? `<div class="badge-cat">${catCorta}</div>` : ''}
+        <div class="img-wrap" onclick="abrirModal(${i})" title="Ver detalle">${imgHtml}</div>
+        <div class="title">${row.Producto}</div>
+        <div class="price">${row.Precio}</div>
+        ${agotado
+          ? `<div class="btn-agotado">Agotado</div>`
+          : `<a href="https://wa.me/${miWhatsApp}?text=${encodeURIComponent(`Hola, vi esto en el catálogo y me interesa: ${row.Producto} (${row.Precio})`)}" target="_blank" class="btn-wa">Pedir por WhatsApp</a>
+             <button class="btn-carrito${enCart?' en-carrito':''}" onclick="toggleCarritoCard(${i},this)">
+               ${enCart ? '✓ En mi pedido' : '+ Agregar al pedido'}
+             </button>`}
+      `;
+      return card;
+    }
+
+    function renderLote() {
+      const fin = Math.min(_renderIdx + LOTE_TAM, productosFiltrados.length);
+      for (let i = _renderIdx; i < fin; i++) {
+        const card = _tarjetaHTML(productosFiltrados[i], i);
+        card.style.animationDelay = `${(i - _renderIdx) * 40}ms`;
         container.appendChild(card);
-      });
+      }
+      _renderIdx = fin;
+      montarCentinela();
+    }
+
+    function montarCentinela() {
+      const viejo = document.getElementById('scroll-centinela');
+      if (viejo) viejo.remove();
+      if (_renderIdx >= productosFiltrados.length) return;
+
+      const s = document.createElement('div');
+      s.id = 'scroll-centinela';
+      s.style.gridColumn = '1/-1';
+      s.style.height = '1px';
+      container.appendChild(s);
+
+      if (_io) _io.disconnect();
+      _io = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) renderLote();
+      }, { rootMargin: '400px' });
+      _io.observe(s);
     }
 
     // ── MODAL CON SWIPE (4) ───────────────────────────
@@ -644,7 +680,7 @@
     }
 
     // ── CARGA SUPABASE ─────────────────────────────────
-    (async () => {
+    async function cargarCatalogo(silencioso = false) {
       try {
         const { data, error } = await sb.from('productos').select('*').order('nombre');
         if (error) throw error;
@@ -661,10 +697,25 @@
         renderChips(cats);
         aplicarFiltros();
       } catch(e) {
-        container.innerHTML = `<div class="sin-resultados">Error al cargar el catálogo. Intenta más tarde.</div>`;
+        if (!silencioso) {
+          container.innerHTML = `<div class="sin-resultados">Error al cargar el catálogo. Intenta más tarde.</div>`;
+        }
       }
-    })();
+    }
+
+    cargarCatalogo();
+
+    // ── REALTIME: refresca solo cuando cambia el inventario ──
+    // (requiere habilitar Realtime para la tabla 'productos' en Supabase)
+    let _refrescoPendiente = null;
+    sb.channel('catalogo-productos')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'productos' }, () => {
+        clearTimeout(_refrescoPendiente);
+        _refrescoPendiente = setTimeout(() => cargarCatalogo(true), 800);
+      })
+      .subscribe();
   </script>
 </body>
 </html>
+
 
