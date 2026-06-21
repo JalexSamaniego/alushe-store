@@ -1052,8 +1052,11 @@
     <div class="login-card">
       <img src="/assets/images/favicon.png" alt="Alushe Store" class="login-logo">
       <h1>Panel de Administración</h1>
-      <p>Ingresa tu contraseña para continuar</p>
+      <p>Inicia sesión para continuar</p>
       <form id="login-form" autocomplete="off">
+        <input type="email" id="login-email" class="login-input"
+               placeholder="correo@ejemplo.com" autocomplete="username" required
+               style="margin-bottom:10px;">
         <input type="password" id="login-pwd" class="login-input"
                placeholder="••••••••" autocomplete="current-password" required>
         <button type="submit" class="login-btn" id="login-btn">Entrar</button>
@@ -1611,12 +1614,8 @@
     const SB_KEY  = 'sb_publishable_JtOAt4xSg7RxIhmxygFKAQ_0jNYENUE';
     const sb      = supabase.createClient(SB_URL, SB_KEY);
 
-    // ─── Contraseña admin (cambia aquí si la quieres modificar) ───
-    const ADMIN_PWD = 'Alushe2024';
-
-    // Sesión local: 24h
-    const SESION_KEY = 'alushe_admin_sesion';
-    const SESION_HORAS = 24;
+    // ─── Sesión via Supabase Auth ───────────────
+    let _sesion = null;   // se mantiene sincronizada con onAuthStateChange
 
     // Rate limit local
     const MAX_INTENTOS = 5;
@@ -1665,29 +1664,21 @@
       }
     }
 
+    // Shim de compatibilidad: el resto del código usa getSesion().token
     function getSesion() {
-      try { return JSON.parse(sessionStorage.getItem(SESION_KEY)); }
-      catch { return null; }
+      return _sesion ? { token: _sesion.access_token } : null;
     }
 
     function tieneSesionValida() {
-      const s = getSesion();
-      return s && s.token && s.expira > Date.now();
+      return !!_sesion;
     }
 
-    function iniciarSesion() {
-      const token = btoa(Date.now().toString());
-      const expira = Date.now() + SESION_HORAS * 60 * 60 * 1000;
-      sessionStorage.setItem(SESION_KEY, JSON.stringify({ token, expira }));
-      mostrarApp();
-    }
-
-    function cerrarSesion() {
-      sessionStorage.removeItem(SESION_KEY);
+    async function cerrarSesion() {
+      await sb.auth.signOut();
+      _sesion = null;
       document.getElementById('app').classList.remove('activo');
       document.getElementById('login-screen').style.display = 'flex';
       document.getElementById('login-pwd').value = '';
-      // Resetear el botón del login (evita que quede cargando)
       const btn = document.getElementById('login-btn');
       btn.disabled = false;
       btn.textContent = 'Entrar';
@@ -1700,11 +1691,19 @@
       cargarStats();
     }
 
+    // Mantener _sesion sincronizada y mostrar la app si ya hay sesión guardada
+    sb.auth.onAuthStateChange((_event, session) => { _sesion = session; });
+    sb.auth.getSession().then(({ data }) => {
+      _sesion = data.session;
+      if (_sesion) mostrarApp();
+    });
+
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const rl = getRL();
       if (rl.bloqueoHasta > Date.now()) return;
 
+      const email = document.getElementById('login-email').value.trim();
       const pwd = document.getElementById('login-pwd').value;
       const errEl = document.getElementById('login-error');
       const btn = document.getElementById('login-btn');
@@ -1714,9 +1713,13 @@
       btn.innerHTML = '<div class="spinner"></div>';
 
       try {
-        if (pwd === ADMIN_PWD) {
+        const { data, error } = await sb.auth.signInWithPassword({ email, password: pwd });
+        if (!error && data.session) {
+          _sesion = data.session;
           setRL({ intentos: 0, bloqueoHasta: 0 });
-          iniciarSesion();
+          btn.disabled = false;
+          btn.textContent = 'Entrar';
+          mostrarApp();
         } else {
           const intentos = rl.intentos + 1;
           if (intentos >= MAX_INTENTOS) {
@@ -1724,7 +1727,7 @@
             actualizarBloqueoUI();
           } else {
             setRL({ ...rl, intentos });
-            errEl.textContent = 'Contraseña incorrecta' +
+            errEl.textContent = 'Correo o contraseña incorrectos' +
               ` · ${MAX_INTENTOS - intentos} intento${MAX_INTENTOS - intentos !== 1 ? 's' : ''} restante${MAX_INTENTOS - intentos !== 1 ? 's' : ''}`;
           }
           btn.disabled = false;
@@ -1732,7 +1735,7 @@
           document.getElementById('login-pwd').value = '';
         }
       } catch (err) {
-        errEl.textContent = 'Error al verificar contraseña.';
+        errEl.textContent = 'Error de conexión. Intenta de nuevo.';
         btn.disabled = false;
         btn.textContent = 'Entrar';
       }
@@ -1740,8 +1743,6 @@
 
     document.getElementById('btn-logout').addEventListener('click', cerrarSesion);
 
-    // Verificar sesión al cargar
-    if (tieneSesionValida()) mostrarApp();
     actualizarBloqueoUI();
 
     // ═══════════════════════════════════════
@@ -2699,4 +2700,5 @@
   </script>
 </body>
 </html>
+
 
