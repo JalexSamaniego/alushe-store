@@ -7,6 +7,7 @@
   <meta name="robots" content="noindex, nofollow">
   <title>Admin · Alushe Store</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --cream:    #f6f5ca;
@@ -1605,29 +1606,33 @@
     // CONFIGURACIÓN
     // ═══════════════════════════════════════
 
-    // URL del backend Apps Script
-    const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzAWexJtZkj5Jf56iJg8huX2BAuoaHK3qXHpSK-9xBKXyYySQ1iG-xEGQ7_sM1yG2W4/exec';
+    // ─── Supabase ────────────────────────────────
+    const SB_URL  = 'https://wzixskdrpdqgtvucnsbf.supabase.co';
+    const SB_KEY  = 'sb_publishable_JtOAt4xSg7RxIhmxygFKAQ_0jNYENUE';
+    const sb      = supabase.createClient(SB_URL, SB_KEY);
+
+    // ─── Contraseña admin (cambia aquí si la quieres modificar) ───
+    const ADMIN_PWD = 'Alushe2024';
 
     // Sesión local: 24h
     const SESION_KEY = 'alushe_admin_sesion';
     const SESION_HORAS = 24;
 
-    // Rate limit local (apoyo extra al del backend)
+    // Rate limit local
     const MAX_INTENTOS = 5;
     const BLOQUEO_MIN = 15;
     const RL_KEY = 'alushe_admin_rl';
 
-    // ─── Llamada genérica al backend ────────────
-    async function llamarBackend(payload) {
-      const res = await fetch(BACKEND_URL, {
-        method: 'POST',
-        // Apps Script no acepta application/json directo, usamos text/plain
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload),
-        redirect: 'follow'
+    // ─── Subir imagen a Supabase Storage ────────
+    async function subirImagenSupabase(blob, nombre) {
+      const slug = nombre.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
+      const filename = slug + '_' + Date.now() + '.jpg';
+      const { error } = await sb.storage.from('catalogo-images').upload(filename, blob, {
+        contentType: 'image/jpeg', upsert: true
       });
-      if (!res.ok) throw new Error('Error HTTP ' + res.status);
-      return await res.json();
+      if (error) throw new Error('Error subiendo imagen: ' + error.message);
+      const { data } = sb.storage.from('catalogo-images').getPublicUrl(filename);
+      return data.publicUrl;
     }
 
     // ═══════════════════════════════════════
@@ -1670,7 +1675,8 @@
       return s && s.token && s.expira > Date.now();
     }
 
-    function iniciarSesion(token) {
+    function iniciarSesion() {
+      const token = btoa(Date.now().toString());
       const expira = Date.now() + SESION_HORAS * 60 * 60 * 1000;
       sessionStorage.setItem(SESION_KEY, JSON.stringify({ token, expira }));
       mostrarApp();
@@ -1708,33 +1714,25 @@
       btn.innerHTML = '<div class="spinner"></div>';
 
       try {
-        const r = await llamarBackend({ accion: 'login', pwd });
-
-        if (r.ok && r.token) {
+        if (pwd === ADMIN_PWD) {
           setRL({ intentos: 0, bloqueoHasta: 0 });
-          iniciarSesion(r.token);
+          iniciarSesion();
         } else {
-          // Manejo de errores del backend (rate limit del servidor)
-          if (r.error && r.error.includes('Demasiados intentos')) {
+          const intentos = rl.intentos + 1;
+          if (intentos >= MAX_INTENTOS) {
             setRL({ intentos: 0, bloqueoHasta: Date.now() + BLOQUEO_MIN * 60000 });
             actualizarBloqueoUI();
           } else {
-            const intentos = rl.intentos + 1;
-            if (intentos >= MAX_INTENTOS) {
-              setRL({ intentos: 0, bloqueoHasta: Date.now() + BLOQUEO_MIN * 60000 });
-              actualizarBloqueoUI();
-            } else {
-              setRL({ ...rl, intentos });
-              errEl.textContent = (r.error || 'Contraseña incorrecta') +
-                ` · ${MAX_INTENTOS - intentos} intento${MAX_INTENTOS - intentos !== 1 ? 's' : ''} restante${MAX_INTENTOS - intentos !== 1 ? 's' : ''}`;
-            }
+            setRL({ ...rl, intentos });
+            errEl.textContent = 'Contraseña incorrecta' +
+              ` · ${MAX_INTENTOS - intentos} intento${MAX_INTENTOS - intentos !== 1 ? 's' : ''} restante${MAX_INTENTOS - intentos !== 1 ? 's' : ''}`;
           }
           btn.disabled = false;
           btn.textContent = 'Entrar';
           document.getElementById('login-pwd').value = '';
         }
       } catch (err) {
-        errEl.textContent = 'Error de conexión. Intenta de nuevo.';
+        errEl.textContent = 'Error al verificar contraseña.';
         btn.disabled = false;
         btn.textContent = 'Entrar';
       }
@@ -1760,14 +1758,11 @@
     // ═══════════════════════════════════════
     async function cargarStats() {
       try {
-        const s = getSesion();
-        if (!s || !s.token) return;
-        const r = await llamarBackend({ accion: 'stats', token: s.token });
-        if (r.ok) {
-          animarNum('stat-total', r.total);
-          animarNum('stat-disp', r.disponibles);
-          animarNum('stat-agot', r.agotados);
-        }
+        const { data, error } = await sb.from('productos').select('estado');
+        if (error) throw error;
+        animarNum('stat-total', data.length);
+        animarNum('stat-disp', data.filter(p => p.estado === 'Disponible').length);
+        animarNum('stat-agot', data.filter(p => p.estado === 'Agotado').length);
       } catch {
         document.getElementById('stat-total').textContent = '—';
       }
@@ -1939,35 +1934,32 @@
       btnTxt.textContent = 'Guardando...';
 
       try {
-        // 1) imagen a base64
-        const imagenBase64 = await blobABase64(imagenBlob);
+        const nombre    = document.getElementById('f-titulo').value.trim();
+        const precio    = obtenerPrecioFinal();
+        const categoria = document.getElementById('f-categoria').value;
+        const estado    = document.getElementById('f-estado').value;
 
-        // 2) enviar al backend
-        const r = await llamarBackend({
-          accion: 'agregar_producto',
-          token: s.token,
-          producto:  document.getElementById('f-titulo').value.trim(),
-          precio:    obtenerPrecioFinal(),
-          categoria: document.getElementById('f-categoria').value,
-          estado:    document.getElementById('f-estado').value,
-          imagenBase64: imagenBase64
-        });
+        // 1) subir imagen a Supabase Storage
+        const urlImagen = await subirImagenSupabase(imagenBlob, nombre);
 
-        if (r.ok) {
+        // 2) insertar / actualizar en Supabase
+        const { error } = await sb.from('productos').upsert({
+          nombre, precio, categoria, estado,
+          url_imagen: urlImagen, url_github: urlImagen,
+          fecha: new Date().toISOString().split('T')[0],
+          fuente: 'manual',
+        }, { onConflict: 'nombre' });
+
+        if (!error) {
           toast('✅ Producto agregado al catálogo', 'success');
           document.getElementById('form-producto').reset();
           quitarImagen();
           setTimeout(() => { irA('dashboard'); cargarStats(); }, 800);
         } else {
-          if (r.error && r.error.includes('Sesión inválida')) {
-            toast('Sesión expirada', 'error');
-            cerrarSesion();
-          } else {
-            toast('Error: ' + (r.error || 'desconocido'), 'error');
-          }
+          toast('Error: ' + error.message, 'error');
         }
       } catch (err) {
-        toast('Error de conexión: ' + err.message, 'error');
+        toast('Error: ' + err.message, 'error');
       } finally {
         btn.disabled = false;
         btnTxt.textContent = 'Guardar producto';
@@ -2064,70 +2056,10 @@
 
     async function cargarHistorial() {
       const lista = document.getElementById('historial-lista');
-      lista.innerHTML = '<div class="historial-vacio"><div class="historial-vacio-emoji">⏳</div>Cargando...</div>';
-
-      try {
-        const s = getSesion();
-        const r = await llamarBackend({ accion: 'obtener_historial', token: s.token });
-        if (!r.ok) throw new Error(r.error);
-
-        if (!r.historial.length) {
-          lista.innerHTML = `<div class="historial-vacio">
-            <div class="historial-vacio-emoji">🤖</div>
-            Aún no hay sincronizaciones registradas.<br>
-            <span style="font-size:11px;margin-top:4px;display:block;">Corre el script y aparecerá aquí.</span>
-          </div>`;
-          return;
-        }
-
-        lista.innerHTML = r.historial.map(h => {
-          const esError = h.estado !== 'OK';
-          // Formatear fecha legible
-          let fechaLeg = h.fecha;
-          try {
-            const [y,m,d] = h.fecha.split('-');
-            const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
-            fechaLeg = `${d} ${meses[parseInt(m)-1]} ${y}`;
-          } catch {}
-
-          return `
-          <div class="sync-card">
-            <div class="sync-card-header">
-              <div>
-                <div class="sync-fecha">${fechaLeg}</div>
-                <div class="sync-hora">🕒 ${h.hora}</div>
-              </div>
-              <div class="sync-estado ${esError ? 'error' : 'ok'}">
-                ${esError ? '⚠️ Error' : '✓ OK'}
-              </div>
-            </div>
-            <div class="sync-stats">
-              <div class="sync-stat">
-                <div class="sync-stat-num verde">${h.nuevos}</div>
-                <div class="sync-stat-label">Nuevos</div>
-              </div>
-              <div class="sync-stat">
-                <div class="sync-stat-num naranja">${h.actualizados}</div>
-                <div class="sync-stat-label">Actualizados</div>
-              </div>
-              <div class="sync-stat">
-                <div class="sync-stat-num rojo">${h.eliminados}</div>
-                <div class="sync-stat-label">Eliminados</div>
-              </div>
-              <div class="sync-stat">
-                <div class="sync-stat-num">${h.total}</div>
-                <div class="sync-stat-label">Total</div>
-              </div>
-            </div>
-          </div>`;
-        }).join('');
-
-      } catch (err) {
-        lista.innerHTML = `<div class="historial-vacio">
-          <div class="historial-vacio-emoji">⚠️</div>
-          Error al cargar historial: ${err.message}
-        </div>`;
-      }
+      lista.innerHTML = `<div class="historial-vacio">
+        <div class="historial-vacio-emoji">🤖</div>
+        El historial de sincronizaciones se registra en la app de escritorio AlusheSync.
+      </div>`;
     }
 
     // ═══════════════════════════════════════
@@ -2153,16 +2085,23 @@
       document.getElementById('gest-subtitulo').textContent = 'Cargando inventario...';
 
       try {
-        const s = getSesion();
-        const r = await llamarBackend({
-          accion: 'obtener_productos',
-          token: s.token,
-          busqueda: ''
-        });
-        if (!r.ok) throw new Error(r.error);
-        todosLosProductos = r.productos;
+        const { data, error } = await sb.from('productos').select('*').order('nombre');
+        if (error) throw error;
+        todosLosProductos = data.map((r, i) => ({
+          fila:      i,
+          nombre:    r.nombre,
+          producto:  r.nombre,
+          precio:    r.precio,
+          categoria: r.categoria || '',
+          estado:    r.estado || 'Disponible',
+          urlGitHub: r.url_github || '',
+          urlImagen: r.url_imagen || '',
+          fecha:     r.fecha || '',
+          fuente:    r.fuente || 'manual',
+        }));
+        const total = todosLosProductos.length;
         document.getElementById('gest-subtitulo').textContent =
-          `${r.total} producto${r.total !== 1 ? 's' : ''} en el catálogo`;
+          `${total} producto${total !== 1 ? 's' : ''} en el catálogo`;
         aplicarFiltrosGestion();
       } catch (err) {
         lista.innerHTML = `<div class="sin-productos"><div class="sin-productos-emoji">⚠️</div>Error: ${err.message}</div>`;
@@ -2278,22 +2217,17 @@
     async function accionLote(nuevoEstado) {
       if (!seleccionados.size) return;
       const n = seleccionados.size;
-      const s = getSesion();
-      let exitos = 0;
+      const nombres = [...seleccionados]
+        .map(fila => todosLosProductos.find(p => p.fila === fila)?.nombre)
+        .filter(Boolean);
 
-      for (const fila of seleccionados) {
-        try {
-          const r = await llamarBackend({ accion: 'cambiar_estado', token: s.token, fila, estado: nuevoEstado });
-          if (r.ok) {
-            exitos++;
-            // Actualizar localmente
-            const prod = todosLosProductos.find(p => p.fila === fila);
-            if (prod) prod.estado = nuevoEstado;
-          }
-        } catch {}
+      const { error } = await sb.from('productos').update({ estado: nuevoEstado }).in('nombre', nombres);
+      if (!error) {
+        todosLosProductos.filter(p => seleccionados.has(p.fila)).forEach(p => p.estado = nuevoEstado);
+        toast(`✅ ${nombres.length} de ${n} actualizados a "${nuevoEstado}"`, 'success');
+      } else {
+        toast('Error al actualizar', 'error');
       }
-
-      toast(`✅ ${exitos} de ${n} actualizados a "${nuevoEstado}"`, 'success');
       seleccionados.clear();
       toggleModoLote();
       aplicarFiltrosGestion();
@@ -2302,11 +2236,11 @@
     // ── CAMBIAR ESTADO RÁPIDO ──────────────────────
     async function cambiarEstadoRapido(fila, nuevoEstado) {
       try {
-        const s = getSesion();
-        const r = await llamarBackend({ accion: 'cambiar_estado', token: s.token, fila, estado: nuevoEstado });
-        if (r.ok) {
-          const prod = todosLosProductos.find(p => p.fila === fila);
-          if (prod) prod.estado = nuevoEstado;
+        const prod = todosLosProductos.find(p => p.fila === fila);
+        if (!prod) return;
+        const { error } = await sb.from('productos').update({ estado: nuevoEstado }).eq('nombre', prod.nombre);
+        if (!error) {
+          prod.estado = nuevoEstado;
           aplicarFiltrosGestion();
           toast(`${nuevoEstado === 'Agotado' ? '🔴' : '🟢'} Marcado como ${nuevoEstado}`, 'success');
         } else {
@@ -2334,25 +2268,23 @@
     }
 
     async function confirmarEliminar() {
-      if (!filaAEliminar) return;
+      if (filaAEliminar === null) return;
+      const prod = todosLosProductos.find(p => p.fila === filaAEliminar);
+      if (!prod) return;
       const btn = document.getElementById('btn-confirmar-eliminar');
       btn.disabled = true; btn.textContent = 'Eliminando...';
 
       try {
-        const s = getSesion();
-        const r = await llamarBackend({ accion: 'eliminar_producto', token: s.token, fila: filaAEliminar });
-        if (r.ok) {
+        const { error } = await sb.from('productos').delete().eq('nombre', prod.nombre);
+        if (!error) {
           todosLosProductos = todosLosProductos.filter(p => p.fila !== filaAEliminar);
-          // Recalcular filas (al eliminar, las siguientes bajan)
-          todosLosProductos.forEach((p, idx) => {
-            if (p.fila > filaAEliminar) p.fila--;
-          });
+          todosLosProductos.forEach((p, i) => { p.fila = i; });
           cerrarModalEliminar();
           aplicarFiltrosGestion();
           toast('🗑️ Producto eliminado', 'success');
           cargarStats();
         } else {
-          toast('Error: ' + r.error, 'error');
+          toast('Error: ' + error.message, 'error');
         }
       } catch {
         toast('Error de conexión', 'error');
@@ -2477,40 +2409,41 @@
       btn.disabled = true; txt.textContent = 'Guardando...';
 
       try {
-        const s = getSesion();
-        let imagenBase64 = null;
-        if (imagenEditBlob) imagenBase64 = await blobABase64(imagenEditBlob);
+        const fila          = parseInt(document.getElementById('edit-fila').value);
+        const prod          = todosLosProductos.find(p => p.fila === fila);
+        const nombreOriginal = prod?.nombre;
+        const nuevoNombre   = document.getElementById('edit-titulo').value.trim();
+        const categoria     = document.getElementById('edit-categoria').value;
+        const estado        = document.getElementById('edit-estado').value;
 
-        const r = await llamarBackend({
-          accion: 'editar_producto',
-          token: s.token,
-          fila:      parseInt(document.getElementById('edit-fila').value),
-          producto:  document.getElementById('edit-titulo').value.trim(),
-          precio:    precioFinal,
-          categoria: document.getElementById('edit-categoria').value,
-          estado:    document.getElementById('edit-estado').value,
-          imagenBase64
-        });
+        const updates = { nombre: nuevoNombre, precio: precioFinal, categoria, estado };
 
-        if (r.ok) {
-          // Actualizar localmente
-          const fila = parseInt(document.getElementById('edit-fila').value);
-          const prod = todosLosProductos.find(p => p.fila === fila);
+        // Si hay nueva imagen, subirla a Supabase Storage
+        if (imagenEditBlob) {
+          const urlImagen = await subirImagenSupabase(imagenEditBlob, nuevoNombre);
+          updates.url_imagen = urlImagen;
+          updates.url_github = urlImagen;
+        }
+
+        const { error } = await sb.from('productos').update(updates).eq('nombre', nombreOriginal);
+
+        if (!error) {
           if (prod) {
-            prod.producto  = document.getElementById('edit-titulo').value.trim();
+            prod.nombre    = nuevoNombre;
+            prod.producto  = nuevoNombre;
             prod.precio    = precioFinal;
-            prod.categoria = document.getElementById('edit-categoria').value;
-            prod.estado    = document.getElementById('edit-estado').value;
-            if (r.urlGitHub) prod.urlGitHub = r.urlGitHub;
+            prod.categoria = categoria;
+            prod.estado    = estado;
+            if (updates.url_imagen) { prod.urlImagen = updates.url_imagen; prod.urlGitHub = updates.url_github; }
           }
           cerrarModalEditDirecto();
           aplicarFiltrosGestion();
           toast('✅ Producto actualizado', 'success');
         } else {
-          toast('Error: ' + (r.error || 'desconocido'), 'error');
+          toast('Error: ' + error.message, 'error');
         }
       } catch (err) {
-        toast('Error de conexión: ' + err.message, 'error');
+        toast('Error: ' + err.message, 'error');
       } finally {
         btn.disabled = false; txt.textContent = 'Guardar cambios';
       }
@@ -2766,3 +2699,4 @@
   </script>
 </body>
 </html>
+
