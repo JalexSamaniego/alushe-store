@@ -4,7 +4,7 @@
   <link rel="icon" type="image/png" href="/assets/images/favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Montserrat', sans-serif; background: #F7F6DE; padding: 12px; }
@@ -303,7 +303,9 @@
   </div>
 
   <script>
-    const csvUrl     = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSFVkVwygu8wOUzX2ji862ooqSuMPET7XRsKpoYnpIY6UkuGWIrTbyZXokA5aI-jfHwDOZ_BIaHq2PQ/pub?gid=523685927&single=true&output=csv';
+    const SB_URL  = 'https://wzixskdrpdqgtvucnsbf.supabase.co';
+    const SB_KEY  = 'sb_publishable_JtOAt4xSg7RxIhmxygFKAQ_0jNYENUE';
+    const sb      = supabase.createClient(SB_URL, SB_KEY);
     const miWhatsApp = '526183973897';
 
     // ✏️ Días que un producto se considera "Nuevo"
@@ -641,19 +643,28 @@
       enviar.href = `https://wa.me/${miWhatsApp}?text=${encodeURIComponent(msg)}`;
     }
 
-    // ── CARGA CSV ─────────────────────────────────────
-    Papa.parse(csvUrl, {
-      download: true, header: true,
-      complete(results) {
-        todosLosProductos = results.data.filter(r => r.Producto && r.Precio);
+    // ── CARGA SUPABASE ─────────────────────────────────
+    (async () => {
+      try {
+        const { data, error } = await sb.from('productos').select('*').order('nombre');
+        if (error) throw error;
+        todosLosProductos = data.filter(r => r.nombre && r.precio).map(r => ({
+          Producto:   r.nombre,
+          Precio:     r.precio,
+          URL_Imagen: r.url_imagen || '',
+          URL_GitHub: r.url_github || '',
+          Estado:     r.estado || 'Disponible',
+          Categoria:  r.categoria || '',
+          Fecha:      r.fecha || '',
+        }));
         const cats = [...new Set(todosLosProductos.map(p => (p.Categoria||'').trim()).filter(Boolean))].sort();
         renderChips(cats);
         aplicarFiltros();
-      },
-      error() {
+      } catch(e) {
         container.innerHTML = `<div class="sin-resultados">Error al cargar el catálogo. Intenta más tarde.</div>`;
       }
-    });
+    })();
   </script>
 </body>
 </html>
+
