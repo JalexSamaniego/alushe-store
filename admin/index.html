@@ -1041,6 +1041,104 @@
     }
     .code-copy-btn:hover { background: rgba(255,255,255,.22); }
 
+    /* ═══ PULIDO v2 ═══ */
+
+    /* Contenedor max-width para escritorio */
+    .app { max-width: 720px; margin: 0 auto; }
+
+    /* ── Navegación inferior persistente ── */
+    main { padding-bottom: 84px; }
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 90;
+      display: flex; background: var(--white); border-top: 1px solid var(--line);
+      box-shadow: 0 -4px 16px rgba(0,0,0,.06); padding: 6px 0 calc(6px + env(safe-area-inset-bottom));
+      max-width: 720px; margin: 0 auto;
+    }
+    .bottom-nav-item {
+      flex: 1; background: none; display: flex; flex-direction: column; align-items: center;
+      gap: 2px; font-size: 10px; font-weight: 700; color: var(--ink-lt); padding: 6px 0;
+      transition: color .15s;
+    }
+    .bottom-nav-item .bn-ico { font-size: 20px; line-height: 1; }
+    .bottom-nav-item.activo { color: var(--green); }
+    .bottom-nav-item.nuevo .bn-ico {
+      background: var(--green); color: #fff; width: 38px; height: 38px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center; margin-top: -16px;
+      box-shadow: 0 4px 12px rgba(37,211,102,.4); font-size: 24px;
+    }
+    .bottom-nav-item.nuevo.activo { color: var(--green-d); }
+
+    /* ── Pantalla de éxito tras agregar ── */
+    .exito-card {
+      background: var(--white); border: 1px solid var(--line); border-radius: var(--r-lg);
+      padding: 32px 22px; text-align: center; box-shadow: 0 6px 20px rgba(0,0,0,.06);
+    }
+    .exito-card .exito-ico { font-size: 54px; margin-bottom: 10px; }
+    .exito-card h2 { font-size: 18px; margin-bottom: 6px; }
+    .exito-card p { font-size: 13px; color: var(--ink-lt); margin-bottom: 22px; }
+    .exito-botones { display: flex; flex-direction: column; gap: 10px; }
+    .exito-botones .btn-guardar, .exito-botones .btn-cancelar { width: 100%; justify-content: center; }
+
+    /* ── Badge de origen (manual / facebook) ── */
+    .badge-origen {
+      display: inline-flex; align-items: center; gap: 3px; font-size: 9px; font-weight: 800;
+      padding: 2px 7px; border-radius: 20px; text-transform: uppercase; letter-spacing: .4px;
+    }
+    .badge-origen.manual   { background: #eef6ff; color: #1d6fd6; }
+    .badge-origen.facebook { background: #e9f9f0; color: #1a9c45; }
+
+    /* ── Skeletons ── */
+    .skel-row {
+      display: flex; align-items: center; gap: 12px; background: var(--white);
+      border: 1px solid var(--line); border-radius: var(--r); padding: 10px; margin-bottom: 8px;
+    }
+    .skel-box { background: linear-gradient(90deg,#ececec 25%,#f5f5f5 50%,#ececec 75%);
+      background-size: 200% 100%; animation: skel 1.3s infinite; border-radius: 8px; }
+    .skel-thumb { width: 52px; height: 52px; flex-shrink: 0; }
+    .skel-lines { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+    .skel-line { height: 11px; }
+    .skel-line.short { width: 45%; }
+    @keyframes skel { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+    /* ── Selector de orden ── */
+    .orden-wrap { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .orden-select {
+      flex: 1; padding: 9px 12px; border: 1.5px solid var(--line); border-radius: 10px;
+      background: var(--white); font-size: 12px; font-weight: 600; color: var(--ink); outline: none;
+    }
+
+    /* ── Widgets de dashboard ── */
+    .dash-widgets { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+    .dash-widget {
+      background: var(--white); border: 1px solid var(--line); border-radius: var(--r);
+      padding: 14px; box-shadow: 0 2px 6px rgba(0,0,0,.04);
+    }
+    .dash-widget-label { font-size: 10px; font-weight: 700; color: var(--ink-lt); text-transform: uppercase; letter-spacing: .5px; }
+    .dash-widget-num { font-size: 22px; font-weight: 800; color: var(--ink); margin-top: 4px; }
+    .dash-cats { background: var(--white); border: 1px solid var(--line); border-radius: var(--r); padding: 14px; margin-bottom: 18px; }
+    .dash-cat-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 12px; }
+    .dash-cat-bar { flex: 1; height: 8px; background: var(--bg); border-radius: 8px; overflow: hidden; }
+    .dash-cat-fill { height: 100%; background: var(--green); border-radius: 8px; }
+    .dash-cat-num { font-weight: 700; color: var(--ink-lt); min-width: 24px; text-align: right; }
+
+    /* ── Botón cuenta (header) ── */
+    .cuenta-btn {
+      background: none; font-size: 18px; color: var(--ink-lt); padding: 6px 8px; border-radius: 8px;
+    }
+    .cuenta-btn:hover { background: var(--bg); }
+    .cuenta-email { font-size: 11px; color: var(--ink-lt); font-weight: 600; margin-right: 4px; }
+
+    /* ── Toast con botón deshacer ── */
+    .toast-undo-btn {
+      margin-left: 12px; background: rgba(255,255,255,.25); color: #fff; border-radius: 6px;
+      padding: 3px 10px; font-size: 12px; font-weight: 800;
+    }
+
+    /* ── Acciones extra de lote ── */
+    .barra-lote-select {
+      padding: 7px 8px; border-radius: 8px; border: none; font-size: 12px; font-weight: 600;
+      max-width: 130px;
+    }
   </style>
 </head>
 <body>
@@ -1087,6 +1185,8 @@
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
           Ver web
         </a>
+        <span class="cuenta-email" id="cuenta-email"></span>
+        <button class="cuenta-btn" id="btn-cuenta" title="Mi cuenta" onclick="abrirModalCuenta()">⚙</button>
         <button class="logout" id="btn-logout">Salir</button>
       </div>
     </header>
@@ -1113,7 +1213,23 @@
           </div>
         </div>
 
-        <button class="accion-grande" onclick="irA('nuevo')">
+        <div class="dash-widgets">
+          <div class="dash-widget">
+            <div class="dash-widget-label">Valor del inventario</div>
+            <div class="dash-widget-num" id="dash-valor">—</div>
+          </div>
+          <div class="dash-widget">
+            <div class="dash-widget-label">Categorías</div>
+            <div class="dash-widget-num" id="dash-ncats">—</div>
+          </div>
+        </div>
+
+        <div class="dash-cats">
+          <div class="dash-widget-label">Productos por categoría</div>
+          <div id="dash-cats-lista"></div>
+        </div>
+
+        <button class="accion-grande" onclick="irANuevo()">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 5v14m-7-7h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
           </svg>
@@ -1150,6 +1266,14 @@
           <div class="accion-secundaria-izq">
             <div class="accion-secundaria-icono">📍</div>
             <div>Puntos de entrega</div>
+          </div>
+          <span class="accion-secundaria-flecha">›</span>
+        </button>
+
+        <button class="accion-secundaria" onclick="exportarCSV()">
+          <div class="accion-secundaria-izq">
+            <div class="accion-secundaria-icono">📤</div>
+            <div>Exportar catálogo (CSV)</div>
           </div>
           <span class="accion-secundaria-flecha">›</span>
         </button>
@@ -1297,6 +1421,20 @@
             </button>
           </div>
         </form>
+
+        <!-- Pantalla de éxito -->
+        <div class="exito-card" id="nuevo-exito" style="display:none;">
+          <div class="exito-ico">✅</div>
+          <h2>¡Producto agregado!</h2>
+          <p id="nuevo-exito-nombre">Ya está publicado en el catálogo.</p>
+          <div class="exito-botones">
+            <button class="btn-guardar" style="background:var(--green);" onclick="nuevoOtro()">
+              ＋ Agregar otro producto
+            </button>
+            <button class="btn-cancelar" onclick="irAGestionar()">📋 Ver productos</button>
+            <button class="btn-cancelar" onclick="irA('dashboard')">🏠 Ir al inicio</button>
+          </div>
+        </div>
       </section>
 
 
@@ -1372,6 +1510,18 @@
           <button class="filtro-chip rojo"  data-filtro="Agotado"    onclick="cambiarFiltro(this)">Agotados</button>
         </div>
 
+        <!-- Orden -->
+        <div class="orden-wrap">
+          <select class="orden-select" id="gest-orden" onchange="aplicarFiltrosGestion()">
+            <option value="nombre">Nombre (A-Z)</option>
+            <option value="precio_asc">Precio: menor a mayor</option>
+            <option value="precio_desc">Precio: mayor a menor</option>
+            <option value="fecha">Más recientes</option>
+            <option value="estado">Por estado</option>
+          </select>
+          <button class="btn-lote" onclick="revisarImagenes()" title="Buscar imágenes rotas">🖼 Revisar</button>
+        </div>
+
         <!-- Header lista -->
         <div class="lista-header">
           <div class="lista-contador" id="gest-contador">—</div>
@@ -1387,6 +1537,18 @@
           <div class="barra-lote-acciones">
             <button class="barra-lote-btn disponible" onclick="accionLote('Disponible')">✓ Disponible</button>
             <button class="barra-lote-btn agotado"    onclick="accionLote('Agotado')">✕ Agotado</button>
+            <select class="barra-lote-select" id="lote-categoria" onchange="accionLoteCategoria(this.value); this.value='';">
+              <option value="">Categoría…</option>
+              <option value="Ropa y accesorios">Ropa y accesorios</option>
+              <option value="Electrónica">Electrónica</option>
+              <option value="Hogar y cocina">Hogar y cocina</option>
+              <option value="Bolsas y carteras">Bolsas y carteras</option>
+              <option value="Juguetes y bebés">Juguetes y bebés</option>
+              <option value="Deporte y fitness">Deporte y fitness</option>
+              <option value="Belleza y cuidado personal">Belleza y cuidado personal</option>
+              <option value="Otros">Otros</option>
+            </select>
+            <button class="barra-lote-btn agotado" onclick="accionLoteEliminar()">🗑️ Borrar</button>
             <button class="barra-lote-btn cancelar"   onclick="cancelarLote()">Cancelar</button>
           </div>
         </div>
@@ -1400,21 +1562,13 @@
           ← Volver
         </button>
         <h1 class="titulo-vista">🖼 Banners</h1>
-        <p class="subtitulo-vista">Edita los 4 banners del catálogo — sin tocar el HTML</p>
+        <p class="subtitulo-vista">Edita los banners del catálogo — se publican al instante</p>
 
         <div id="banners-lista"></div>
 
-        <div class="code-export" id="banner-code-block" style="display:none;">
-          <div class="code-export-label">
-            <span>📋 HTML GENERADO — PEGAR EN catalogo/index.html (líneas 213–244)</span>
-          </div>
-          <pre id="banner-code-pre"></pre>
-          <button class="code-copy-btn" onclick="copiarBannerHTML()">📋 Copiar HTML</button>
-        </div>
-
         <div style="margin-top:16px;">
-          <button class="btn-guardar" onclick="generarBannerHTML()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;">
-            📋 Generar HTML para copiar
+          <button class="btn-guardar" onclick="agregarBanner()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;">
+            ＋ Agregar banner
           </button>
         </div>
       </section>
@@ -1474,6 +1628,25 @@
       </section>
 
     </main>
+
+    <!-- ───── NAVEGACIÓN INFERIOR ───── -->
+    <nav class="bottom-nav">
+      <button class="bottom-nav-item" data-nav="dashboard" onclick="irA('dashboard')">
+        <span class="bn-ico">🏠</span>Inicio
+      </button>
+      <button class="bottom-nav-item" data-nav="gestionar" onclick="irAGestionar()">
+        <span class="bn-ico">📋</span>Productos
+      </button>
+      <button class="bottom-nav-item nuevo" data-nav="nuevo" onclick="irANuevo()">
+        <span class="bn-ico">＋</span>Nuevo
+      </button>
+      <button class="bottom-nav-item" data-nav="sync" onclick="irASync()">
+        <span class="bn-ico">🤖</span>Sync
+      </button>
+      <button class="bottom-nav-item" data-nav="banners" onclick="irA('banners')">
+        <span class="bn-ico">🖼</span>Banners
+      </button>
+    </nav>
   </div>
 
 
@@ -1601,6 +1774,37 @@
     </div>
   </div>
 
+  <!-- Modal cuenta / cambiar contraseña -->
+  <div class="modal-edit-overlay" id="modal-cuenta" onclick="cerrarModalCuenta(event)">
+    <div class="modal-edit" style="max-height:auto;">
+      <div class="modal-edit-handle"></div>
+      <div class="modal-edit-header">
+        <div class="modal-edit-titulo">Mi cuenta</div>
+        <button class="modal-edit-cerrar" onclick="cerrarModalCuenta()">✕</button>
+      </div>
+      <div class="field">
+        <label class="field-label">Sesión iniciada como</label>
+        <div style="font-size:13px;font-weight:700;color:var(--ink);" id="cuenta-email-modal">—</div>
+      </div>
+      <form id="form-cuenta" autocomplete="off">
+        <div class="field">
+          <label class="field-label">Nueva contraseña</label>
+          <input type="password" id="cuenta-pwd" class="field-input" placeholder="Mínimo 6 caracteres" minlength="6" autocomplete="new-password" required>
+        </div>
+        <div class="field">
+          <label class="field-label">Repetir contraseña</label>
+          <input type="password" id="cuenta-pwd2" class="field-input" placeholder="Repite la contraseña" minlength="6" autocomplete="new-password" required>
+        </div>
+        <div class="form-acciones">
+          <button type="button" class="btn-cancelar" onclick="cerrarModalCuenta()">Cancelar</button>
+          <button type="submit" class="btn-guardar" id="btn-cuenta-guardar">
+            <span id="btn-cuenta-texto">Cambiar contraseña</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- toast -->
   <div class="toast" id="toast"></div>
 
@@ -1688,7 +1892,27 @@
     function mostrarApp() {
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('app').classList.add('activo');
+      const email = _sesion?.user?.email || '';
+      document.getElementById('cuenta-email').textContent = email;
       cargarStats();
+      iniciarRealtime();
+    }
+
+    // ── Realtime: refresca stats y lista cuando cambia el inventario ──
+    let _rtCanal = null, _rtPend = null;
+    function iniciarRealtime() {
+      if (_rtCanal) return;
+      _rtCanal = sb.channel('admin-productos')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'productos' }, () => {
+          clearTimeout(_rtPend);
+          _rtPend = setTimeout(() => {
+            cargarStats();
+            if (document.getElementById('vista-gestionar').classList.contains('activa') && !modoLote) {
+              cargarProductos();
+            }
+          }, 700);
+        })
+        .subscribe();
     }
 
     // Mantener _sesion sincronizada y mostrar la app si ya hay sesión guardada
@@ -1751,19 +1975,58 @@
     function irA(vista) {
       document.querySelectorAll('.vista').forEach(v => v.classList.remove('activa'));
       document.getElementById('vista-' + vista).classList.add('activa');
+      // Estado activo del nav inferior
+      document.querySelectorAll('.bottom-nav-item').forEach(b =>
+        b.classList.toggle('activo', b.dataset.nav === vista));
+      if (vista === 'banners') cargarBanners();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+
+    // Ir a "Nuevo" dejando el formulario limpio y listo
+    function irANuevo() {
+      document.getElementById('form-producto').reset();
+      quitarImagen();
+      document.getElementById('card-preview-wrap').style.display = 'none';
+      document.getElementById('nuevo-exito').style.display = 'none';
+      document.getElementById('form-producto').style.display = '';
+      irA('nuevo');
+    }
+    function nuevoOtro() { irANuevo(); }
 
     // ═══════════════════════════════════════
     // ESTADÍSTICAS DEL DASHBOARD
     // ═══════════════════════════════════════
+    // Extrae el valor numérico de un precio ("MX$1,200" o "3xMX$100" → 1200 / 100)
+    function precioNumerico(precio) {
+      if (!precio) return 0;
+      const m = String(precio).match(/MX\$([\d,]+)/);
+      return m ? parseFloat(m[1].replace(/,/g, '')) : 0;
+    }
+
     async function cargarStats() {
       try {
-        const { data, error } = await sb.from('productos').select('estado');
+        const { data, error } = await sb.from('productos').select('estado, precio, categoria');
         if (error) throw error;
         animarNum('stat-total', data.length);
         animarNum('stat-disp', data.filter(p => p.estado === 'Disponible').length);
         animarNum('stat-agot', data.filter(p => p.estado === 'Agotado').length);
+
+        // Valor del inventario
+        const valor = data.reduce((s, p) => s + precioNumerico(p.precio), 0);
+        document.getElementById('dash-valor').textContent = 'MX$' + valor.toLocaleString('en-US');
+
+        // Desglose por categoría
+        const conteo = {};
+        data.forEach(p => { const c = (p.categoria || 'Otros').trim() || 'Otros'; conteo[c] = (conteo[c] || 0) + 1; });
+        const cats = Object.entries(conteo).sort((a, b) => b[1] - a[1]);
+        document.getElementById('dash-ncats').textContent = cats.length;
+        const max = cats.length ? cats[0][1] : 1;
+        document.getElementById('dash-cats-lista').innerHTML = cats.map(([c, n]) => `
+          <div class="dash-cat-row">
+            <span style="flex:0 0 38%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c}</span>
+            <span class="dash-cat-bar"><span class="dash-cat-fill" style="width:${Math.round(n / max * 100)}%"></span></span>
+            <span class="dash-cat-num">${n}</span>
+          </div>`).join('') || '<div style="font-size:12px;color:var(--ink-lt);margin-top:8px;">Sin productos aún.</div>';
       } catch {
         document.getElementById('stat-total').textContent = '—';
       }
@@ -1940,6 +2203,17 @@
         const categoria = document.getElementById('f-categoria').value;
         const estado    = document.getElementById('f-estado').value;
 
+        // 0) ¿ya existe un producto con ese nombre?
+        const { data: existente } = await sb.from('productos').select('nombre').eq('nombre', nombre).maybeSingle();
+        if (existente) {
+          const ok = confirm(`Ya existe un producto llamado "${nombre}".\n\n¿Quieres REEMPLAZARLO con estos nuevos datos?\n(Cancelar para cambiar el nombre)`);
+          if (!ok) {
+            btn.disabled = false;
+            btnTxt.textContent = 'Guardar producto';
+            return;
+          }
+        }
+
         // 1) subir imagen a Supabase Storage
         const urlImagen = await subirImagenSupabase(imagenBlob, nombre);
 
@@ -1952,10 +2226,13 @@
         }, { onConflict: 'nombre' });
 
         if (!error) {
-          toast('✅ Producto agregado al catálogo', 'success');
-          document.getElementById('form-producto').reset();
-          quitarImagen();
-          setTimeout(() => { irA('dashboard'); cargarStats(); }, 800);
+          toast('✅ Producto guardado en el catálogo', 'success');
+          cargarStats();
+          // Mostrar pantalla de éxito con opciones (sin obligar a relogin/salir)
+          document.getElementById('form-producto').style.display = 'none';
+          document.getElementById('nuevo-exito-nombre').textContent = `"${nombre}" ya está publicado en el catálogo.`;
+          document.getElementById('nuevo-exito').style.display = 'block';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
           toast('Error: ' + error.message, 'error');
         }
@@ -1976,6 +2253,111 @@
       t.className = 'toast visible ' + tipo;
       setTimeout(() => t.classList.remove('visible'), 3500);
     }
+
+    let _undoTimer = null;
+    function toastUndo(msg, onUndo) {
+      const t = document.getElementById('toast');
+      clearTimeout(_undoTimer);
+      t.innerHTML = '';
+      t.append(msg);
+      const b = document.createElement('button');
+      b.className = 'toast-undo-btn';
+      b.textContent = 'Deshacer';
+      b.onclick = () => { t.classList.remove('visible'); clearTimeout(_undoTimer); onUndo(); };
+      t.appendChild(b);
+      t.className = 'toast visible success';
+      _undoTimer = setTimeout(() => t.classList.remove('visible'), 6000);
+    }
+
+    // ── LOTE: cambiar categoría / eliminar ──
+    async function accionLoteCategoria(categoria) {
+      if (!categoria || !seleccionados.size) return;
+      const nombres = [...seleccionados].map(f => todosLosProductos.find(p => p.fila === f)?.nombre).filter(Boolean);
+      const { error } = await sb.from('productos').update({ categoria }).in('nombre', nombres);
+      if (!error) {
+        todosLosProductos.filter(p => seleccionados.has(p.fila)).forEach(p => p.categoria = categoria);
+        toast(`✅ ${nombres.length} movidos a "${categoria}"`, 'success');
+      } else toast('Error al actualizar', 'error');
+      seleccionados.clear(); toggleModoLote(); aplicarFiltrosGestion(); cargarStats();
+    }
+
+    async function accionLoteEliminar() {
+      if (!seleccionados.size) return;
+      const nombres = [...seleccionados].map(f => todosLosProductos.find(p => p.fila === f)?.nombre).filter(Boolean);
+      if (!confirm(`¿Eliminar ${nombres.length} producto(s)? Esta acción no se puede deshacer en lote.`)) return;
+      const { error } = await sb.from('productos').delete().in('nombre', nombres);
+      if (!error) { toast(`🗑️ ${nombres.length} eliminados`, 'success'); }
+      else toast('Error al eliminar', 'error');
+      seleccionados.clear(); toggleModoLote(); cargarProductos(); cargarStats();
+    }
+
+    // ── Exportar catálogo a CSV ──
+    async function exportarCSV() {
+      const { data, error } = await sb.from('productos').select('*').order('nombre');
+      if (error) { toast('Error al exportar', 'error'); return; }
+      const cols = ['nombre', 'precio', 'categoria', 'estado', 'fuente', 'fecha', 'url_github', 'url_imagen'];
+      const esc = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+      const csv = [cols.join(',')].concat(
+        data.map(r => cols.map(c => esc(r[c])).join(','))
+      ).join('\r\n');
+      const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `catalogo_alushe_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      toast('📤 CSV descargado', 'success');
+    }
+
+    // ── Detector de imágenes rotas ──
+    async function revisarImagenes() {
+      toast('🔍 Revisando imágenes…', 'success');
+      const rotas = [];
+      await Promise.all(todosLosProductos.map(p => new Promise(res => {
+        const url = p.urlGitHub || p.urlImagen;
+        if (!url) { rotas.push(p.producto); return res(); }
+        const img = new Image();
+        img.onload = () => res();
+        img.onerror = () => { rotas.push(p.producto); res(); };
+        img.src = url;
+      })));
+      if (!rotas.length) { toast('✅ Todas las imágenes cargan bien', 'success'); return; }
+      alert(`⚠️ ${rotas.length} producto(s) con imagen rota o faltante:\n\n• ${rotas.slice(0, 30).join('\n• ')}${rotas.length > 30 ? '\n…' : ''}`);
+    }
+
+    // ── Modal cuenta / cambiar contraseña ──
+    function abrirModalCuenta() {
+      document.getElementById('cuenta-email-modal').textContent = _sesion?.user?.email || '—';
+      document.getElementById('cuenta-pwd').value = '';
+      document.getElementById('cuenta-pwd2').value = '';
+      document.getElementById('modal-cuenta').classList.add('abierto');
+      document.body.style.overflow = 'hidden';
+    }
+    function cerrarModalCuenta(e) {
+      if (e && e.target !== document.getElementById('modal-cuenta')) return;
+      document.getElementById('modal-cuenta').classList.remove('abierto');
+      document.body.style.overflow = '';
+    }
+    document.getElementById('form-cuenta').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const p1 = document.getElementById('cuenta-pwd').value;
+      const p2 = document.getElementById('cuenta-pwd2').value;
+      if (p1 !== p2) { toast('Las contraseñas no coinciden', 'error'); return; }
+      const btn = document.getElementById('btn-cuenta-guardar');
+      const txt = document.getElementById('btn-cuenta-texto');
+      btn.disabled = true; txt.textContent = 'Guardando…';
+      const { error } = await sb.auth.updateUser({ password: p1 });
+      btn.disabled = false; txt.textContent = 'Cambiar contraseña';
+      if (!error) { cerrarModalCuenta(); toast('🔑 Contraseña actualizada', 'success'); }
+      else toast('Error: ' + error.message, 'error');
+    });
+
+    // ── Esc cierra modales abiertos ──
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      if (document.getElementById('modal-edit').classList.contains('abierto')) cerrarModalEditDirecto();
+      else if (document.getElementById('modal-eliminar').classList.contains('abierto')) cerrarModalEliminar();
+      else if (document.getElementById('modal-cuenta').classList.contains('abierto')) cerrarModalCuenta();
+    });
 
 
     // ═══════════════════════════════════════
@@ -2057,10 +2439,43 @@
 
     async function cargarHistorial() {
       const lista = document.getElementById('historial-lista');
-      lista.innerHTML = `<div class="historial-vacio">
-        <div class="historial-vacio-emoji">🤖</div>
-        El historial de sincronizaciones se registra en la app de escritorio AlusheSync.
-      </div>`;
+      lista.innerHTML = `<div class="historial-vacio"><div class="historial-vacio-emoji">⏳</div>Cargando...</div>`;
+      try {
+        const { data, error } = await sb.from('sync_log')
+          .select('*').order('creado', { ascending: false }).limit(30);
+        if (error) throw error;
+        if (!data.length) {
+          lista.innerHTML = `<div class="historial-vacio">
+            <div class="historial-vacio-emoji">🤖</div>
+            Aún no hay sincronizaciones. Corre la app AlusheSync y aparecerán aquí.
+          </div>`;
+          return;
+        }
+        lista.innerHTML = data.map(h => {
+          const f = new Date(h.creado);
+          const fecha = f.toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' });
+          const hora  = f.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+          const err = (h.estado && h.estado !== 'OK');
+          return `
+          <div class="sync-card">
+            <div class="sync-card-header">
+              <div><div class="sync-fecha">${fecha}</div><div class="sync-hora">🕒 ${hora}</div></div>
+              <div class="sync-estado ${err ? 'error' : 'ok'}">${err ? '⚠️ Error' : '✓ OK'}</div>
+            </div>
+            <div class="sync-stats">
+              <div class="sync-stat"><div class="sync-stat-num verde">${h.nuevos ?? 0}</div><div class="sync-stat-label">Nuevos</div></div>
+              <div class="sync-stat"><div class="sync-stat-num naranja">${h.actualizados ?? 0}</div><div class="sync-stat-label">Actualizados</div></div>
+              <div class="sync-stat"><div class="sync-stat-num rojo">${h.eliminados ?? 0}</div><div class="sync-stat-label">Eliminados</div></div>
+              <div class="sync-stat"><div class="sync-stat-num">${h.total ?? 0}</div><div class="sync-stat-label">Total</div></div>
+            </div>
+          </div>`;
+        }).join('');
+      } catch (e) {
+        lista.innerHTML = `<div class="historial-vacio">
+          <div class="historial-vacio-emoji">⚠️</div>
+          No se pudo cargar el historial (¿falta crear la tabla sync_log?).
+        </div>`;
+      }
     }
 
     // ═══════════════════════════════════════
@@ -2080,9 +2495,20 @@
       await cargarProductos();
     }
 
+    function skeletonRows(n = 6) {
+      return Array(n).fill(`
+        <div class="skel-row">
+          <div class="skel-box skel-thumb"></div>
+          <div class="skel-lines">
+            <div class="skel-box skel-line"></div>
+            <div class="skel-box skel-line short"></div>
+          </div>
+        </div>`).join('');
+    }
+
     async function cargarProductos() {
       const lista = document.getElementById('gest-lista');
-      lista.innerHTML = '<div class="cargando-lista">⏳ Cargando productos...</div>';
+      lista.innerHTML = skeletonRows();
       document.getElementById('gest-subtitulo').textContent = 'Cargando inventario...';
 
       try {
@@ -2109,8 +2535,15 @@
       }
     }
 
+    // Normaliza para buscar sin importar acentos/mayúsculas
+    function norm(s) {
+      return (s || '').toString().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    }
+
+    let _debounceBusq = null;
     function filtrarLista() {
-      aplicarFiltrosGestion();
+      clearTimeout(_debounceBusq);
+      _debounceBusq = setTimeout(aplicarFiltrosGestion, 220);
     }
 
     function cambiarFiltro(btn) {
@@ -2121,20 +2554,40 @@
     }
 
     function aplicarFiltrosGestion() {
-      const busq = document.getElementById('gest-buscador').value.toLowerCase().trim();
+      const busq = norm(document.getElementById('gest-buscador').value.trim());
 
       productosFiltradosG = todosLosProductos.filter(p => {
         const matchBusq = !busq ||
-          p.producto.toLowerCase().includes(busq) ||
-          p.categoria.toLowerCase().includes(busq);
+          norm(p.producto).includes(busq) ||
+          norm(p.categoria).includes(busq);
         const matchEstado = filtroEstado === 'todos' || p.estado === filtroEstado;
         return matchBusq && matchEstado;
       });
 
+      // Ordenar
+      const orden = document.getElementById('gest-orden')?.value || 'nombre';
+      const cmp = {
+        nombre:      (a, b) => a.producto.localeCompare(b.producto),
+        precio_asc:  (a, b) => precioNumerico(a.precio) - precioNumerico(b.precio),
+        precio_desc: (a, b) => precioNumerico(b.precio) - precioNumerico(a.precio),
+        fecha:       (a, b) => (b.fecha || '').localeCompare(a.fecha || ''),
+        estado:      (a, b) => (a.estado || '').localeCompare(b.estado || ''),
+      }[orden];
+      if (cmp) productosFiltradosG.sort(cmp);
+
+      _gestLimite = LOTE_GEST;
       document.getElementById('gest-contador').textContent =
         `${productosFiltradosG.length} de ${todosLosProductos.length} productos`;
 
       renderLista();
+    }
+
+    const LOTE_GEST = 40;       // productos por tanda en la lista
+    let _gestLimite = LOTE_GEST;
+
+    function escHtml(s) {
+      return (s || '').toString().replace(/[&<>"']/g, c =>
+        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     }
 
     function renderLista() {
@@ -2148,7 +2601,9 @@
         return;
       }
 
-      lista.innerHTML = productosFiltradosG.map(p => {
+      const visibles = productosFiltradosG.slice(0, _gestLimite);
+
+      lista.innerHTML = visibles.map(p => {
         const estaAgotado = p.estado === 'Agotado';
         const img = p.urlGitHub || p.urlImagen;
         const thumb = img
@@ -2156,7 +2611,9 @@
              <div class="prod-thumb-placeholder" style="display:none;">🛍️</div>`
           : `<div class="prod-thumb-placeholder">🛍️</div>`;
 
-        const catCorta = (p.categoria || 'Otros').split(' ')[0];
+        const catCorta = escHtml((p.categoria || 'Otros').split(' ')[0]);
+        const esManual = (p.fuente || 'manual') === 'manual';
+        const origen = `<span class="badge-origen ${esManual ? 'manual' : 'facebook'}">${esManual ? '✋ Manual' : 'ⓕ FB'}</span>`;
 
         return `
         <div class="prod-item${estaAgotado ? ' agotado' : ''}${seleccionados.has(p.fila) ? ' seleccionado' : ''}"
@@ -2167,10 +2624,11 @@
           ${thumb}
           <div class="prod-info" onclick="${modoLote ? `toggleSeleccion(${p.fila}, !seleccionados.has(${p.fila}))` : `abrirModalEdit(${p.fila})`}"
                style="cursor:pointer;">
-            <div class="prod-nombre">${p.producto}</div>
+            <div class="prod-nombre">${escHtml(p.producto)}</div>
             <div class="prod-meta">
-              <span class="prod-precio">${p.precio}</span>
+              <span class="prod-precio">${escHtml(p.precio)}</span>
               <span class="prod-cat">${catCorta}</span>
+              ${origen}
             </div>
           </div>
           ${!modoLote ? `
@@ -2180,10 +2638,27 @@
                      onchange="cambiarEstadoRapido(${p.fila}, this.checked ? 'Disponible' : 'Agotado')">
               <span class="estado-slider"></span>
             </label>
-            <button class="prod-btn danger" onclick="pedirEliminar(${p.fila}, '${p.producto.replace(/'/g, "\'")}')">🗑️</button>
+            <button class="prod-btn danger" onclick="pedirEliminar(${p.fila}, this.closest('.prod-item').dataset.nombre)">🗑️</button>
           </div>` : ''}
         </div>`;
       }).join('');
+
+      // Guardar nombre en dataset para borrado seguro (evita problemas de comillas)
+      visibles.forEach(p => {
+        const el = document.getElementById('prod-item-' + p.fila);
+        if (el) el.dataset.nombre = p.producto;
+      });
+
+      // Botón "Ver más"
+      if (productosFiltradosG.length > _gestLimite) {
+        const restantes = productosFiltradosG.length - _gestLimite;
+        const btn = document.createElement('button');
+        btn.className = 'btn-lote';
+        btn.style.cssText = 'width:100%;margin-top:10px;padding:12px;';
+        btn.textContent = `Ver ${Math.min(restantes, LOTE_GEST)} más (${restantes} restantes)`;
+        btn.onclick = () => { _gestLimite += LOTE_GEST; renderLista(); };
+        lista.appendChild(btn);
+      }
     }
 
     // ── MODO LOTE ──────────────────────────────────
@@ -2272,6 +2747,7 @@
       if (filaAEliminar === null) return;
       const prod = todosLosProductos.find(p => p.fila === filaAEliminar);
       if (!prod) return;
+      const snapshot = { ...prod };  // para poder deshacer
       const btn = document.getElementById('btn-confirmar-eliminar');
       btn.disabled = true; btn.textContent = 'Eliminando...';
 
@@ -2282,8 +2758,8 @@
           todosLosProductos.forEach((p, i) => { p.fila = i; });
           cerrarModalEliminar();
           aplicarFiltrosGestion();
-          toast('🗑️ Producto eliminado', 'success');
           cargarStats();
+          toastUndo('🗑️ Producto eliminado', () => restaurarProducto(snapshot));
         } else {
           toast('Error: ' + error.message, 'error');
         }
@@ -2292,6 +2768,15 @@
       } finally {
         btn.disabled = false; btn.textContent = 'Sí, eliminar';
       }
+    }
+
+    async function restaurarProducto(p) {
+      const { error } = await sb.from('productos').insert({
+        nombre: p.nombre, precio: p.precio, categoria: p.categoria, estado: p.estado,
+        url_imagen: p.urlImagen, url_github: p.urlGitHub, fecha: p.fecha, fuente: p.fuente,
+      });
+      if (!error) { toast('↩️ Producto restaurado', 'success'); cargarProductos(); cargarStats(); }
+      else toast('No se pudo restaurar: ' + error.message, 'error');
     }
 
     // ── MODAL EDITAR ───────────────────────────────
@@ -2333,7 +2818,12 @@
 
       document.getElementById('modal-edit').classList.add('abierto');
       document.body.style.overflow = 'hidden';
+      _editDirty = false;
     }
+
+    // Marcar cambios sin guardar en el formulario de edición
+    let _editDirty = false, _editGuardando = false;
+    document.getElementById('form-editar').addEventListener('input', () => { _editDirty = true; });
 
     function cerrarModalEdit(e) {
       if (e && e.target !== document.getElementById('modal-edit')) return;
@@ -2341,9 +2831,12 @@
     }
 
     function cerrarModalEditDirecto() {
+      if (_editDirty && !_editGuardando &&
+          !confirm('Tienes cambios sin guardar. ¿Cerrar de todas formas?')) return;
       document.getElementById('modal-edit').classList.remove('abierto');
       document.body.style.overflow = '';
       imagenEditBlob = null;
+      _editDirty = false;
     }
 
     function toggleEditMultipack(activo) {
@@ -2437,7 +2930,9 @@
             prod.estado    = estado;
             if (updates.url_imagen) { prod.urlImagen = updates.url_imagen; prod.urlGitHub = updates.url_github; }
           }
+          _editGuardando = true;
           cerrarModalEditDirecto();
+          _editGuardando = false;
           aplicarFiltrosGestion();
           toast('✅ Producto actualizado', 'success');
         } else {
@@ -2470,21 +2965,33 @@
   
 
     // ════════════════════════════════════════
-    // FASE 4A — BANNERS
+    // BANNERS (dinámicos desde Supabase)
     // ════════════════════════════════════════
-    let bannersData = JSON.parse(localStorage.getItem('alushe_banners') || 'null') || [
-      { emoji: '🎉', titulo: 'Insumos 3×$100', sub: 'Lleva 3 y paga solo $100 — stock limitado', tipo: 'promo', tag: 'Promo' },
-      { emoji: '📦', titulo: 'Entrega a domicilio en Durango', sub: '10 puntos de entrega disponibles en la ciudad', tipo: 'aviso', tag: 'Info' },
-      { emoji: '✨', titulo: '¡Nuevos productos cada semana!', sub: 'Síguenos en Facebook para ver las novedades', tipo: 'nuevo', tag: 'Nuevo' },
-      { emoji: '💬', titulo: '¿Dudas o preguntas?', sub: 'Escríbenos por WhatsApp — respondemos rápido', tipo: 'aviso', tag: 'Contacto' }
-    ];
+    let bannersData = [];
 
-    function guardarBanners() { localStorage.setItem('alushe_banners', JSON.stringify(bannersData)); }
+    async function cargarBanners() {
+      const lista = document.getElementById('banners-lista');
+      if (!lista) return;
+      lista.innerHTML = skeletonRows(3);
+      const { data, error } = await sb.from('banners').select('*').order('orden');
+      if (error) {
+        lista.innerHTML = `<div class="historial-vacio"><div class="historial-vacio-emoji">⚠️</div>
+          No se pudieron cargar los banners (¿falta crear la tabla <code>banners</code>?).</div>`;
+        return;
+      }
+      bannersData = data;
+      renderBanners();
+    }
 
     function renderBanners() {
       const lista = document.getElementById('banners-lista');
       if (!lista) return;
       lista.innerHTML = '';
+      if (!bannersData.length) {
+        lista.innerHTML = `<div class="historial-vacio"><div class="historial-vacio-emoji">🖼</div>
+          No hay banners. Agrega el primero abajo.</div>`;
+        return;
+      }
       bannersData.forEach((b, i) => {
         const card = document.createElement('div');
         card.className = 'banner-editor-card';
@@ -2492,6 +2999,7 @@
           '<option value="'+t+'"'+(b.tipo===t?' selected':'')+'>'+
           {promo:'🟢 Promo (verde)',aviso:'🔵 Aviso (azul)',nuevo:'🟠 Nuevo (naranja)'}[t]+'</option>'
         ).join('');
+        const v = s => escHtml(s).replace(/"/g, '&quot;');
         card.innerHTML =
           '<div class="banner-editor-header">'+
             '<span class="banner-editor-num">'+(i+1)+'</span>'+
@@ -2500,25 +3008,28 @@
           '</div>'+
           '<p class="preview-label">VISTA PREVIA EN VIVO</p>'+
           '<div class="banner-preview-live '+b.tipo+'" id="bprev-'+i+'">'+
-            '<div class="banner-preview-emoji" id="bprev-emoji-'+i+'">'+b.emoji+'</div>'+
+            '<div class="banner-preview-emoji" id="bprev-emoji-'+i+'">'+escHtml(b.emoji)+'</div>'+
             '<div class="banner-preview-texto">'+
-              '<div class="banner-preview-titulo" id="bprev-titulo-'+i+'">'+b.titulo+'</div>'+
-              '<div class="banner-preview-sub" id="bprev-sub-'+i+'">'+b.sub+'</div>'+
+              '<div class="banner-preview-titulo" id="bprev-titulo-'+i+'">'+escHtml(b.titulo)+'</div>'+
+              '<div class="banner-preview-sub" id="bprev-sub-'+i+'">'+escHtml(b.sub)+'</div>'+
             '</div>'+
-            '<div class="banner-preview-tag" id="bprev-tag-'+i+'">'+b.tag+'</div>'+
+            '<div class="banner-preview-tag" id="bprev-tag-'+i+'">'+escHtml(b.tag)+'</div>'+
           '</div>'+
           '<div id="bform-'+i+'" style="display:none;">'+
             '<div class="field"><label class="field-label">Emoji</label>'+
-              '<input type="text" class="field-input" id="bf-emoji-'+i+'" value="'+b.emoji+'" oninput="updateBannerPreview('+i+')" style="font-size:22px;text-align:center;max-width:90px;"></div>'+
+              '<input type="text" class="field-input" id="bf-emoji-'+i+'" value="'+v(b.emoji)+'" oninput="updateBannerPreview('+i+')" style="font-size:22px;text-align:center;max-width:90px;"></div>'+
             '<div class="field"><label class="field-label">Título</label>'+
-              '<input type="text" class="field-input" id="bf-titulo-'+i+'" value="'+b.titulo.replace(/"/g,'&quot;')+'" oninput="updateBannerPreview('+i+')" placeholder="Título del banner"></div>'+
+              '<input type="text" class="field-input" id="bf-titulo-'+i+'" value="'+v(b.titulo)+'" oninput="updateBannerPreview('+i+')" placeholder="Título del banner"></div>'+
             '<div class="field"><label class="field-label">Subtítulo</label>'+
-              '<input type="text" class="field-input" id="bf-sub-'+i+'" value="'+b.sub.replace(/"/g,'&quot;')+'" oninput="updateBannerPreview('+i+')" placeholder="Texto secundario"></div>'+
+              '<input type="text" class="field-input" id="bf-sub-'+i+'" value="'+v(b.sub)+'" oninput="updateBannerPreview('+i+')" placeholder="Texto secundario"></div>'+
             '<div class="field"><label class="field-label">Tipo (color de fondo)</label>'+
               '<select class="field-select" id="bf-tipo-'+i+'" onchange="updateBannerPreview('+i+')">'+tipoOpts+'</select></div>'+
             '<div class="field"><label class="field-label">Tag (etiqueta)</label>'+
-              '<input type="text" class="field-input" id="bf-tag-'+i+'" value="'+b.tag.replace(/"/g,'&quot;')+'" oninput="updateBannerPreview('+i+')" placeholder="Promo, Info, Nuevo..."></div>'+
-            '<button class="btn-guardar" onclick="guardarBanner('+i+')" style="width:100%;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:6px;">✓ Guardar banner '+(i+1)+'</button>'+
+              '<input type="text" class="field-input" id="bf-tag-'+i+'" value="'+v(b.tag)+'" oninput="updateBannerPreview('+i+')" placeholder="Promo, Info, Nuevo..."></div>'+
+            '<div style="display:flex;gap:10px;margin-top:8px;">'+
+              '<button class="btn-guardar" onclick="guardarBanner('+i+')" style="flex:2;display:flex;align-items:center;justify-content:center;gap:6px;">✓ Guardar</button>'+
+              '<button class="btn-cancelar" onclick="eliminarBanner('+i+')" style="flex:1;color:var(--red);">🗑️ Borrar</button>'+
+            '</div>'+
           '</div>';
         lista.appendChild(card);
       });
@@ -2542,37 +3053,36 @@
       }
     }
 
-    function guardarBanner(i) {
-      const get = id => { const el = document.getElementById(id); return el ? el.value : ''; };
-      bannersData[i] = {
+    async function guardarBanner(i) {
+      const get = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+      const b = bannersData[i];
+      const fila = {
         emoji: get('bf-emoji-'+i), titulo: get('bf-titulo-'+i),
-        sub: get('bf-sub-'+i), tipo: get('bf-tipo-'+i), tag: get('bf-tag-'+i)
+        sub: get('bf-sub-'+i), tipo: get('bf-tipo-'+i), tag: get('bf-tag-'+i),
       };
-      guardarBanners();
-      document.getElementById('bform-'+i).style.display = 'none';
-      mostrarToast('✓ Banner '+(i+1)+' guardado', 'success');
+      const { error } = await sb.from('banners').update(fila).eq('id', b.id);
+      if (!error) {
+        Object.assign(bannersData[i], fila);
+        document.getElementById('bform-'+i).style.display = 'none';
+        toast('✓ Banner '+(i+1)+' guardado', 'success');
+      } else toast('Error: ' + error.message, 'error');
     }
 
-    function generarBannerHTML() {
-      let html = '';
-      bannersData.forEach(b => {
-        html += '        <div class="banner-slide '+b.tipo+'">\n';
-        html += '          <div class="banner-emoji">'+b.emoji+'</div>\n';
-        html += '          <div class="banner-texto">\n';
-        html += '            <div class="banner-titulo">'+b.titulo+'</div>\n';
-        html += '            <div class="banner-sub">'+b.sub+'</div>\n';
-        html += '          </div>\n';
-        html += '          <div class="banner-tag">'+b.tag+'</div>\n';
-        html += '        </div>\n';
+    async function agregarBanner() {
+      const orden = bannersData.length ? Math.max(...bannersData.map(b => b.orden || 0)) + 1 : 1;
+      const { error } = await sb.from('banners').insert({
+        orden, emoji: '✨', titulo: 'Nuevo banner', sub: 'Edita este texto', tipo: 'promo', tag: 'Nuevo'
       });
-      document.getElementById('banner-code-pre').textContent = html;
-      document.getElementById('banner-code-block').style.display = 'block';
-      document.getElementById('banner-code-block').scrollIntoView({ behavior: 'smooth' });
+      if (!error) { toast('✓ Banner agregado', 'success'); cargarBanners(); }
+      else toast('Error: ' + error.message, 'error');
     }
 
-    function copiarBannerHTML() {
-      const code = document.getElementById('banner-code-pre').textContent;
-      navigator.clipboard.writeText(code).then(() => mostrarToast('✓ HTML copiado al portapapeles', 'success'));
+    async function eliminarBanner(i) {
+      const b = bannersData[i];
+      if (!confirm('¿Eliminar este banner?')) return;
+      const { error } = await sb.from('banners').delete().eq('id', b.id);
+      if (!error) { toast('🗑️ Banner eliminado', 'success'); cargarBanners(); }
+      else toast('Error: ' + error.message, 'error');
     }
 
     // ════════════════════════════════════════
@@ -2659,17 +3169,17 @@
       puntosData.splice(i, 1);
       guardarPuntos();
       renderPuntos();
-      mostrarToast('🗑 Punto eliminado', '');
+      toast('🗑 Punto eliminado', '');
     }
 
     function guardarPunto() {
       const nombre = document.getElementById('pf-nombre').value.trim();
       const hora = document.getElementById('pf-hora').value.trim();
       const maps_url = document.getElementById('pf-maps').value.trim();
-      if (!nombre || !hora) { mostrarToast('⚠ Nombre y horario son obligatorios', 'error'); return; }
+      if (!nombre || !hora) { toast('⚠ Nombre y horario son obligatorios', 'error'); return; }
       const punto = { id: generarIdDesdeNombre(nombre), nombre, hora, maps_url };
-      if (editandoPunto >= 0) { puntosData[editandoPunto] = punto; mostrarToast('✓ Punto actualizado', 'success'); }
-      else { puntosData.push(punto); mostrarToast('✓ Punto agregado', 'success'); }
+      if (editandoPunto >= 0) { puntosData[editandoPunto] = punto; toast('✓ Punto actualizado', 'success'); }
+      else { puntosData.push(punto); toast('✓ Punto agregado', 'success'); }
       guardarPuntos();
       cerrarPuntoForm();
       renderPuntos();
@@ -2684,7 +3194,7 @@
 
     function copiarPuntosJSON() {
       const json = document.getElementById('punto-code-pre').textContent;
-      navigator.clipboard.writeText(json).then(() => mostrarToast('✓ JSON copiado al portapapeles', 'success'));
+      navigator.clipboard.writeText(json).then(() => toast('✓ JSON copiado al portapapeles', 'success'));
     }
 
     // Hook: render when banners/entrega vistas activate
@@ -2700,5 +3210,6 @@
   </script>
 </body>
 </html>
+
 
 
