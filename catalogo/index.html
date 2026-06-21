@@ -206,43 +206,9 @@
     </select>
   </div>
 
-  <!-- BANNER ROTATIVO -->
-  <div class="banner-wrap" id="banner-wrap">
-    <div class="banner-track" id="banner-track">
-      <!-- ✏️ EDITA AQUÍ TUS BANNERS -->
-      <div class="banner-slide promo">
-        <div class="banner-emoji">🎉</div>
-        <div class="banner-texto">
-          <div class="banner-titulo">Insumos 3×$100</div>
-          <div class="banner-sub">Lleva 3 y paga solo $100 — stock limitado</div>
-        </div>
-        <div class="banner-tag">Promo</div>
-      </div>
-      <div class="banner-slide aviso">
-        <div class="banner-emoji">🚚</div>
-        <div class="banner-texto">
-          <div class="banner-titulo">Entrega a domicilio en Durango</div>
-          <div class="banner-sub">10 puntos de entrega disponibles en la ciudad</div>
-        </div>
-        <div class="banner-tag">Info</div>
-      </div>
-      <div class="banner-slide nuevo">
-        <div class="banner-emoji">✨</div>
-        <div class="banner-texto">
-          <div class="banner-titulo">¡Nuevos productos cada semana!</div>
-          <div class="banner-sub">Síguenos en Facebook para ver las novedades</div>
-        </div>
-        <div class="banner-tag">Nuevo</div>
-      </div>
-      <div class="banner-slide aviso">
-        <div class="banner-emoji">💬</div>
-        <div class="banner-texto">
-          <div class="banner-titulo">¿Dudas o preguntas?</div>
-          <div class="banner-sub">Escríbenos por WhatsApp — respondemos rápido</div>
-        </div>
-        <div class="banner-tag">Contacto</div>
-      </div>
-    </div>
+  <!-- BANNER ROTATIVO (se llena desde Supabase) -->
+  <div class="banner-wrap" id="banner-wrap" style="display:none;">
+    <div class="banner-track" id="banner-track"></div>
     <div class="banner-dots" id="banner-dots"></div>
   </div>
 
@@ -326,29 +292,53 @@
       container.innerHTML += `<div class="skeleton"><div class="skeleton-img"></div><div class="skeleton-line"></div><div class="skeleton-line short"></div><div class="skeleton-btn"></div></div>`;
     }
 
-    // ── BANNER ROTATIVO ────────────────────────────────
-    (function() {
+    // ── BANNER ROTATIVO (desde Supabase) ───────────────
+    function escBanner(s){ return (s||'').toString().replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+    async function cargarBanners() {
+      const wrap   = document.getElementById('banner-wrap');
       const track  = document.getElementById('banner-track');
       const dotsEl = document.getElementById('banner-dots');
+      let lista = [];
+      try {
+        const { data, error } = await sb.from('banners').select('*').order('orden');
+        if (!error && data) lista = data;
+      } catch(e) {}
+
+      if (!lista.length) { wrap.style.display = 'none'; return; }
+
+      track.innerHTML = lista.map(b => `
+        <div class="banner-slide ${['promo','aviso','nuevo'].includes(b.tipo)?b.tipo:'promo'}">
+          <div class="banner-emoji">${escBanner(b.emoji)}</div>
+          <div class="banner-texto">
+            <div class="banner-titulo">${escBanner(b.titulo)}</div>
+            <div class="banner-sub">${escBanner(b.sub)}</div>
+          </div>
+          ${b.tag ? `<div class="banner-tag">${escBanner(b.tag)}</div>` : ''}
+        </div>`).join('');
+      wrap.style.display = '';
+
       const slides = track.querySelectorAll('.banner-slide');
+      dotsEl.innerHTML = '';
       let actual = 0, timer = null;
       slides.forEach((_, i) => {
         const d = document.createElement('button');
         d.className = 'banner-dot' + (i === 0 ? ' activo' : '');
-        d.addEventListener('click', () => irA(i));
+        d.addEventListener('click', () => irBanner(i));
         dotsEl.appendChild(d);
       });
-      function irA(idx) {
+      function irBanner(idx) {
         actual = (idx + slides.length) % slides.length;
         track.style.transform = `translateX(-${actual * 100}%)`;
         dotsEl.querySelectorAll('.banner-dot').forEach((d, i) => d.classList.toggle('activo', i === actual));
         clearInterval(timer);
-        timer = setInterval(() => irA(actual + 1), 4500);
+        if (slides.length > 1) timer = setInterval(() => irBanner(actual + 1), 4500);
       }
-      document.getElementById('banner-wrap').addEventListener('mouseenter', () => clearInterval(timer));
-      document.getElementById('banner-wrap').addEventListener('mouseleave',  () => { clearInterval(timer); timer = setInterval(() => irA(actual + 1), 4500); });
-      timer = setInterval(() => irA(actual + 1), 4500);
-    })();
+      wrap.addEventListener('mouseenter', () => clearInterval(timer));
+      wrap.addEventListener('mouseleave',  () => { clearInterval(timer); if (slides.length > 1) timer = setInterval(() => irBanner(actual + 1), 4500); });
+      if (slides.length > 1) timer = setInterval(() => irBanner(actual + 1), 4500);
+    }
+    cargarBanners();
 
     // ── CONTADOR ANIMADO ───────────────────────────────
     function animarContador(el, destino) {
@@ -717,5 +707,6 @@
   </script>
 </body>
 </html>
+
 
 
