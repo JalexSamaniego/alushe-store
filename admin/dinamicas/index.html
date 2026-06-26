@@ -164,7 +164,21 @@
     .sw input:checked + .sl{background:var(--green);}
     .sw input:checked + .sl::before{transform:translateX(18px);}
     #elim-extra{display:none;align-items:center;gap:6px;}
-    .elim-finalistas{background:rgba(255,255,255,.14);color:var(--cream);border-radius:8px;padding:5px 7px;font-weight:700;font-size:12px;border:none;}
+    .elim-finalistas{background:#fff;color:#1a1a18;border-radius:8px;padding:6px 8px;font-weight:700;font-size:12px;border:none;cursor:pointer;}
+    .elim-finalistas option{background:#fff;color:#1a1a18;}
+
+    /* Layout rueda + tabla de participantes */
+    .ruleta-main{display:flex;align-items:center;justify-content:center;gap:22px;position:relative;flex-wrap:wrap;}
+    .ruleta-tabla{width:240px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:12px;order:-1;}
+    .rt-titulo{color:var(--cream);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;opacity:.85;}
+    .rt-scroll{max-height:min(70vw,360px);overflow-y:auto;}
+    .rt-row{display:flex;gap:8px;align-items:center;padding:5px 7px;border-radius:7px;font-size:13px;}
+    .rt-row:nth-child(odd){background:rgba(255,255,255,.05);}
+    .rt-num{color:var(--green);font-weight:800;min-width:36px;}
+    .rt-nom{color:var(--cream);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    @media(max-width:760px){ .ruleta-tabla{order:2;width:100%;} .rt-scroll{max-height:200px;} }
+    .ruleta-stage:fullscreen .ruleta-tabla{width:300px;}
+    .ruleta-stage:fullscreen .rt-scroll{max-height:62vh;}
     .elim-info{color:var(--cream);font-size:13px;font-weight:800;margin-top:12px;position:relative;opacity:.9;}
     .descartados-strip{display:none;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:12px;position:relative;}
     .desc-chip{background:rgba(255,255,255,.1);color:#c9c8bb;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;text-decoration:line-through;}
@@ -263,14 +277,17 @@
             </span>
           </div>
 
-          <div class="wheel-box" id="wheel-box">
-            <div class="wheel-pointer"></div>
-            <canvas id="wheel" width="600" height="600"></canvas>
-            <button class="wheel-center-btn" id="wheel-spin" onclick="girar()">GIRAR</button>
-            <div class="elim-flash" id="elim-flash">
-              <div class="x">❌</div>
-              <div class="nm" id="elim-flash-nombre">—</div>
-              <div class="tag">Eliminado</div>
+          <div class="ruleta-main">
+            <div class="ruleta-tabla" id="ruleta-tabla"></div>
+            <div class="wheel-box" id="wheel-box">
+              <div class="wheel-pointer"></div>
+              <canvas id="wheel" width="600" height="600"></canvas>
+              <button class="wheel-center-btn" id="wheel-spin" onclick="girar()">GIRAR</button>
+              <div class="elim-flash" id="elim-flash">
+                <div class="x">❌</div>
+                <div class="nm" id="elim-flash-nombre">—</div>
+                <div class="tag">Eliminado</div>
+              </div>
             </div>
           </div>
 
@@ -772,6 +789,15 @@
     function updateElimInfo(){
       const el = document.getElementById('elim-info');
       if (el) el.textContent = `Quedan ${entries.length} · descartados ${descartados.length}`;
+      renderListaRuleta();
+    }
+    function renderListaRuleta(){
+      const cont = document.getElementById('ruleta-tabla');
+      if (!cont) return;
+      if (!entries.length){ cont.innerHTML = ''; return; }
+      cont.innerHTML = `<div class="rt-titulo">Participantes (${entries.length})</div><div class="rt-scroll">` +
+        entries.map(e => `<div class="rt-row"><span class="rt-num">${e.numero!=null?('#'+e.numero):''}</span><span class="rt-nom">${esc(e.comprador||e.label)}</span></div>`).join('') +
+        `</div>`;
     }
     function autoEliminar(){
       if (entries.length<2) return;
