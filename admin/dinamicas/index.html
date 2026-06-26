@@ -219,6 +219,7 @@
 
         <!-- Lista: participantes -->
         <div id="det-lista" style="display:none;">
+          <button class="btn btn-ghost btn-block" style="margin-bottom:14px;" onclick="abrirPegar()">📋 Pegar lista (desde foto / libreta)</button>
           <div id="participantes-lista"></div>
         </div>
       </section>
@@ -316,6 +317,33 @@
       <div class="modal-acc">
         <button class="btn btn-ghost" id="btn-liberar" onclick="liberarBoleto()" style="display:none;">🗑️ Liberar</button>
         <button class="btn btn-pri" onclick="guardarBoleto()">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal pegar lista -->
+  <div class="overlay" id="modal-pegar" onclick="if(event.target===this)cerrarPegar()">
+    <div class="modal">
+      <div class="modal-head"><h3>Pegar lista</h3><button class="modal-x" onclick="cerrarPegar()">✕</button></div>
+      <p style="font-size:12px;color:var(--ink-lt);margin-bottom:12px;line-height:1.5;">
+        📸 Sobre la foto de tu libreta, usa <b>Google Lens</b> (Android) o <b>Texto en vivo</b> (iPhone) para copiar los nombres y pégalos aquí — uno por línea.
+        Si escribes el teléfono junto al nombre, lo separo solo.
+      </p>
+      <div class="field">
+        <label>Participantes (uno por línea)</label>
+        <textarea id="pegar-texto" style="min-height:170px;" placeholder="Juan Pérez 6181234567&#10;María López&#10;Carlos Núñez…" oninput="contarPegar()"></textarea>
+      </div>
+      <div class="field">
+        <label>Estado para todos</label>
+        <select id="pegar-estado">
+          <option value="pagado">Pagado</option>
+          <option value="apartado">Apartado</option>
+        </select>
+      </div>
+      <div style="font-size:12px;color:var(--ink-lt);font-weight:700;margin-bottom:10px;" id="pegar-conteo">0 participantes detectados</div>
+      <div class="modal-acc">
+        <button class="btn btn-ghost" onclick="cerrarPegar()">Cancelar</button>
+        <button class="btn btn-pri" onclick="guardarPegar()">Insertar participantes</button>
       </div>
     </div>
   </div>
@@ -573,6 +601,55 @@
       if (!confirm('¿Quitar a este participante?')) return;
       await sb.from('boletos').delete().eq('id', id);
       toast('Participante quitado'); cargarBoletos();
+    }
+
+    // ════════ PEGAR LISTA (desde foto/libreta vía OCR del teléfono) ════════
+    function abrirPegar(){
+      document.getElementById('pegar-texto').value='';
+      document.getElementById('pegar-estado').value='pagado';
+      contarPegar();
+      document.getElementById('modal-pegar').classList.add('abierto');
+    }
+    function cerrarPegar(){ document.getElementById('modal-pegar').classList.remove('abierto'); }
+
+    function parsearPegar(){
+      return document.getElementById('pegar-texto').value.split('\n')
+        .map(l => l.trim())
+        .filter(Boolean)
+        .map(l => {
+          // Quitar viñetas o numeración inicial: "1.", "1)", "-", "•", "*"
+          l = l.replace(/^\s*([\-•*·]|\d+[\.\)])\s*/, '').trim();
+          // Detectar teléfono al final (>=7 dígitos) y separarlo
+          let comprador = l, contacto = '';
+          const m = l.match(/^(.*?)[\s\-:]+([\d][\d\s\-()]{6,})$/);
+          if (m && m[2].replace(/\D/g,'').length >= 7){ comprador = m[1].trim(); contacto = m[2].trim(); }
+          return { comprador, contacto };
+        })
+        .filter(p => p.comprador);
+    }
+    function contarPegar(){
+      document.getElementById('pegar-conteo').textContent = parsearPegar().length + ' participantes detectados';
+    }
+    async function guardarPegar(){
+      const items = parsearPegar();
+      if (!items.length){ toast('No detecté nombres','error'); return; }
+      const estado = document.getElementById('pegar-estado').value;
+      // Omitir repetidos (por nombre, ignorando mayúsculas) ya existentes
+      const existentes = new Set(boletos.map(b => (b.comprador||'').toLowerCase().trim()));
+      const vistos = new Set();
+      const nuevos = items.filter(p => {
+        const k = p.comprador.toLowerCase();
+        if (existentes.has(k) || vistos.has(k)) return false;
+        vistos.add(k); return true;
+      });
+      if (!nuevos.length){ toast('Todos ya estaban en la lista'); cerrarPegar(); return; }
+      const filas = nuevos.map(p => ({ dinamica_id: dinActual.id, numero: null, comprador: p.comprador, contacto: p.contacto, estado }));
+      const r = await sb.from('boletos').insert(filas);
+      if (r.error){ toast('Error: '+r.error.message,'error'); return; }
+      cerrarPegar();
+      const omit = items.length - nuevos.length;
+      toast(`✓ ${nuevos.length} agregados${omit?` · ${omit} repetidos omitidos`:''}`);
+      cargarBoletos();
     }
 
     // ════════ RULETA ════════
