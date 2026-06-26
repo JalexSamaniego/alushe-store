@@ -163,7 +163,6 @@
     .sw .sl::before{content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s;}
     .sw input:checked + .sl{background:var(--green);}
     .sw input:checked + .sl::before{transform:translateX(18px);}
-    #elim-extra{display:none;align-items:center;gap:6px;}
     .elim-finalistas{background:#fff;color:#1a1a18;border-radius:8px;padding:6px 8px;font-weight:700;font-size:12px;border:none;cursor:pointer;}
     .elim-finalistas option{background:#fff;color:#1a1a18;}
 
@@ -266,14 +265,21 @@
           <div class="ruleta-premio" id="ruleta-premio"></div>
 
           <div class="modo-elim-row">
-            <label class="sw"><input type="checkbox" id="elim-toggle" onchange="toggleElim(this.checked)"><span class="sl"></span></label>
-            <span>Modo eliminación</span>
-            <span id="elim-extra">· parar al quedar
+            <span>Modo:</span>
+            <select class="elim-finalistas" id="modo-sorteo" onchange="cambiarModo()">
+              <option value="unico">Giro único → ganador</option>
+              <option value="elim">Eliminación → gana el último</option>
+              <option value="ganadorN">Gana la selección N°</option>
+            </select>
+            <span id="ctx-elim" style="display:none;align-items:center;gap:6px;">· parar al quedar
               <select class="elim-finalistas" id="elim-finalistas">
                 <option value="1">1 (ganador directo)</option>
                 <option value="2">2 finalistas</option>
                 <option value="3">3 finalistas</option>
               </select>
+            </span>
+            <span id="ctx-ganadorN" style="display:none;align-items:center;gap:6px;">· gana la selección N°
+              <input type="number" class="elim-finalistas" id="target-n" value="4" min="2" style="width:64px;" onchange="updateElimInfo()">
             </span>
           </div>
 
@@ -301,6 +307,7 @@
           <div class="ruleta-controls">
             <button class="btn spin" onclick="girar()">🎡 GIRAR</button>
             <button class="btn" id="btn-auto" style="display:none;" onclick="autoEliminar()">▶ Auto</button>
+            <button class="btn" id="btn-son" onclick="toggleSon()" title="Sonido">🔊</button>
             <button class="btn" onclick="pantallaCompleta()">⛶ Pantalla completa</button>
           </div>
 
@@ -428,10 +435,26 @@
     let ganadorActual = null;
     // Modo eliminación
     let modoElim = false;
+    let modoSorteo = 'unico';    // 'unico' | 'elim' | 'ganadorN'
+    let selN = 0;
     let baseEntries = [];        // set completo (para reiniciar)
     let descartados = [];
     let autoCorriendo = false;
     let finalRound = false;
+    // Audio (Web Audio API, sin archivos)
+    let actx = null, sonOn = true, lastSeg = -1;
+    function audio(){ if(!actx){ try{ actx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return actx; }
+    function beep(freq,dur,type='square',vol=0.15,when=0){
+      if(!sonOn) return; const a=audio(); if(!a) return;
+      const t=a.currentTime+when, o=a.createOscillator(), g=a.createGain();
+      o.type=type; o.frequency.value=freq; o.connect(g); g.connect(a.destination);
+      g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+      o.start(t); o.stop(t+dur);
+    }
+    function sTick(){ beep(1000,0.025,'square',0.05); }
+    function sElim(){ beep(330,0.16,'sawtooth',0.18); beep(150,0.30,'sawtooth',0.16,0.07); }
+    function sWin(){ [523,659,784,1047,1319].forEach((f,i)=>beep(f,0.34,'triangle',0.2,i*0.11)); }
+    function toggleSon(){ sonOn=!sonOn; if(sonOn){ const a=audio(); if(a&&a.resume)a.resume(); } document.getElementById('btn-son').textContent = sonOn?'🔊':'🔇'; }
 
     function esc(s){return (s||'').toString().replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
     function toast(m,t=''){const e=document.getElementById('toast');e.textContent=m;e.className='toast visible '+t;setTimeout(()=>e.classList.remove('visible'),3200);}
@@ -750,7 +773,7 @@
 
     function prepararRuleta(){
       baseEntries = entries.slice();
-      descartados = []; finalRound = false; autoCorriendo = false;
+      descartados = []; finalRound = false; autoCorriendo = false; selN = 0;
       aplicarElimUI();
       pintarRuleta();
       renderDescartados(); updateElimInfo();
@@ -765,17 +788,23 @@
     // ── Modo eliminación ──
     function aplicarElimUI(){
       const on = modoElim;
-      document.getElementById('elim-toggle').checked = on;
-      document.getElementById('elim-extra').style.display = on?'inline-flex':'none';
+      document.getElementById('modo-sorteo').value = modoSorteo;
+      document.getElementById('ctx-elim').style.display     = modoSorteo==='elim'?'inline-flex':'none';
+      document.getElementById('ctx-ganadorN').style.display = modoSorteo==='ganadorN'?'inline-flex':'none';
       document.getElementById('btn-auto').style.display = on?'inline-flex':'none';
       document.getElementById('descartados-strip').style.display = on?'flex':'none';
       document.getElementById('elim-info').style.display = on?'block':'none';
-      document.querySelector('.ruleta-controls .btn.spin').textContent = on?'❌ Eliminar uno':'🎡 GIRAR';
-      document.getElementById('wheel-spin').textContent = on?'SACAR':'GIRAR';
+      const spinBtn = document.querySelector('.ruleta-controls .btn.spin');
+      if (modoSorteo==='elim'){ spinBtn.textContent='❌ Eliminar uno'; document.getElementById('wheel-spin').textContent='SACAR'; }
+      else { spinBtn.textContent='🎡 GIRAR'; document.getElementById('wheel-spin').textContent='GIRAR'; }
     }
-    function toggleElim(on){ modoElim = on; resetElim(); }
+    function cambiarModo(){
+      modoSorteo = document.getElementById('modo-sorteo').value;
+      modoElim = (modoSorteo !== 'unico');
+      resetElim();
+    }
     function resetElim(){
-      autoCorriendo = false; finalRound = false;
+      autoCorriendo = false; finalRound = false; selN = 0;
       document.getElementById('btn-auto').textContent = '▶ Auto';
       entries = baseEntries.slice();
       descartados = [];
@@ -786,9 +815,18 @@
       document.getElementById('descartados-strip').innerHTML =
         descartados.map(d=>`<span class="desc-chip">❌ ${esc(d.label)}</span>`).join('');
     }
+    function targetGanadorN(){
+      const n = Math.max(parseInt(document.getElementById('target-n').value)||4, 2);
+      return Math.min(n, baseEntries.length || n);
+    }
     function updateElimInfo(){
       const el = document.getElementById('elim-info');
-      if (el) el.textContent = `Quedan ${entries.length} · descartados ${descartados.length}`;
+      if (el){
+        if (modoSorteo==='ganadorN')
+          el.textContent = `Selección ${selN}/${targetGanadorN()} · quedan ${entries.length}`;
+        else
+          el.textContent = `Quedan ${entries.length} · descartados ${descartados.length}`;
+      }
       renderListaRuleta();
     }
     function renderListaRuleta(){
@@ -805,29 +843,38 @@
       autoCorriendo = true; document.getElementById('btn-auto').textContent='⏸ Pausar';
       girar();
     }
-    function eliminar(idx){
+    function eliminarVisual(idx, after){
       const out = entries.splice(idx,1)[0];
       descartados.push(out);
+      sElim();
       document.getElementById('elim-flash-nombre').textContent = out.label;
       document.getElementById('elim-flash').classList.add('show');
-      const finalistas = Math.max(parseInt(document.getElementById('elim-finalistas').value)||1, 1);
       setTimeout(()=>{
         document.getElementById('elim-flash').classList.remove('show');
-        renderDescartados(); updateElimInfo();
-        if (entries.length <= finalistas){
-          if (entries.length === 1){ mostrarGanadorEntry(entries[0]); }
-          else {
-            finalRound = true; pintarRuleta();
-            toast(`¡Ronda final entre ${entries.length}! Gira para el ganador 🏆`);
-            document.querySelector('.ruleta-controls .btn.spin').textContent='🏆 Elegir ganador';
-            document.getElementById('wheel-spin').textContent='GANA';
-            autoCorriendo=false; document.getElementById('btn-auto').textContent='▶ Auto';
-          }
-        } else {
-          pintarRuleta();
-          if (autoCorriendo) setTimeout(girar, 850);
-        }
+        renderDescartados(); updateElimInfo(); pintarRuleta();
+        if (after) after();
       }, 1150);
+    }
+    function chequeoElim(){
+      const finalistas = Math.max(parseInt(document.getElementById('elim-finalistas').value)||1, 1);
+      if (entries.length <= finalistas){
+        if (entries.length === 1){ mostrarGanadorEntry(entries[0]); }
+        else {
+          finalRound = true;
+          toast(`¡Ronda final entre ${entries.length}! Gira para el ganador 🏆`);
+          document.querySelector('.ruleta-controls .btn.spin').textContent='🏆 Elegir ganador';
+          document.getElementById('wheel-spin').textContent='GANA';
+          autoCorriendo=false; document.getElementById('btn-auto').textContent='▶ Auto';
+        }
+      } else if (autoCorriendo) setTimeout(girar, 850);
+    }
+    // Modo "gana la selección N°": elimina los primeros N-1, el N-ésimo gana
+    function pasoGanadorN(idx){
+      selN++;
+      const tN = targetGanadorN();
+      if (selN >= tN){ selN = 0; mostrarGanadorEntry(entries[idx]); return; }
+      updateElimInfo();
+      eliminarVisual(idx, ()=>{ if (autoCorriendo) setTimeout(girar, 850); });
     }
 
     // ── Dibujo de la rueda ──
@@ -868,6 +915,7 @@
     function girar(){
       if (spinning) return;
       if (entries.length<2){ toast('Faltan participantes','error'); return; }
+      const a=audio(); if (a&&a.resume) a.resume();
       spinning=true; cerrarGanador();
       document.getElementById('wheel-spin').disabled=true;
       const n=entries.length, seg=TAU/n;
@@ -879,16 +927,24 @@
       const rapido = autoCorriendo;
       const dur = rapido?3600:6200, turns = rapido?5:7;
       const start=rotation, end=rotation+delta+TAU*turns, t0=performance.now();
+      lastSeg = -1;
       (function frame(now){
         const p=Math.min((now-t0)/dur,1), e=1-Math.pow(1-p,3);
         rotation=start+(end-start)*e; drawWheel();
+        const segNow = Math.floor(((((pointer-rotation)%TAU)+TAU)%TAU)/seg);
+        if (segNow!==lastSeg){ lastSeg=segNow; sTick(); }
         if (p<1) requestAnimationFrame(frame);
         else {
           rotation=end%TAU; spinning=false; document.getElementById('wheel-spin').disabled=false;
-          if (modoElim && !finalRound) eliminar(elegido);
-          else { finalRound=false; mostrarGanadorEntry(entries[elegido]); }
+          procesarSeleccion(elegido);
         }
       })(t0);
+    }
+
+    function procesarSeleccion(idx){
+      if (modoSorteo==='unico' || finalRound){ finalRound=false; mostrarGanadorEntry(entries[idx]); return; }
+      if (modoSorteo==='ganadorN'){ pasoGanadorN(idx); return; }
+      eliminarVisual(idx, chequeoElim);   // modo 'elim'
     }
 
     function mostrarGanador(i){ mostrarGanadorEntry(entries[i]); }
@@ -897,7 +953,7 @@
       ganadorActual = entry;
       document.getElementById('ganador-nombre').textContent = entry.label;
       document.getElementById('ganador-ov').classList.add('show');
-      lanzarConfeti();
+      sWin(); lanzarConfeti();
     }
     function cerrarGanador(){ document.getElementById('ganador-ov').classList.remove('show'); }
 
