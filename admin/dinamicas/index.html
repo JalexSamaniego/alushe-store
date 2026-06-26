@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Dinámicas · Alushe Store</title>
+  <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root{
+      --cream:#f6f5ca; --cream-d:#e8e7a8; --bg:#fafaf6; --ink:#1a1a18; --ink-mid:#3a3a35;
+      --ink-lt:#7a7a6e; --line:#e5e4d6; --green:#25D366; --green-d:#1ebe57; --red:#ff3366;
+      --amber:#f0a500; --white:#fff; --r:12px; --r-lg:16px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;-webkit-tap-highlight-color:transparent;}
+    button{font-family:inherit;cursor:pointer;border:none;}
+    input,select,textarea{font-family:inherit;}
+    .wrap{max-width:880px;margin:0 auto;padding:0 0 60px;}
+
+    /* Topbar */
+    .topbar{display:flex;align-items:center;justify-content:space-between;background:var(--ink);color:var(--cream);padding:12px 16px;position:sticky;top:0;z-index:50;}
+    .topbar-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:15px;}
+    .topbar-brand img{width:30px;height:30px;border-radius:7px;}
+    .topbar-brand small{display:block;font-size:10px;color:var(--ink-lt);font-weight:600;}
+    .back-link{color:var(--cream);text-decoration:none;font-size:12px;font-weight:700;background:rgba(255,255,255,.1);padding:7px 12px;border-radius:8px;}
+    .back-link:hover{background:rgba(255,255,255,.2);}
+
+    main{padding:18px 16px 0;}
+    h1.t{font-size:22px;font-weight:800;}
+    p.sub{font-size:13px;color:var(--ink-lt);margin-top:4px;margin-bottom:18px;}
+
+    .vista{display:none;}
+    .vista.activa{display:block;}
+
+    /* Botones */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:10px;font-weight:700;font-size:14px;padding:12px 18px;transition:.15s;}
+    .btn-pri{background:var(--green);color:#fff;}
+    .btn-pri:hover{background:var(--green-d);}
+    .btn-dark{background:var(--ink);color:var(--cream);}
+    .btn-dark:hover{background:var(--ink-mid);}
+    .btn-ghost{background:var(--white);color:var(--ink-mid);border:1.5px solid var(--line);}
+    .btn-ghost:hover{border-color:var(--ink-lt);}
+    .btn-block{width:100%;}
+
+    /* Cards de dinámicas */
+    .din-card{background:var(--white);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.04);cursor:pointer;transition:.15s;}
+    .din-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.08);}
+    .din-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+    .din-nombre{font-size:16px;font-weight:800;}
+    .din-premio{font-size:12px;color:var(--ink-lt);margin-top:2px;}
+    .din-estado{font-size:10px;font-weight:800;text-transform:uppercase;padding:3px 9px;border-radius:20px;white-space:nowrap;}
+    .din-estado.activa{background:#e9f9f0;color:#1a9c45;}
+    .din-estado.finalizada{background:#eee;color:#888;}
+    .din-barra{height:8px;background:var(--bg);border-radius:8px;overflow:hidden;margin:12px 0 6px;}
+    .din-barra-fill{height:100%;background:var(--green);border-radius:8px;transition:width .4s;}
+    .din-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-lt);font-weight:600;}
+    .din-ganador{margin-top:8px;font-size:12px;font-weight:700;color:var(--amber);}
+
+    /* Detalle: stats */
+    .stats4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;}
+    .stat{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:12px 8px;text-align:center;}
+    .stat-num{font-size:20px;font-weight:800;}
+    .stat-lbl{font-size:9px;font-weight:700;color:var(--ink-lt);text-transform:uppercase;letter-spacing:.4px;margin-top:2px;}
+    .stat.green .stat-num{color:var(--green-d);}
+    .stat.amber .stat-num{color:var(--amber);}
+
+    .det-acciones{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+    .det-acciones .btn{flex:1;min-width:130px;}
+
+    /* Grid de boletos numerados */
+    .boletos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;margin-bottom:20px;}
+    .boleto{aspect-ratio:1;border-radius:9px;border:1.5px solid var(--line);background:var(--white);font-size:12px;font-weight:800;color:var(--ink-lt);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.12s;position:relative;}
+    .boleto:hover{transform:scale(1.06);border-color:var(--ink-lt);}
+    .boleto.pagado{background:var(--green);border-color:var(--green-d);color:#fff;}
+    .boleto.apartado{background:var(--amber);border-color:#d68f00;color:#fff;}
+    .leyenda{display:flex;gap:16px;font-size:11px;color:var(--ink-lt);font-weight:600;margin-bottom:12px;flex-wrap:wrap;}
+    .leyenda i{display:inline-block;width:12px;height:12px;border-radius:4px;vertical-align:-1px;margin-right:4px;}
+
+    /* Lista de participantes */
+    .part-item{display:flex;align-items:center;gap:10px;background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;margin-bottom:8px;}
+    .part-num{width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--cream);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .part-info{flex:1;min-width:0;}
+    .part-nombre{font-size:14px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .part-contacto{font-size:11px;color:var(--ink-lt);}
+    .part-estado{font-size:9px;font-weight:800;text-transform:uppercase;padding:3px 8px;border-radius:20px;}
+    .part-estado.pagado{background:#e9f9f0;color:#1a9c45;}
+    .part-estado.apartado{background:#fff4e0;color:#b8770a;}
+    .icon-btn{background:none;font-size:16px;color:var(--ink-lt);padding:4px 6px;border-radius:6px;}
+    .icon-btn:hover{background:var(--bg);}
+
+    /* Campos */
+    .field{margin-bottom:14px;}
+    .field label{display:block;font-size:11px;font-weight:700;color:var(--ink-lt);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;}
+    .field input,.field select,.field textarea{width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:10px;font-size:14px;background:var(--white);color:var(--ink);outline:none;}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(37,211,102,.12);}
+    .req{color:var(--red);}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+    /* Modal */
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:flex-end;justify-content:center;z-index:100;}
+    .overlay.abierto{display:flex;}
+    .modal{background:var(--white);width:100%;max-width:480px;border-radius:18px 18px 0 0;padding:22px;max-height:90vh;overflow-y:auto;animation:subir .25s ease;}
+    @media(min-width:520px){.overlay{align-items:center;}.modal{border-radius:18px;}}
+    @keyframes subir{from{transform:translateY(30px);opacity:.6;}to{transform:translateY(0);opacity:1;}}
+    .modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+    .modal-head h3{font-size:17px;font-weight:800;}
+    .modal-x{background:none;font-size:20px;color:var(--ink-lt);}
+    .modal-acc{display:flex;gap:10px;margin-top:8px;}
+    .modal-acc .btn{flex:1;}
+
+    /* ── RULETA ── */
+    .ruleta-stage{background:var(--ink);border-radius:var(--r-lg);padding:22px 16px 26px;text-align:center;position:relative;overflow:hidden;}
+    .ruleta-stage::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:rgba(37,211,102,.12);}
+    .ruleta-titulo{color:var(--cream);font-size:18px;font-weight:800;position:relative;}
+    .ruleta-premio{color:var(--green);font-size:13px;font-weight:700;margin-bottom:14px;position:relative;}
+    .wheel-box{position:relative;width:min(86vw,420px);height:min(86vw,420px);margin:0 auto;}
+    .wheel-box canvas{width:100%;height:100%;display:block;border-radius:50%;box-shadow:0 8px 30px rgba(0,0,0,.4);}
+    .wheel-pointer{position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;border-top:26px solid var(--green);z-index:5;filter:drop-shadow(0 2px 3px rgba(0,0,0,.4));}
+    .wheel-center-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:22%;height:22%;border-radius:50%;background:var(--green);color:#fff;font-weight:800;font-size:14px;box-shadow:0 4px 14px rgba(0,0,0,.4);z-index:4;border:4px solid var(--cream);}
+    .wheel-center-btn:disabled{opacity:.6;cursor:default;}
+    .ruleta-controls{display:flex;gap:10px;justify-content:center;margin-top:18px;position:relative;flex-wrap:wrap;}
+    .ruleta-controls .btn{background:rgba(255,255,255,.12);color:var(--cream);}
+    .ruleta-controls .btn:hover{background:rgba(255,255,255,.22);}
+    .ruleta-controls .btn.spin{background:var(--green);color:#fff;font-size:16px;padding:14px 28px;}
+    .ruleta-controls .btn.spin:hover{background:var(--green-d);}
+    .ruleta-vacia{color:var(--ink-lt);font-size:13px;padding:40px 10px;}
+
+    /* Overlay ganador */
+    .ganador-ov{position:absolute;inset:0;background:rgba(26,26,24,.92);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:20;border-radius:var(--r-lg);padding:20px;}
+    .ganador-ov.show{display:flex;animation:fadein .3s;}
+    @keyframes fadein{from{opacity:0;}to{opacity:1;}}
+    .ganador-label{color:var(--ink-lt);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;}
+    .ganador-nombre{color:#fff;font-size:34px;font-weight:800;margin:10px 20px;text-align:center;line-height:1.2;}
+    .ganador-emoji{font-size:54px;animation:pop .5s;}
+    @keyframes pop{0%{transform:scale(0);}70%{transform:scale(1.25);}100%{transform:scale(1);}}
+    .ganador-ov .btn{margin-top:18px;}
+
+    /* Ruleta libre panel */
+    .libre-panel{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-top:16px;}
+    .libre-panel textarea{min-height:110px;resize:vertical;}
+
+    /* Fullscreen */
+    .ruleta-stage:fullscreen{display:flex;flex-direction:column;justify-content:center;border-radius:0;padding:30px;}
+    .ruleta-stage:fullscreen .wheel-box{width:min(70vh,560px);height:min(70vh,560px);}
+
+    /* Confetti */
+    .confeti{position:absolute;width:9px;height:14px;top:-20px;z-index:25;pointer-events:none;}
+
+    .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(140%);background:var(--ink);color:#fff;padding:12px 20px;border-radius:30px;font-size:13px;font-weight:700;z-index:200;transition:transform .3s;box-shadow:0 8px 24px rgba(0,0,0,.3);}
+    .toast.visible{transform:translateX(-50%) translateY(0);}
+    .toast.error{background:var(--red);}
+    .vacio{text-align:center;color:var(--ink-lt);font-size:13px;font-weight:600;padding:40px 0;}
+    .cargando{text-align:center;color:var(--ink-lt);padding:60px 0;font-weight:600;}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="topbar-brand">
+        <img src="/assets/images/favicon.png" alt="Alushe">
+        <div>Dinámicas<small>Rifas y sorteos</small></div>
+      </div>
+      <a href="/admin" class="back-link">← Panel admin</a>
+    </div>
+
+    <main id="app" style="display:none;">
+
+      <!-- ── LISTA DE DINÁMICAS ── -->
+      <section class="vista activa" id="vista-lista">
+        <h1 class="t">Dinámicas</h1>
+        <p class="sub">Controla tus rifas y sorteos, y haz la ruleta en vivo 🎡</p>
+
+        <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;">
+          <button class="btn btn-pri" onclick="abrirCrear()">＋ Nueva dinámica</button>
+          <button class="btn btn-ghost" onclick="abrirRuletaLibre()">🎡 Ruleta libre</button>
+        </div>
+
+        <div id="lista-dinamicas"><div class="cargando">Cargando…</div></div>
+      </section>
+
+      <!-- ── DETALLE DE DINÁMICA ── -->
+      <section class="vista" id="vista-detalle">
+        <button class="btn btn-ghost" style="margin-bottom:14px;padding:8px 14px;" onclick="volverLista()">← Volver</button>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+          <div>
+            <h1 class="t" id="det-nombre">—</h1>
+            <p class="sub" id="det-premio" style="margin-bottom:0;"></p>
+          </div>
+          <button class="icon-btn" title="Editar / eliminar" onclick="menuDinamica()">⋯</button>
+        </div>
+        <div style="height:14px;"></div>
+
+        <div class="stats4">
+          <div class="stat"><div class="stat-num" id="st-total">—</div><div class="stat-lbl">Boletos</div></div>
+          <div class="stat green"><div class="stat-num" id="st-vendidos">—</div><div class="stat-lbl">Vendidos</div></div>
+          <div class="stat"><div class="stat-num" id="st-disp">—</div><div class="stat-lbl">Disponibles</div></div>
+          <div class="stat amber"><div class="stat-num" id="st-ingreso">—</div><div class="stat-lbl">Ingresos</div></div>
+        </div>
+
+        <div class="det-acciones">
+          <button class="btn btn-dark" onclick="abrirRuletaDinamica()">🎡 Hacer la ruleta</button>
+          <button class="btn btn-pri" id="det-add-btn" onclick="accionAgregar()">＋ Agregar</button>
+        </div>
+
+        <div id="det-ganador-box"></div>
+
+        <!-- Numerada: grid -->
+        <div id="det-numerada" style="display:none;">
+          <div class="leyenda">
+            <span><i style="background:var(--white);border:1.5px solid var(--line);"></i>Libre</span>
+            <span><i style="background:var(--amber);"></i>Apartado</span>
+            <span><i style="background:var(--green);"></i>Pagado</span>
+          </div>
+          <div class="boletos-grid" id="boletos-grid"></div>
+        </div>
+
+        <!-- Lista: participantes -->
+        <div id="det-lista" style="display:none;">
+          <div id="participantes-lista"></div>
+        </div>
+      </section>
+
+      <!-- ── RULETA ── -->
+      <section class="vista" id="vista-ruleta">
+        <button class="btn btn-ghost" style="margin-bottom:14px;padding:8px 14px;" onclick="cerrarRuleta()">← Volver</button>
+
+        <div class="ruleta-stage" id="ruleta-stage">
+          <div class="ruleta-titulo" id="ruleta-titulo">Ruleta Alushe</div>
+          <div class="ruleta-premio" id="ruleta-premio"></div>
+
+          <div class="wheel-box" id="wheel-box">
+            <div class="wheel-pointer"></div>
+            <canvas id="wheel" width="600" height="600"></canvas>
+            <button class="wheel-center-btn" id="wheel-spin" onclick="girar()">GIRAR</button>
+          </div>
+
+          <div id="ruleta-vacia" class="ruleta-vacia" style="display:none;">
+            No hay participantes para girar. Vende boletos o usa la ruleta libre.
+          </div>
+
+          <div class="ruleta-controls">
+            <button class="btn spin" onclick="girar()">🎡 GIRAR</button>
+            <button class="btn" onclick="pantallaCompleta()">⛶ Pantalla completa</button>
+          </div>
+
+          <!-- Overlay ganador -->
+          <div class="ganador-ov" id="ganador-ov">
+            <div class="ganador-emoji">🎉</div>
+            <div class="ganador-label">¡Ganador!</div>
+            <div class="ganador-nombre" id="ganador-nombre">—</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+              <button class="btn btn-pri" id="btn-guardar-ganador" onclick="guardarGanador()">💾 Guardar ganador</button>
+              <button class="btn" style="background:rgba(255,255,255,.15);color:#fff;" onclick="cerrarGanador()">Cerrar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ruleta libre -->
+        <div class="libre-panel" id="libre-panel" style="display:none;">
+          <div class="field" style="margin-bottom:8px;">
+            <label>Participantes (uno por línea)</label>
+            <textarea id="libre-texto" placeholder="Juan Pérez&#10;María López&#10;Carlos…"></textarea>
+          </div>
+          <button class="btn btn-pri btn-block" onclick="cargarLibre()">Cargar en la ruleta</button>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Modal crear/editar dinámica -->
+  <div class="overlay" id="modal-crear" onclick="if(event.target===this)cerrarCrear()">
+    <div class="modal">
+      <div class="modal-head"><h3 id="crear-titulo">Nueva dinámica</h3><button class="modal-x" onclick="cerrarCrear()">✕</button></div>
+      <input type="hidden" id="crear-id">
+      <div class="field"><label>Nombre <span class="req">*</span></label>
+        <input type="text" id="crear-nombre" placeholder="Ej. Rifa Caja Misteriosa" maxlength="80"></div>
+      <div class="field"><label>Premio</label>
+        <input type="text" id="crear-premio" placeholder="Ej. Caja misteriosa de productos" maxlength="100"></div>
+      <div class="field"><label>Tipo de dinámica</label>
+        <select id="crear-tipo" onchange="toggleTipoCrear()">
+          <option value="numerada">Boletos numerados (pool fijo)</option>
+          <option value="lista">Lista de participantes</option>
+        </select></div>
+      <div class="grid2">
+        <div class="field" id="crear-total-wrap"><label>Total de boletos</label>
+          <input type="number" id="crear-total" placeholder="100" min="1" max="2000"></div>
+        <div class="field"><label>Precio por boleto</label>
+          <input type="number" id="crear-precio" placeholder="20" min="0"></div>
+      </div>
+      <div class="modal-acc">
+        <button class="btn btn-ghost" onclick="cerrarCrear()">Cancelar</button>
+        <button class="btn btn-pri" id="btn-guardar-din" onclick="guardarDinamica()">Crear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal boleto / participante -->
+  <div class="overlay" id="modal-boleto" onclick="if(event.target===this)cerrarBoleto()">
+    <div class="modal">
+      <div class="modal-head"><h3 id="boleto-titulo">Boleto</h3><button class="modal-x" onclick="cerrarBoleto()">✕</button></div>
+      <input type="hidden" id="boleto-id">
+      <input type="hidden" id="boleto-numero">
+      <div class="field"><label>Nombre del comprador <span class="req">*</span></label>
+        <input type="text" id="boleto-comprador" placeholder="Nombre y apellido" maxlength="80"></div>
+      <div class="field"><label>Contacto (WhatsApp)</label>
+        <input type="text" id="boleto-contacto" placeholder="618 123 4567" maxlength="40"></div>
+      <div class="field"><label>Estado</label>
+        <select id="boleto-estado">
+          <option value="pagado">Pagado</option>
+          <option value="apartado">Apartado</option>
+        </select></div>
+      <div class="modal-acc">
+        <button class="btn btn-ghost" id="btn-liberar" onclick="liberarBoleto()" style="display:none;">🗑️ Liberar</button>
+        <button class="btn btn-pri" onclick="guardarBoleto()">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const SB_URL = 'https://wzixskdrpdqgtvucnsbf.supabase.co';
+    const SB_KEY = 'sb_publishable_JtOAt4xSg7RxIhmxygFKAQ_0jNYENUE';
+    const sb = supabase.createClient(SB_URL, SB_KEY);
+
+    // ── Auth gate (sesión compartida con /admin) ──
+    sb.auth.getSession().then(({ data }) => {
+      if (!data.session) { location.href = '/admin'; return; }
+      document.getElementById('app').style.display = 'block';
+      cargarDinamicas();
+    });
+
+    // ── Estado ──
+    let dinamicas = [];
+    let dinActual = null;        // dinámica abierta
+    let boletos = [];            // boletos de la dinámica abierta
+    let entries = [];            // entradas de la ruleta {label, boleto?}
+    let modoLibre = false;
+    let ganadorActual = null;
+
+    function esc(s){return (s||'').toString().replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+    function toast(m,t=''){const e=document.getElementById('toast');e.textContent=m;e.className='toast visible '+t;setTimeout(()=>e.classList.remove('visible'),3200);}
+    function fmtMX(n){return 'MX$'+(Number(n)||0).toLocaleString('en-US');}
+    function irVista(v){document.querySelectorAll('.vista').forEach(s=>s.classList.remove('activa'));document.getElementById('vista-'+v).classList.add('activa');window.scrollTo({top:0});}
+
+    // ════════ LISTA DE DINÁMICAS ════════
+    async function cargarDinamicas(){
+      const cont = document.getElementById('lista-dinamicas');
+      const { data, error } = await sb.from('dinamicas').select('*').order('creado',{ascending:false});
+      if (error){ cont.innerHTML = `<div class="vacio">Error al cargar (¿faltan las tablas? Corre el SQL).</div>`; return; }
+      dinamicas = data;
+      // Conteo de boletos por dinámica
+      const { data: cnt } = await sb.from('boletos').select('dinamica_id');
+      const porDin = {};
+      (cnt||[]).forEach(b => porDin[b.dinamica_id] = (porDin[b.dinamica_id]||0)+1);
+
+      if (!dinamicas.length){ cont.innerHTML = `<div class="vacio">Aún no hay dinámicas. Crea la primera 👆</div>`; return; }
+      cont.innerHTML = dinamicas.map(d => {
+        const vend = porDin[d.id]||0;
+        const tot = d.tipo==='numerada' ? (d.total_boletos||0) : vend;
+        const pct = tot ? Math.round(vend/tot*100) : 0;
+        return `
+        <div class="din-card" onclick="abrirDinamica(${d.id})">
+          <div class="din-card-top">
+            <div><div class="din-nombre">${esc(d.nombre)}</div>
+            ${d.premio?`<div class="din-premio">🎁 ${esc(d.premio)}</div>`:''}</div>
+            <span class="din-estado ${d.estado}">${d.estado}</span>
+          </div>
+          ${d.tipo==='numerada'?`
+          <div class="din-barra"><div class="din-barra-fill" style="width:${pct}%"></div></div>
+          <div class="din-meta"><span>${vend} / ${tot} vendidos</span><span>${pct}%</span></div>`
+          :`<div class="din-meta" style="margin-top:10px;"><span>${vend} participantes</span><span>Lista libre</span></div>`}
+          ${d.ganador?`<div class="din-ganador">🏆 Ganador: ${esc(d.ganador)}</div>`:''}
+        </div>`;
+      }).join('');
+    }
+
+    function volverLista(){ irVista('lista'); cargarDinamicas(); }
+
+    // ════════ CREAR / EDITAR DINÁMICA ════════
+    function abrirCrear(){
+      document.getElementById('crear-id').value='';
+      document.getElementById('crear-titulo').textContent='Nueva dinámica';
+      document.getElementById('btn-guardar-din').textContent='Crear';
+      document.getElementById('crear-nombre').value='';
+      document.getElementById('crear-premio').value='';
+      document.getElementById('crear-tipo').value='numerada';
+      document.getElementById('crear-total').value='';
+      document.getElementById('crear-precio').value='';
+      toggleTipoCrear();
+      document.getElementById('modal-crear').classList.add('abierto');
+    }
+    function cerrarCrear(){ document.getElementById('modal-crear').classList.remove('abierto'); }
+    function toggleTipoCrear(){
+      const lista = document.getElementById('crear-tipo').value==='lista';
+      document.getElementById('crear-total-wrap').style.display = lista?'none':'block';
+    }
+    async function guardarDinamica(){
+      const id = document.getElementById('crear-id').value;
+      const nombre = document.getElementById('crear-nombre').value.trim();
+      if (!nombre){ toast('Ponle un nombre','error'); return; }
+      const tipo = document.getElementById('crear-tipo').value;
+      const fila = {
+        nombre, premio: document.getElementById('crear-premio').value.trim(), tipo,
+        total_boletos: tipo==='numerada' ? (parseInt(document.getElementById('crear-total').value)||0) : 0,
+        precio_boleto: parseFloat(document.getElementById('crear-precio').value)||0,
+      };
+      if (tipo==='numerada' && fila.total_boletos<1){ toast('Indica el total de boletos','error'); return; }
+      let r;
+      if (id) r = await sb.from('dinamicas').update(fila).eq('id', id);
+      else    r = await sb.from('dinamicas').insert(fila);
+      if (r.error){ toast('Error: '+r.error.message,'error'); return; }
+      cerrarCrear(); toast(id?'✓ Dinámica actualizada':'✓ Dinámica creada');
+      cargarDinamicas();
+    }
+
+    async function menuDinamica(){
+      if (!dinActual) return;
+      const acc = prompt('Escribe:\n  E = editar\n  F = marcar finalizada / reactivar\n  B = BORRAR dinámica','E');
+      if (!acc) return;
+      const a = acc.trim().toUpperCase();
+      if (a==='E'){
+        document.getElementById('crear-id').value = dinActual.id;
+        document.getElementById('crear-titulo').textContent='Editar dinámica';
+        document.getElementById('btn-guardar-din').textContent='Guardar';
+        document.getElementById('crear-nombre').value = dinActual.nombre;
+        document.getElementById('crear-premio').value = dinActual.premio||'';
+        document.getElementById('crear-tipo').value = dinActual.tipo;
+        document.getElementById('crear-total').value = dinActual.total_boletos||'';
+        document.getElementById('crear-precio').value = dinActual.precio_boleto||'';
+        toggleTipoCrear();
+        document.getElementById('modal-crear').classList.add('abierto');
+      } else if (a==='F'){
+        const nuevo = dinActual.estado==='activa'?'finalizada':'activa';
+        await sb.from('dinamicas').update({estado:nuevo}).eq('id',dinActual.id);
+        dinActual.estado=nuevo; toast('Estado: '+nuevo); abrirDinamica(dinActual.id);
+      } else if (a==='B'){
+        if (!confirm('¿Borrar esta dinámica y todos sus boletos?')) return;
+        await sb.from('dinamicas').delete().eq('id',dinActual.id);
+        toast('🗑️ Dinámica borrada'); volverLista();
+      }
+    }
+
+    // ════════ DETALLE ════════
+    async function abrirDinamica(id){
+      dinActual = dinamicas.find(d=>d.id===id) || dinActual;
+      if (!dinActual) { const {data}=await sb.from('dinamicas').select('*').eq('id',id).single(); dinActual=data; }
+      irVista('detalle');
+      document.getElementById('det-nombre').textContent = dinActual.nombre;
+      document.getElementById('det-premio').textContent = dinActual.premio ? '🎁 '+dinActual.premio : '';
+      document.getElementById('det-add-btn').textContent = dinActual.tipo==='numerada' ? '＋ Vender boleto' : '＋ Agregar participante';
+      await cargarBoletos();
+    }
+
+    async function cargarBoletos(){
+      const { data } = await sb.from('boletos').select('*').eq('dinamica_id', dinActual.id).order('numero',{nullsFirst:false});
+      boletos = data||[];
+      renderDetalle();
+    }
+
+    function renderDetalle(){
+      const vendidos = boletos.length;
+      const total = dinActual.tipo==='numerada' ? (dinActual.total_boletos||0) : vendidos;
+      const ingreso = boletos.filter(b=>b.estado==='pagado').length * (Number(dinActual.precio_boleto)||0);
+      document.getElementById('st-total').textContent = dinActual.tipo==='numerada'?total:'∞';
+      document.getElementById('st-vendidos').textContent = vendidos;
+      document.getElementById('st-disp').textContent = dinActual.tipo==='numerada'?Math.max(total-vendidos,0):'—';
+      document.getElementById('st-ingreso').textContent = fmtMX(ingreso);
+
+      // Ganador
+      const gb = document.getElementById('det-ganador-box');
+      gb.innerHTML = dinActual.ganador
+        ? `<div class="din-ganador" style="background:#fff8e6;border:1px solid #f0d590;padding:12px;border-radius:10px;margin-bottom:14px;">🏆 Ganador: ${esc(dinActual.ganador)}${dinActual.ganador_numero?` (boleto #${dinActual.ganador_numero})`:''}</div>` : '';
+
+      if (dinActual.tipo==='numerada') renderGrid();
+      else renderParticipantes();
+    }
+
+    function renderGrid(){
+      document.getElementById('det-numerada').style.display='block';
+      document.getElementById('det-lista').style.display='none';
+      const mapa = {}; boletos.forEach(b=>mapa[b.numero]=b);
+      let html='';
+      for (let i=1;i<=(dinActual.total_boletos||0);i++){
+        const b = mapa[i];
+        const cls = b ? (b.estado==='pagado'?'pagado':'apartado') : '';
+        const title = b ? `${b.comprador||''} (${b.estado})` : 'Libre';
+        html += `<button class="boleto ${cls}" title="${esc(title)}" onclick="clicBoleto(${i})">${i}</button>`;
+      }
+      document.getElementById('boletos-grid').innerHTML = html;
+    }
+
+    function renderParticipantes(){
+      document.getElementById('det-numerada').style.display='none';
+      document.getElementById('det-lista').style.display='block';
+      const cont = document.getElementById('participantes-lista');
+      if (!boletos.length){ cont.innerHTML=`<div class="vacio">Sin participantes todavía.</div>`; return; }
+      cont.innerHTML = boletos.map((b,i)=>`
+        <div class="part-item">
+          <div class="part-num">${i+1}</div>
+          <div class="part-info">
+            <div class="part-nombre">${esc(b.comprador||'(sin nombre)')}</div>
+            ${b.contacto?`<div class="part-contacto">📱 ${esc(b.contacto)}</div>`:''}
+          </div>
+          <span class="part-estado ${b.estado}">${b.estado}</span>
+          <button class="icon-btn" onclick="editarBoletoLista(${b.id})">✏️</button>
+          <button class="icon-btn" onclick="borrarBoleto(${b.id})">🗑️</button>
+        </div>`).join('');
+    }
+
+    function accionAgregar(){
+      if (dinActual.tipo==='numerada'){
+        // siguiente número libre
+        const usados = new Set(boletos.map(b=>b.numero));
+        let libre=null;
+        for(let i=1;i<=(dinActual.total_boletos||0);i++){ if(!usados.has(i)){libre=i;break;} }
+        if (libre===null){ toast('No quedan boletos libres','error'); return; }
+        abrirBoleto(libre, null);
+      } else {
+        abrirBoleto(null, null);
+      }
+    }
+
+    // ════════ BOLETO (modal) ════════
+    function clicBoleto(numero){
+      const b = boletos.find(x=>x.numero===numero);
+      abrirBoleto(numero, b);
+    }
+    function editarBoletoLista(id){ abrirBoleto(null, boletos.find(b=>b.id===id)); }
+
+    function abrirBoleto(numero, b){
+      document.getElementById('boleto-id').value = b?b.id:'';
+      document.getElementById('boleto-numero').value = (b?b.numero:numero) ?? '';
+      document.getElementById('boleto-titulo').textContent =
+        dinActual.tipo==='numerada' ? `Boleto #${b?b.numero:numero}` : (b?'Editar participante':'Nuevo participante');
+      document.getElementById('boleto-comprador').value = b?b.comprador||'':'';
+      document.getElementById('boleto-contacto').value = b?b.contacto||'':'';
+      document.getElementById('boleto-estado').value = b?b.estado:'pagado';
+      document.getElementById('btn-liberar').style.display = b?'block':'none';
+      document.getElementById('modal-boleto').classList.add('abierto');
+    }
+    function cerrarBoleto(){ document.getElementById('modal-boleto').classList.remove('abierto'); }
+
+    async function guardarBoleto(){
+      const id = document.getElementById('boleto-id').value;
+      const comprador = document.getElementById('boleto-comprador').value.trim();
+      if (!comprador){ toast('Falta el nombre','error'); return; }
+      const fila = {
+        dinamica_id: dinActual.id,
+        numero: document.getElementById('boleto-numero').value ? parseInt(document.getElementById('boleto-numero').value) : null,
+        comprador,
+        contacto: document.getElementById('boleto-contacto').value.trim(),
+        estado: document.getElementById('boleto-estado').value,
+      };
+      let r;
+      if (id) r = await sb.from('boletos').update(fila).eq('id', id);
+      else    r = await sb.from('boletos').insert(fila);
+      if (r.error){ toast('Error: '+r.error.message,'error'); return; }
+      cerrarBoleto(); toast('✓ Guardado'); cargarBoletos();
+    }
+    async function liberarBoleto(){
+      const id = document.getElementById('boleto-id').value;
+      if (!id) return;
+      if (!confirm('¿Liberar este boleto?')) return;
+      await sb.from('boletos').delete().eq('id', id);
+      cerrarBoleto(); toast('Boleto liberado'); cargarBoletos();
+    }
+    async function borrarBoleto(id){
+      if (!confirm('¿Quitar a este participante?')) return;
+      await sb.from('boletos').delete().eq('id', id);
+      toast('Participante quitado'); cargarBoletos();
+    }
+
+    // ════════ RULETA ════════
+    function abrirRuletaDinamica(){
+      modoLibre = false;
+      if (!boletos.length){ toast('Vende boletos primero','error'); }
+      entries = boletos.map(b => ({
+        label: dinActual.tipo==='numerada' ? `#${b.numero} ${b.comprador||''}`.trim() : (b.comprador||'—'),
+        numero: b.numero, comprador: b.comprador
+      }));
+      document.getElementById('ruleta-titulo').textContent = dinActual.nombre;
+      document.getElementById('ruleta-premio').textContent = dinActual.premio ? '🎁 '+dinActual.premio : '';
+      document.getElementById('libre-panel').style.display='none';
+      document.getElementById('btn-guardar-ganador').style.display='inline-flex';
+      irVista('ruleta');
+      prepararRuleta();
+    }
+    function abrirRuletaLibre(){
+      modoLibre = true; dinActual=null;
+      entries = [];
+      document.getElementById('ruleta-titulo').textContent = 'Ruleta libre';
+      document.getElementById('ruleta-premio').textContent = '';
+      document.getElementById('libre-panel').style.display='block';
+      document.getElementById('btn-guardar-ganador').style.display='none';
+      irVista('ruleta');
+      prepararRuleta();
+    }
+    function cargarLibre(){
+      const lineas = document.getElementById('libre-texto').value.split('\n').map(s=>s.trim()).filter(Boolean);
+      if (lineas.length<2){ toast('Pon al menos 2 nombres','error'); return; }
+      entries = lineas.map(n=>({label:n, comprador:n}));
+      prepararRuleta(); toast(`${lineas.length} participantes cargados`);
+    }
+    function cerrarRuleta(){ cerrarGanador(); if(dinActual) irVista('detalle'); else irVista('lista'); }
+
+    function prepararRuleta(){
+      const vacia = entries.length<2;
+      document.getElementById('ruleta-vacia').style.display = vacia?'block':'none';
+      document.getElementById('wheel-box').style.display = vacia?'none':'block';
+      if (!vacia) drawWheel();
+    }
+
+    // ── Dibujo de la rueda ──
+    const TAU = Math.PI*2;
+    const COLORS = ['#25D366','#1a1a18','#e8e7a8','#f0a500','#2c8a4a','#3a3a35','#f6f5ca','#1ebe57','#b8400a','#4a6fa5'];
+    let rotation = 0, spinning = false;
+
+    function textColor(hex){
+      const c=hex.replace('#',''); const r=parseInt(c.substr(0,2),16),g=parseInt(c.substr(2,2),16),b=parseInt(c.substr(4,2),16);
+      return (0.299*r+0.587*g+0.114*b)>150 ? '#1a1a18' : '#ffffff';
+    }
+    function drawWheel(){
+      const cv=document.getElementById('wheel'), ctx=cv.getContext('2d');
+      const W=cv.width, R=W/2, n=entries.length, seg=TAU/n;
+      ctx.clearRect(0,0,W,W);
+      ctx.save(); ctx.translate(R,R); ctx.rotate(rotation);
+      for(let i=0;i<n;i++){
+        const a0=i*seg, a1=a0+seg, col=COLORS[i%COLORS.length];
+        ctx.beginPath(); ctx.moveTo(0,0); ctx.arc(0,0,R-6,a0,a1); ctx.closePath();
+        ctx.fillStyle=col; ctx.fill();
+        ctx.strokeStyle='rgba(255,255,255,.25)'; ctx.lineWidth=1.5; ctx.stroke();
+        if (seg>0.07){
+          ctx.save(); ctx.rotate(a0+seg/2);
+          ctx.textAlign='right'; ctx.textBaseline='middle'; ctx.fillStyle=textColor(col);
+          const fs=Math.max(11,Math.min(22, R*0.07 - n*0.05));
+          ctx.font=`700 ${fs}px Montserrat, sans-serif`;
+          let lbl=entries[i].label; if(lbl.length>20) lbl=lbl.slice(0,19)+'…';
+          ctx.fillText(lbl, R-18, 0);
+          ctx.restore();
+        }
+      }
+      ctx.restore();
+      // Centro
+      ctx.beginPath(); ctx.arc(R,R,R*0.135,0,TAU); ctx.fillStyle='#1a1a18'; ctx.fill();
+      ctx.strokeStyle='#f6f5ca'; ctx.lineWidth=4; ctx.stroke();
+    }
+
+    function girar(){
+      if (spinning) return;
+      if (entries.length<2){ toast('Faltan participantes','error'); return; }
+      spinning=true; cerrarGanador();
+      document.getElementById('wheel-spin').disabled=true;
+      const n=entries.length, seg=TAU/n;
+      const winner=Math.floor(Math.random()*n);
+      const pointer=-Math.PI/2;
+      const targetMod = ((pointer-(winner+0.5)*seg)%TAU+TAU)%TAU;
+      const currentMod = ((rotation%TAU)+TAU)%TAU;
+      let delta = targetMod-currentMod; if (delta<0) delta+=TAU;
+      const start=rotation, end=rotation+delta+TAU*7, dur=6200, t0=performance.now();
+      (function frame(now){
+        const p=Math.min((now-t0)/dur,1), e=1-Math.pow(1-p,3);
+        rotation=start+(end-start)*e; drawWheel();
+        if (p<1) requestAnimationFrame(frame);
+        else { rotation=end%TAU; spinning=false; document.getElementById('wheel-spin').disabled=false; mostrarGanador(winner); }
+      })(t0);
+    }
+
+    function mostrarGanador(i){
+      ganadorActual = entries[i];
+      document.getElementById('ganador-nombre').textContent = entries[i].label;
+      document.getElementById('ganador-ov').classList.add('show');
+      lanzarConfeti();
+    }
+    function cerrarGanador(){ document.getElementById('ganador-ov').classList.remove('show'); }
+
+    async function guardarGanador(){
+      if (!ganadorActual || !dinActual){ cerrarGanador(); return; }
+      const r = await sb.from('dinamicas').update({
+        ganador: ganadorActual.comprador || ganadorActual.label,
+        ganador_numero: ganadorActual.numero || null,
+        estado: 'finalizada'
+      }).eq('id', dinActual.id);
+      if (r.error){ toast('Error: '+r.error.message,'error'); return; }
+      dinActual.ganador = ganadorActual.comprador || ganadorActual.label;
+      dinActual.ganador_numero = ganadorActual.numero || null;
+      dinActual.estado='finalizada';
+      toast('🏆 Ganador guardado'); cerrarGanador();
+    }
+
+    function pantallaCompleta(){
+      const el = document.getElementById('ruleta-stage');
+      if (!document.fullscreenElement) el.requestFullscreen?.().then(()=>setTimeout(drawWheel,300)).catch(()=>{});
+      else document.exitFullscreen?.();
+    }
+    document.addEventListener('fullscreenchange', ()=>setTimeout(()=>{ if(entries.length>=2) drawWheel(); },200));
+
+    // ── Confeti ──
+    function lanzarConfeti(){
+      const stage=document.getElementById('ruleta-stage');
+      const cols=['#25D366','#f0a500','#f6f5ca','#1ebe57','#ff3366'];
+      for(let i=0;i<70;i++){
+        const c=document.createElement('div'); c.className='confeti';
+        c.style.left=Math.random()*100+'%';
+        c.style.background=cols[i%cols.length];
+        c.style.transform=`rotate(${Math.random()*360}deg)`;
+        stage.appendChild(c);
+        const dur=2200+Math.random()*1500;
+        c.animate([
+          {transform:`translateY(0) rotate(0deg)`,opacity:1},
+          {transform:`translateY(${stage.offsetHeight+40}px) rotate(${Math.random()*720}deg)`,opacity:.9}
+        ],{duration:dur,easing:'ease-in'}).onfinish=()=>c.remove();
+      }
+    }
+
+    // Redibujar al cambiar tamaño
+    window.addEventListener('resize', ()=>{ if(entries.length>=2 && document.getElementById('vista-ruleta').classList.contains('activa')) drawWheel(); });
+  </script>
+</body>
+</html>
