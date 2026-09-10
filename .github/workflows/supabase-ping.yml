@@ -1,0 +1,17 @@
+name: Supabase Ping
+
+on:
+  schedule:
+    # Se ejecuta cada 3 días a las 12:00 PM (Mediodía UTC)
+    - cron: '0 12 */3 * *'
+  workflow_dispatch: # Permite ejecutarlo manualmente desde GitHub
+
+jobs:
+  ping_supabase:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hacer Ping a Supabase
+        run: |
+          curl --request GET 'https://wzixskdrpdqgtvucnsbf.supabase.co/rest/v1/productos?select=id&limit=1' \
+          --header 'apikey: ${{ secrets.SUPABASE_ANON_KEY }}' \
+          --header 'Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}'
