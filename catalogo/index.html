@@ -1,13 +1,73 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <meta charset="UTF-8">
+  <title>Catálogo · Alushe Store</title>
+  <meta name="description" content="Catálogo completo de Alushe Store en Durango, Dgo. Ropa, tecnología, hogar, belleza y más con entrega a domicilio.">
+  <!-- Open Graph / WhatsApp / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://alushe.store/catalogo">
+  <meta property="og:title" content="Catálogo · Alushe Store">
+  <meta property="og:description" content="Catálogo completo de Alushe Store en Durango, Dgo. Ropa, tecnología, hogar, belleza y más con entrega a domicilio.">
+  <meta property="og:image" content="https://alushe.store/assets/images/favicon.png">
+  <meta property="og:image:width" content="500">
+  <meta property="og:image:height" content="500">
+  <meta property="og:locale" content="es_MX">
+  <meta property="og:site_name" content="Alushe Store">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Catálogo · Alushe Store">
+  <meta name="twitter:description" content="Catálogo completo de Alushe Store en Durango, Dgo. Ropa, tecnología, hogar, belleza y más con entrega a domicilio.">
+  <meta name="twitter:image" content="https://alushe.store/assets/images/favicon.png">
   <link rel="icon" type="image/png" href="/assets/images/favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
+    :root {
+      --cream:   #f6f5ca;
+      --cream-d: #e8e7a8;
+      --ink:     #1a1a18;
+      --ink-mid: #3a3a35;
+      --ink-lt:  #7a7a6e;
+      --green:   #25D366;
+      --green-d: #1ebe57;
+      --white:   #ffffff;
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Montserrat', sans-serif; background: #F7F6DE; padding: 12px; }
+    body { font-family: 'Montserrat', sans-serif; background: #F7F6DE; padding: 76px 12px 20px; }
+
+    /* ── NAVBAR ──────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 24px;
+      background: rgba(246,245,202,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(26,26,24,0.08);
+      transition: padding 0.3s;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo img { width: 34px; height: 34px; object-fit: contain; border-radius: 8px; }
+    .nav-logo-text { font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 800; color: var(--ink); letter-spacing: -0.3px; }
+    .nav-links { display: flex; gap: 16px; align-items: center; }
+    .nav-links a { font-size: 12px; font-weight: 600; color: var(--ink-mid); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-cta {
+      background: var(--ink) !important; color: var(--cream) !important;
+      padding: 8px 16px; border-radius: 50px;
+      font-weight: 600 !important; font-size: 12px !important;
+      transition: background 0.2s, transform 0.15s !important;
+    }
+    .nav-cta:hover { background: var(--ink-mid) !important; transform: scale(1.03); }
+    @media (max-width: 600px) {
+      nav { padding: 10px 12px; }
+      .nav-logo-text { font-size: 14px; }
+      .nav-links { gap: 8px; }
+      .nav-links a { font-size: 11px; }
+      .nav-cta { padding: 6px 10px; font-size: 11px !important; }
+    }
 
     .controles { max-width:1200px; margin:0 auto 14px; display:flex; flex-wrap:wrap; gap:8px; }
     .buscador { flex:1 1 200px; padding:10px 14px; border:1.5px solid #ddd; border-radius:10px; font-family:'Montserrat',sans-serif; font-size:13px; background:white; outline:none; transition:border-color .2s,box-shadow .2s; }
@@ -137,6 +197,22 @@
     .modal-btn-carrito { width:100%; background:white; border:1.5px solid #25D366; color:#25D366; padding:10px; border-radius:10px; font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; cursor:pointer; transition:all .18s; display:flex; align-items:center; justify-content:center; gap:6px; }
     .modal-btn-carrito:hover { background:#f0fdf5; }
     .modal-btn-carrito.en-carrito { background:#e8f8ef; border-color:#1ebe57; color:#1a9c45; }
+    .modal-btn-compartir { width:100%; background:white; border:1.5px solid #1a1a18; color:#1a1a18; padding:10px; border-radius:10px; font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; cursor:pointer; transition:all .18s; display:flex; align-items:center; justify-content:center; gap:6px; }
+    .modal-btn-compartir:hover { background:#f5f5f5; }
+
+    /* TOAST */
+    .toast-notif { position:fixed; top:75px; left:50%; transform:translateX(-50%) translateY(-20px); background:#1a1a18; color:white; padding:10px 20px; border-radius:50px; font-size:12px; font-weight:700; box-shadow:0 8px 24px rgba(0,0,0,0.2); z-index:2000; opacity:0; pointer-events:none; transition:all .25s ease; white-space:nowrap; }
+    .toast-notif.visible { opacity:1; transform:translateX(-50%) translateY(0); }
+
+    /* FOOTER */
+    footer {
+      background: var(--ink); color: rgba(246,245,202,0.55);
+      padding: 30px 20px; text-align: center;
+      font-size: 12px; font-weight: 400; letter-spacing: 0.3px;
+      margin-top: 50px; border-radius: 14px;
+    }
+    footer a { color: var(--cream); text-decoration: none; font-weight: 600; }
+    footer strong { color: var(--cream); font-weight: 700; }
 
     /* CARRITO FLOTANTE */
     .carrito-flotante { position:fixed; bottom:20px; left:20px; background:white; border-radius:14px; box-shadow:0 8px 28px rgba(0,0,0,.15); padding:10px 14px; z-index:997; display:flex; align-items:center; gap:10px; cursor:pointer; transition:transform .2s,box-shadow .2s,opacity .3s; opacity:0; pointer-events:none; transform:translateY(10px); max-width:200px; }
@@ -188,6 +264,16 @@
   </style>
 </head>
 <body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="/"><img src="/assets/images/favicon.png" alt="Alushe Store logo"><span class="nav-logo-text">Alushe Store</span></a>
+    <div class="nav-links">
+      <a href="/">Inicio</a>
+      <a href="/puntos_entrega">Puntos de entrega</a>
+      <a href="https://wa.me/526183973897" target="_blank" class="nav-cta">WhatsApp 💬</a>
+    </div>
+  </nav>
 
   <div class="controles">
     <input class="buscador" type="text" id="buscador" placeholder="🔍 Buscar producto..." oninput="aplicarFiltros()">
@@ -285,7 +371,21 @@
     let productosFiltrados = [];
     let categoriaActiva    = 'Todos';
     let modalIdxActual     = 0;
-    let carrito            = [];
+
+    function cargarCarritoLS() {
+      try {
+        const raw = localStorage.getItem('alushe_carrito');
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+    function guardarCarritoLS() {
+      try {
+        localStorage.setItem('alushe_carrito', JSON.stringify(carrito));
+      } catch (e) {}
+    }
+    let carrito = cargarCarritoLS();
 
     // ── SKELETONS ──────────────────────────────────────
     for (let i = 0; i < 12; i++) {
@@ -372,6 +472,10 @@
     }
 
     // ── HELPERS ───────────────────────────────────────
+    function normalizarTexto(txt) {
+      return (txt || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+    }
+
     function extraerPrecio(str) {
       const n = parseFloat((str || '').replace(/[^0-9.]/g, ''));
       return isNaN(n) ? 0 : n;
@@ -391,12 +495,12 @@
 
     // ── FILTROS ───────────────────────────────────────
     function aplicarFiltros() {
-      const busqueda  = document.getElementById('buscador').value.toLowerCase().trim();
+      const busqueda  = normalizarTexto(document.getElementById('buscador').value);
       const orden     = document.getElementById('orden').value;
       const precioMax = parseFloat(document.getElementById('precio_max').value) || Infinity;
 
       let res = todosLosProductos.filter(p =>
-        p.Producto.toLowerCase().includes(busqueda) &&
+        normalizarTexto(p.Producto).includes(busqueda) &&
         (categoriaActiva === 'Todos' || p.Categoria === categoriaActiva) &&
         extraerPrecio(p.Precio) <= precioMax
       );
@@ -536,11 +640,13 @@
       document.querySelector('.modal-nav.next').style.display = total > 1 ? '' : 'none';
 
       document.getElementById('modal-acciones').innerHTML = agotado
-        ? `<div class="modal-btn-agotado">Agotado</div>`
+        ? `<div class="modal-btn-agotado">Agotado</div>
+           <button class="modal-btn-compartir" onclick="compartirProducto(${idx})">🔗 Compartir producto</button>`
         : `<a href="https://wa.me/${miWhatsApp}?text=${encodeURIComponent(`Hola, vi esto en el catálogo y me interesa: ${row.Producto} (${row.Precio})`)}" target="_blank" class="modal-btn-wa">💬 Pedir por WhatsApp</a>
            <button class="modal-btn-carrito${enCart?' en-carrito':''}" onclick="toggleCarritoModal(${idx})">
              ${enCart ? '✓ En mi pedido' : '+ Agregar al pedido'}
-           </button>`;
+           </button>
+           <button class="modal-btn-compartir" onclick="compartirProducto(${idx})">🔗 Compartir producto</button>`;
     }
 
     function navegarModal(dir) {
@@ -572,6 +678,40 @@
       if (e.key === 'ArrowLeft')  navegarModal(-1);
     });
 
+    function compartirProducto(idx) {
+      const row = productosFiltrados[idx];
+      if (!row) return;
+      const url = `${window.location.origin}${window.location.pathname}?producto=${encodeURIComponent(row.Producto)}`;
+      if (navigator.share) {
+        navigator.share({
+          title: `${row.Producto} · Alushe Store`,
+          text: `Mira ${row.Producto} (${row.Precio}) en Alushe Store:`,
+          url: url
+        }).catch(() => {});
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(() => {
+          mostrarToast('✓ Enlace copiado al portapapeles');
+        }).catch(() => {
+          prompt('Copia el enlace de este producto:', url);
+        });
+      } else {
+        prompt('Copia el enlace de este producto:', url);
+      }
+    }
+
+    function mostrarToast(msg) {
+      let toast = document.getElementById('toast-notif');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toast-notif';
+        toast.className = 'toast-notif';
+        document.body.appendChild(toast);
+      }
+      toast.textContent = msg;
+      toast.classList.add('visible');
+      setTimeout(() => toast.classList.remove('visible'), 2800);
+    }
+
     // ── CARRITO (6) ───────────────────────────────────
     function carritoContiene(nombre) { return carrito.some(p => p.nombre === nombre); }
 
@@ -585,6 +725,7 @@
         carrito.push({ nombre: row.Producto, precio: row.Precio, precioNum: extraerPrecio(row.Precio) });
         if (btn) { btn.textContent = '✓ En mi pedido'; btn.classList.add('en-carrito'); }
       }
+      guardarCarritoLS();
       actualizarCarritoUI();
     }
 
@@ -596,6 +737,7 @@
       } else {
         carrito.push({ nombre: row.Producto, precio: row.Precio, precioNum: extraerPrecio(row.Precio) });
       }
+      guardarCarritoLS();
       actualizarCarritoUI();
       renderModal(idx);
       actualizarBotonesCards();
@@ -635,6 +777,7 @@
 
     function vaciarCarrito() {
       carrito = [];
+      guardarCarritoLS();
       actualizarCarritoUI();
       actualizarBotonesCards();
       renderPanelCarrito();
@@ -642,6 +785,7 @@
 
     function quitarDelCarrito(nombre) {
       carrito = carrito.filter(p => p.nombre !== nombre);
+      guardarCarritoLS();
       actualizarCarritoUI();
       actualizarBotonesCards();
       renderPanelCarrito();
@@ -686,6 +830,19 @@
         const cats = [...new Set(todosLosProductos.map(p => (p.Categoria||'').trim()).filter(Boolean))].sort();
         renderChips(cats);
         aplicarFiltros();
+        actualizarBotonesCards();
+        actualizarCarritoUI();
+
+        // Si la URL contiene ?producto=Nombre, abrir directamente ese producto
+        const urlParams = new URLSearchParams(window.location.search);
+        const prodParam = urlParams.get('producto');
+        if (prodParam) {
+          const normP = normalizarTexto(prodParam);
+          const fIdx = productosFiltrados.findIndex(p => normalizarTexto(p.Producto) === normP || normalizarTexto(p.Producto).includes(normP));
+          if (fIdx !== -1) {
+            setTimeout(() => abrirModal(fIdx), 250);
+          }
+        }
       } catch(e) {
         if (!silencioso) {
           container.innerHTML = `<div class="sin-resultados">Error al cargar el catálogo. Intenta más tarde.</div>`;
@@ -693,6 +850,7 @@
       }
     }
 
+    actualizarCarritoUI();
     cargarCatalogo();
 
     // ── REALTIME: refresca solo cuando cambia el inventario ──
@@ -705,6 +863,14 @@
       })
       .subscribe();
   </script>
+  <!-- FOOTER -->
+  <footer>
+    <p><strong>Alushe Store</strong> &nbsp;·&nbsp; Durango, Dgo. &nbsp;·&nbsp;
+    <a href="/">Inicio</a> &nbsp;·&nbsp;
+    <a href="/catalogo">Catálogo</a> &nbsp;·&nbsp;
+    <a href="/puntos_entrega">Puntos de entrega</a></p>
+    <p style="margin-top:8px;">© 2026 Alushe Store. Todos los derechos reservados.</p>
+  </footer>
 </body>
 </html>
 

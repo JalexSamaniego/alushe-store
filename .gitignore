@@ -1,0 +1,16 @@
+# Entornos y credenciales
+.env
+.env.*
+!.env.example
+*.local.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# IDEs y SO
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
