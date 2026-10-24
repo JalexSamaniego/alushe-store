@@ -22,7 +22,7 @@
   <meta name="twitter:image" content="https://alushe.store/assets/images/favicon.png">
   <title>Puntos de Entrega - Alushe Store</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Playfair+Display:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
@@ -30,20 +30,37 @@
   <style>
     :root {
       --cream:   #f6f5ca;
-      --cream-d: #e8e7a8;
+      --cream-d: #ecebb8;
+      --cream-lt:#fbfae8;
+      --paper:   #fcfbf0;
+      --surface: #ffffff;
       --ink:     #1a1a18;
-      --ink-mid: #3a3a35;
-      --ink-lt:  #7a7a6e;
+      --ink-mid: #45453d;
+      --ink-lt:  #86857a;
+      --line:    #e9e8d4;
+      --line-d:  #dedcc2;
       --green:   #25D366;
       --green-d: #1ebe57;
       --white:   #ffffff;
+      --r-sm: 10px; --r: 16px; --r-lg: 22px; --r-pill: 999px;
+      --shadow:    0 4px 14px rgba(26,26,24,.06), 0 12px 32px rgba(26,26,24,.05);
+      --shadow-lg: 0 12px 28px rgba(26,26,24,.10), 0 28px 64px rgba(26,26,24,.10);
+      --ease: cubic-bezier(.22,.61,.36,1);
     }
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
-      font-family: 'Montserrat', sans-serif;
-      margin: 0;
-      padding: 76px 15px 30px;
-      background-color: #F7F6DE;
+      font-family: 'DM Sans', sans-serif;
+      margin: 0; padding: 70px 14px 20px;
+      background: var(--paper); color: var(--ink);
+      overflow-x: hidden; -webkit-font-smoothing: antialiased;
+    }
+    a { text-decoration: none; }
+
+    /* grano sutil */
+    body::after {
+      content:''; position:fixed; inset:0; z-index:9998; pointer-events:none; opacity:.025;
+      background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/></filter><rect width='180' height='180' filter='url(%23n)'/></svg>");
     }
 
     /* ── NAVBAR ──────────────────────────────────────── */
@@ -51,155 +68,136 @@
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
       padding: 12px 24px;
-      background: rgba(246,245,202,0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(26,26,24,0.08);
-      transition: padding 0.3s;
+      background: rgba(252,251,240,0.82);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
     }
-    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .nav-logo img { width: 34px; height: 34px; object-fit: contain; border-radius: 8px; }
-    .nav-logo-text { font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 800; color: var(--ink); letter-spacing: -0.3px; }
-    .nav-links { display: flex; gap: 16px; align-items: center; }
-    .nav-links a { font-size: 12px; font-weight: 600; color: var(--ink-mid); text-decoration: none; transition: color 0.2s; }
-    .nav-links a:hover { color: var(--ink); }
+    .nav-logo { display: flex; align-items: center; gap: 10px; }
+    .nav-logo img { width: 34px; height: 34px; object-fit: contain; border-radius: 9px; }
+    .nav-logo-text { font-family: 'Montserrat'; font-size: 15px; font-weight: 800; color: var(--ink); letter-spacing: -0.3px; }
+    .nav-links { display: flex; gap: 6px; align-items: center; }
+    .nav-links a { font-size: 13px; font-weight: 500; color: var(--ink-mid); padding: 8px 14px; border-radius: var(--r-pill); transition: background .2s, color .2s; }
+    .nav-links a:hover { background: var(--cream); color: var(--ink); }
     .nav-cta {
       background: var(--ink) !important; color: var(--cream) !important;
-      padding: 8px 16px; border-radius: 50px;
-      font-weight: 600 !important; font-size: 12px !important;
-      transition: background 0.2s, transform 0.15s !important;
+      font-weight: 600 !important; display: inline-flex; align-items: center; gap: 6px;
+      transition: background .2s, transform .15s !important;
     }
-    .nav-cta:hover { background: var(--ink-mid) !important; transform: scale(1.03); }
+    .nav-cta:hover { background: #000 !important; transform: translateY(-1px); }
     @media (max-width: 600px) {
-      nav { padding: 10px 12px; }
+      nav { padding: 10px 14px; }
       .nav-logo-text { font-size: 14px; }
-      .nav-links { gap: 8px; }
-      .nav-links a { font-size: 11px; }
-      .nav-cta { padding: 6px 10px; font-size: 11px !important; }
+      .nav-links { gap: 2px; }
+      .nav-links a { font-size: 11px; padding: 7px 9px; }
     }
 
-    .header-title {
-      text-align: center;
-      color: #333;
-      margin-bottom: 20px;
-      font-weight: 800;
-      font-size: 26px;
-      text-transform: uppercase;
-    }
+    /* ── MARQUEE ───────────────────────────── */
+    .marquee-wrap { max-width: 1100px; margin: 6px auto 20px; overflow: hidden; background: var(--ink); border-radius: 12px; padding: 11px 0; }
+    .marquee-track { display: flex; width: max-content; animation: mqmove 26s linear infinite; }
+    .marquee-track span { font-family: 'Montserrat'; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(246,245,202,.55); padding: 0 16px; white-space: nowrap; }
+    .marquee-track .mq-s { color: var(--green); }
+    @keyframes mqmove { to { transform: translateX(-50%); } }
 
-    .info-box {
-      background: #fff;
-      border-radius: 12px;
-      padding: 15px 20px;
-      max-width: 1000px;
-      margin: 0 auto 25px;
-      text-align: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-      border-left: 5px solid #ff6b6b;
-      font-size: 14px;
-      color: #444;
-      line-height: 1.6;
-    }
-    .info-box.delivery {
-      border-left-color: #25D366;
-      margin-top: 10px;
-      margin-bottom: 40px;
-    }
+    /* ── INTRO ─────────────────────────────── */
+    .intro { max-width: 1100px; margin: 0 auto 20px; }
+    .tag { display: inline-flex; align-items: center; gap: 7px; font-family: 'Montserrat'; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-lt); margin-bottom: 10px; }
+    .tag::before { content: ''; width: 18px; height: 1.5px; background: var(--green); }
+    .cat-title { font-family: 'Playfair Display', serif; font-size: clamp(28px, 5vw, 44px); font-weight: 600; letter-spacing: -.5px; line-height: 1.05; }
+    .cat-title em { font-style: italic; color: var(--ink-lt); }
+    .cat-sub { margin-top: 10px; font-size: 14.5px; font-weight: 300; color: var(--ink-mid); max-width: 480px; }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
+    /* ── INFO CARD ─────────────────────────── */
+    .info-card { max-width: 1100px; margin: 0 auto 28px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 18px 20px; display: flex; gap: 16px; align-items: flex-start; box-shadow: var(--shadow); }
+    .info-icon { width: 42px; height: 42px; flex-shrink: 0; border-radius: 12px; background: var(--cream); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .info-list { display: flex; flex-direction: column; gap: 7px; }
+    .info-list p { font-size: 13px; font-weight: 300; color: var(--ink-mid); line-height: 1.5; }
+    .info-list strong { font-weight: 600; color: var(--ink); }
 
+    /* ── GRID ──────────────────────────────── */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; max-width: 1100px; margin: 0 auto; }
+
+    /* ── CARD ──────────────────────────────── */
     .card {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      text-align: center;
-      padding-bottom: 20px;
-      transition: transform 0.2s;
+      background: var(--surface); border: 1px solid var(--line); border-radius: var(--r);
+      overflow: hidden; display: flex; flex-direction: column; text-align: left; padding-bottom: 16px;
+      opacity: 0; transform: translateY(18px);
+      transition: opacity .55s var(--ease), transform .55s var(--ease), box-shadow .28s, border-color .28s;
     }
-    .card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
+    .card.in { opacity: 1; transform: none; }
+    .card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); border-color: var(--line-d); }
 
-    .images-wrap { display: flex; border-bottom: 1px solid #eee; background: #fafafa; }
-    .images-wrap > div { flex: 1; padding: 10px; }
+    .images-wrap { display: flex; gap: 2px; background: var(--line); border-bottom: 1px solid var(--line); }
+    .images-wrap > div { flex: 1; padding: 10px; background: var(--cream-lt); }
     .images-wrap img {
-      width: 100%;
-      height: 130px;
-      object-fit: cover;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      background-color: #eaeaea;
-      cursor: pointer;
+      width: 100%; height: 130px; object-fit: cover; border-radius: 10px;
+      background: linear-gradient(145deg,#f3f2e4,#eceadb); cursor: zoom-in;
+      transition: transform .4s var(--ease), box-shadow .2s;
+    }
+    .images-wrap img:hover { transform: scale(1.03); box-shadow: 0 6px 16px rgba(26,26,24,.12); }
+
+    .img-label { font-family: 'Montserrat'; font-size: 10px; color: var(--ink-lt); margin-top: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; text-align: center; }
+
+    .title { font-family: 'DM Sans'; font-size: 16px; font-weight: 600; margin: 15px 16px 8px; color: var(--ink); }
+    .desc  {
+      display: inline-flex; align-items: center; gap: 5px; align-self: flex-start;
+      font-family: 'Montserrat'; font-size: 12px; font-weight: 700; color: var(--green-d);
+      background: #e8f8ef; margin: 0 16px 16px; padding: 5px 11px; border-radius: var(--r-pill);
     }
 
-    .img-label {
-      font-size: 11px;
-      color: #777;
-      margin-top: 8px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .title { font-size: 17px; font-weight: 800; margin: 15px 15px 5px; color: #333; }
-    .desc  { font-size: 14px; color: #ff3366; margin: 0 15px 15px; font-weight: 800; }
-
-    /* Botones con iconos SVG */
+    /* Botones */
     .btn-maps {
-      background: #1A73E8;
-      color: white;
-      text-decoration: none;
-      padding: 10px 15px;
-      margin: auto 20px 0;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 13px;
-      transition: background 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      background: var(--surface); color: var(--ink-mid); border: 1.5px solid var(--line-d);
+      text-decoration: none; padding: 11px; margin: auto 16px 0; border-radius: var(--r-sm);
+      font-family: 'DM Sans'; font-weight: 600; font-size: 12.5px;
+      transition: border-color .2s, background .2s, color .2s;
     }
-    .btn-maps:hover { background: #1557b0; }
+    .btn-maps:hover { border-color: var(--ink); color: var(--ink); background: var(--cream-lt); }
+    .btn-maps svg { color: var(--ink-mid); flex-shrink: 0; }
 
     .btn-wa {
-      background: #25D366;
-      color: white;
-      text-decoration: none;
-      padding: 10px 15px;
-      margin: 10px 20px 0;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 13px;
-      transition: background 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      background: var(--ink); color: var(--cream); text-decoration: none;
+      padding: 11px; margin: 9px 16px 0; border-radius: var(--r-sm);
+      font-family: 'DM Sans'; font-weight: 600; font-size: 12.5px;
+      transition: background .2s, transform .12s;
     }
-    .btn-wa:hover { background: #1ebe57; }
+    .btn-wa:hover { background: #000; }
+    .btn-wa:active { transform: scale(.98); }
+    .btn-wa svg { color: var(--green); flex-shrink: 0; }
+
+    /* ── ENTREGA A DOMICILIO ───────────────── */
+    .delivery-card {
+      max-width: 1100px; margin: 28px auto 0; position: relative; overflow: hidden;
+      background: var(--ink); color: var(--cream); border-radius: var(--r-lg);
+      padding: 22px 26px; display: flex; gap: 18px; align-items: center;
+    }
+    .delivery-card::before { content:''; position:absolute; top:-40px; right:-20px; width:220px; height:220px; border-radius:50%; background:radial-gradient(circle,rgba(37,211,102,.22),transparent 70%); }
+    .delivery-emoji { width: 52px; height: 52px; flex-shrink: 0; border-radius: 14px; background: rgba(37,211,102,.16); display: flex; align-items: center; justify-content: center; font-size: 26px; z-index: 1; }
+    .delivery-card > div { z-index: 1; }
+    .delivery-card strong { font-family: 'Montserrat'; font-size: 16px; font-weight: 800; display: block; margin-bottom: 3px; }
+    .delivery-card p { font-size: 13px; font-weight: 300; color: rgba(246,245,202,.8); line-height: 1.5; }
 
     /* FOOTER */
     footer {
       background: var(--ink); color: rgba(246,245,202,0.55);
-      padding: 30px 20px; text-align: center;
-      font-size: 12px; font-weight: 400; letter-spacing: 0.3px;
-      margin-top: 50px; border-radius: 14px;
+      padding: 32px 20px; text-align: center;
+      font-size: 12px; font-weight: 300; letter-spacing: 0.3px;
+      margin-top: 40px; border-radius: var(--r);
     }
-    footer a { color: var(--cream); text-decoration: none; font-weight: 600; }
-    footer strong { color: var(--cream); font-weight: 700; }
+    footer a { color: var(--cream); text-decoration: none; font-weight: 500; }
+    footer strong { color: var(--cream); font-weight: 600; }
 
     @media (max-width: 480px) {
+      body { padding: 66px 8px 20px; }
       .grid { grid-template-columns: 1fr; }
-      .header-title { font-size: 22px; }
-      .images-wrap img { height: 120px; }
+      .images-wrap img { height: 140px; }
+      .delivery-card { flex-wrap: wrap; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+      .card { opacity:1; transform:none; }
     }
   </style>
 </head>
@@ -215,13 +213,29 @@
     </div>
   </nav>
 
-  <div class="header-title">📍 Puntos de Entrega</div>
+  <!-- MARQUEE -->
+  <div class="marquee-wrap" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Durango, Dgo.</span><span class="mq-s">✦</span><span>10 puntos de entrega</span><span class="mq-s">✦</span><span>Envíos a domicilio</span><span class="mq-s">✦</span><span>Lunes a sábado</span><span class="mq-s">✦</span><span>Coordina por WhatsApp</span><span class="mq-s">✦</span>
+      <span>Durango, Dgo.</span><span class="mq-s">✦</span><span>10 puntos de entrega</span><span class="mq-s">✦</span><span>Envíos a domicilio</span><span class="mq-s">✦</span><span>Lunes a sábado</span><span class="mq-s">✦</span><span>Coordina por WhatsApp</span><span class="mq-s">✦</span>
+    </div>
+  </div>
 
-  <div class="info-box">
-    <strong>⚠️ INFORMACIÓN IMPORTANTE</strong><br>
-    💳 Pagos en efectivo o tarjeta. El costo del artículo es el exhibido en la publicación.<br>
-    🕒 Todas las entregas de <strong>Lunes a Sábado</strong> son programadas con <strong>1 día de anticipación</strong>.<br>
-    🔍 *Haz clic en las fotos para ampliarlas.*
+  <!-- INTRO -->
+  <div class="intro">
+    <div class="tag">Dónde encontrarnos</div>
+    <h1 class="cat-title">Puntos de <em>entrega.</em></h1>
+    <p class="cat-sub">10 puntos distribuidos en Durango. Elige el más cercano y coordina tu pedido por WhatsApp.</p>
+  </div>
+
+  <!-- INFO -->
+  <div class="info-card">
+    <div class="info-icon">ℹ️</div>
+    <div class="info-list">
+      <p><strong>💳 Pagos</strong> en efectivo o tarjeta. El costo del artículo es el exhibido en la publicación.</p>
+      <p><strong>🕒 Entregas</strong> de Lunes a Sábado, programadas con 1 día de anticipación.</p>
+      <p><strong>🔍 Tip:</strong> toca las fotos para ampliarlas.</p>
+    </div>
   </div>
 
   <div class="grid">
@@ -242,8 +256,8 @@
       </div>
       <div class="title">&quot;Guadalajara&quot; Factor</div>
       <div class="desc">🕒 4:00 pm</div>
-      <a href="https://maps.app.goo.gl/S5Rf4VzhrjDkAnDe6" target="_blank" class="btn-maps"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="white" d="M12 0C7.802 0 4 3.403 4 7.602 4 11.8 7.469 16.812 12 24c4.531-7.188 8-12.2 8-16.398C20 3.403 16.199 0 12 0zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg> Ver en Google Maps</a>
-      <a href="https://wa.me/526183973897?text=Hola%2C%20me%20interesa%20el%20punto%20de%20entrega%3A%20%22Guadalajara%22%20Factor%20%284%3A00%20pm%29" target="_blank" class="btn-wa"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="white" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> Apartar lugar</a>
+      <a href="https://maps.app.goo.gl/S5Rf4VzhrjDkAnDe6" target="_blank" class="btn-maps"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="currentColor" d="M12 0C7.802 0 4 3.403 4 7.602 4 11.8 7.469 16.812 12 24c4.531-7.188 8-12.2 8-16.398C20 3.403 16.199 0 12 0zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg> Ver en Google Maps</a>
+      <a href="https://wa.me/526183973897?text=Hola%2C%20me%20interesa%20el%20punto%20de%20entrega%3A%20%22Guadalajara%22%20Factor%20%284%3A00%20pm%29" target="_blank" class="btn-wa"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> Apartar lugar</a>
     </div>
 
     <div class="card">
@@ -263,8 +277,8 @@
       </div>
       <div class="title">Zona Centro &quot;Catedral&quot;</div>
       <div class="desc">🕒 4:30 pm</div>
-      <a href="https://maps.app.goo.gl/99kjyTA6yEKn3c737" target="_blank" class="btn-maps"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="white" d="M12 0C7.802 0 4 3.403 4 7.602 4 11.8 7.469 16.812 12 24c4.531-7.188 8-12.2 8-16.398C20 3.403 16.199 0 12 0zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg> Ver en Google Maps</a>
-      <a href="https://wa.me/526183973897?text=Hola%2C%20me%20interesa%20el%20punto%20de%20entrega%3A%20Zona%20Centro%20%22Catedral%22%20%284%3A30%20pm%29" target="_blank" class="btn-wa"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="white" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> Apartar lugar</a>
+      <a href="https://maps.app.goo.gl/99kjyTA6yEKn3c737" target="_blank" class="btn-maps"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="currentColor" d="M12 0C7.802 0 4 3.403 4 7.602 4 11.8 7.469 16.812 12 24c4.531-7.188 8-12.2 8-16.398C20 3.403 16.199 0 12 0zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg> Ver en Google Maps</a>
+      <a href="https://wa.me/526183973897?text=Hola%2C%20me%20interesa%20el%20punto%20de%20entrega%3A%20Zona%20Centro%20%22Catedral%22%20%284%3A30%20pm%29" target="_blank" class="btn-wa"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> Apartar lugar</a>
     </div>
 
     <div class="card">
@@ -284,8 +298,8 @@
       </div>
       <div class="title">Santuario &quot;Libro&quot;</div>
       <div class="desc">🕒 5:00 pm</div>
-      <a href="https://maps.app.goo.gl/c6xkrWRUiBZtoHgaA" target="_blank" class="btn-maps"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="white" d="M12 0C7.802 0 4 3.403 4 7.602 4 11.8 7.469 16.812 12 24c4.531-7.188 8-12.2 8-16.398C20 3.403 16.199 0 12 0zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg> Ver en Google Maps</a>
-      <a href="https://wa.me/526183973897?text=Hola%2C%20me%20interesa%20el%20punto%20de%20entrega%3A%20Santuario%20%22Libro%22%20%285%3A00%20pm%29" target="_blank" class="btn-wa"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="white" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> Apartar lugar</a>
+      <a href="https://maps.app.goo.gl/c6xkrWRUiBZtoHgaA" target="_blank" class="btn-maps"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="currentColor" d="M12 0C7.802 0 4 3.403 4 7.602 4 11.8 7.469 16.812 12 24c4.531-7.188 8-12.2 8-16.398C20 3.403 16.199 0 12 0zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg> Ver en Google Maps</a>
+      <a href="https://wa.me/526183973897?text=Hola%2C%20me%20interesa%20el%20punto%20de%20entrega%3A%20Santuario%20%22Libro%22%20%285%3A00%20pm%29" target="_blank" class="btn-wa"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> Apartar lugar</a>
     </div>
 
     <div class="card">
@@ -305,8 +319,8 @@
       </div>
       <div class="title">Plaza Galas &quot;Office Depot&quot;</div>
       <div class="desc">🕒 5:30 pm</div>
-      <a href="https://maps.app.goo.gl/1kfNca72vWncHhm48" target="_blank" class="btn-maps"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="white" d="M12 0C7.802 0 4 3.403 4 7.602 4 11.8 7.469 16.812 12 24c4.531-7.188 8-12.2 8-16.398C20 3.403 16.199 0 12 0zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg> Ver en Google Maps</a>
-      <a href="https://wa.me/526183973897?text=Hola%2C%20me%20interesa%20el%20punto%20de%20entrega%3A%20Plaza%20Galas%20%22Office%20Depot%22%20%285%3A30%20pm%29" target="_blank" class="btn-wa"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="white" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> Apartar lugar</a>
+      <a href="https://maps.app.goo.gl/1kfNca72vWncHhm48" target="_blank" class="btn-maps"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="currentColor" d="M12 0C7.802 0 4 3.403 4 7.602 4 11.8 7.469 16.812 12 24c4.531-7.188 8-12.2 8-16.398C20 3.403 16.199 0 12 0zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg> Ver en Google Maps</a>
+      <a href="https://wa.me/526183973897?text=Hola%2C%20me%20interesa%20el%20punto%20de%20entrega%3A%20Plaza%20Galas%20%22Office%20Depot%22%20%285%3A30%20pm%29" target="_blank" class="btn-wa"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> Apartar lugar</a>
     </div>
 
     <div class="card">
@@ -326,8 +340,8 @@
       </div>
       <div class="title">&quot;Oxxo&quot; Luz y Esperanza</div>
       <div class="desc">🕒 5:30 pm</div>
-      <a href="https://maps.app.goo.gl/BqtiNzuEhs1AGMqa6" target="_blank" class="btn-maps"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="white" d="M12 0C7.802 0 4 3.403 4 7.602 4 11.8 7.469 16.812 12 24c4.531-7.188 8-12.2 8-16.398C20 3.403 16.199 0 12 0zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg> Ver en Google Maps</a>
-      <a href="https://wa.me/526183973897?text=Hola%2C%20me%20interesa%20el%20punto%20de%20entrega%3A%20%22Oxxo%22%20Luz%20y%20Esperanza%20%285%3A30%20pm%29" target="_blank" class="btn-wa"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="white" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> Apartar lugar</a>
+      <a href="https://maps.app.goo.gl/BqtiNzuEhs1AGMqa6" target="_blank" class="btn-maps"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="currentColor" d="M12 0C7.802 0 4 3.403 4 7.602 4 11.8 7.469 16.812 12 24c4.531-7.188 8-12.2 8-16.398C20 3.403 16.199 0 12 0zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg> Ver en Google Maps</a>
+      <a href="https://wa.me/526183973897?text=Hola%2C%20me%20interesa%20el%20punto%20de%20entrega%3A%20%22Oxxo%22%20Luz%20y%20Esperanza%20%285%3A30%20pm%29" target="_blank" class="btn-wa"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> Apartar lugar</a>
     </div>
 
     <div class="card">
@@ -347,8 +361,8 @@
       </div>
       <div class="title">&quot;Oxxo&quot; Morga</div>
       <div class="desc">🕒 6:00 pm</div>
-      <a href="https://maps.app.goo.gl/zcHsmC8ZJMC4Njs47" target="_blank" class="btn-maps"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="white" d="M12 0C7.802 0 4 3.403 4 7.602 4 11.8 7.469 16.812 12 24c4.531-7.188 8-12.2 8-16.398C20 3.403 16.199 0 12 0zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg> Ver en Google Maps</a>
-      <a href="https://wa.me/526183973897?text=Hola%2C%20me%20interesa%20el%20punto%20de%20entrega%3A%20%22Oxxo%22%20Morga%20%286%3A00%20pm%29" target="_blank" class="btn-wa"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="white" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> Apartar lugar</a>
+      <a href="https://maps.app.goo.gl/zcHsmC8ZJMC4Njs47" target="_blank" class="btn-maps"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="currentColor" d="M12 0C7.802 0 4 3.403 4 7.602 4 11.8 7.469 16.812 12 24c4.531-7.188 8-12.2 8-16.398C20 3.403 16.199 0 12 0zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg> Ver en Google Maps</a>
+      <a href="https://wa.me/526183973897?text=Hola%2C%20me%20interesa%20el%20punto%20de%20entrega%3A%20%22Oxxo%22%20Morga%20%286%3A00%20pm%29" target="_blank" class="btn-wa"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> Apartar lugar</a>
     </div>
 
     <div class="card">
@@ -368,8 +382,8 @@
       </div>
       <div class="title">&quot;Guadalajara&quot; Puentes Gemelos</div>
       <div class="desc">🕒 6:30 pm</div>
-      <a href="https://maps.app.goo.gl/9EDMhMzFvNnot8116" target="_blank" class="btn-maps"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="white" d="M12 0C7.802 0 4 3.403 4 7.602 4 11.8 7.469 16.812 12 24c4.531-7.188 8-12.2 8-16.398C20 3.403 16.199 0 12 0zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg> Ver en Google Maps</a>
-      <a href="https://wa.me/526183973897?text=Hola%2C%20me%20interesa%20el%20punto%20de%20entrega%3A%20%22Guadalajara%22%20Puentes%20Gemelos%20%286%3A30%20pm%29" target="_blank" class="btn-wa"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="white" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> Apartar lugar</a>
+      <a href="https://maps.app.goo.gl/9EDMhMzFvNnot8116" target="_blank" class="btn-maps"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="currentColor" d="M12 0C7.802 0 4 3.403 4 7.602 4 11.8 7.469 16.812 12 24c4.531-7.188 8-12.2 8-16.398C20 3.403 16.199 0 12 0zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg> Ver en Google Maps</a>
+      <a href="https://wa.me/526183973897?text=Hola%2C%20me%20interesa%20el%20punto%20de%20entrega%3A%20%22Guadalajara%22%20Puentes%20Gemelos%20%286%3A30%20pm%29" target="_blank" class="btn-wa"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> Apartar lugar</a>
     </div>
 
     <div class="card">
@@ -389,8 +403,8 @@
       </div>
       <div class="title">&quot;Alsúper&quot; Ojo de Agua</div>
       <div class="desc">🕒 7:00 pm</div>
-      <a href="https://maps.app.goo.gl/j5kWsf4Qyo88yV6T6" target="_blank" class="btn-maps"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="white" d="M12 0C7.802 0 4 3.403 4 7.602 4 11.8 7.469 16.812 12 24c4.531-7.188 8-12.2 8-16.398C20 3.403 16.199 0 12 0zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg> Ver en Google Maps</a>
-      <a href="https://wa.me/526183973897?text=Hola%2C%20me%20interesa%20el%20punto%20de%20entrega%3A%20%22Als%C3%BAper%22%20Ojo%20de%20Agua%20%287%3A00%20pm%29" target="_blank" class="btn-wa"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="white" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> Apartar lugar</a>
+      <a href="https://maps.app.goo.gl/j5kWsf4Qyo88yV6T6" target="_blank" class="btn-maps"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="currentColor" d="M12 0C7.802 0 4 3.403 4 7.602 4 11.8 7.469 16.812 12 24c4.531-7.188 8-12.2 8-16.398C20 3.403 16.199 0 12 0zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg> Ver en Google Maps</a>
+      <a href="https://wa.me/526183973897?text=Hola%2C%20me%20interesa%20el%20punto%20de%20entrega%3A%20%22Als%C3%BAper%22%20Ojo%20de%20Agua%20%287%3A00%20pm%29" target="_blank" class="btn-wa"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> Apartar lugar</a>
     </div>
 
     <div class="card">
@@ -410,8 +424,8 @@
       </div>
       <div class="title">&quot;Oxxo&quot; Santa María</div>
       <div class="desc">🕒 7:30 pm</div>
-      <a href="https://maps.app.goo.gl/2es8XfLCFhMnxpvx9" target="_blank" class="btn-maps"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="white" d="M12 0C7.802 0 4 3.403 4 7.602 4 11.8 7.469 16.812 12 24c4.531-7.188 8-12.2 8-16.398C20 3.403 16.199 0 12 0zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg> Ver en Google Maps</a>
-      <a href="https://wa.me/526183973897?text=Hola%2C%20me%20interesa%20el%20punto%20de%20entrega%3A%20%22Oxxo%22%20Santa%20Mar%C3%ADa%20%287%3A30%20pm%29" target="_blank" class="btn-wa"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="white" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> Apartar lugar</a>
+      <a href="https://maps.app.goo.gl/2es8XfLCFhMnxpvx9" target="_blank" class="btn-maps"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="currentColor" d="M12 0C7.802 0 4 3.403 4 7.602 4 11.8 7.469 16.812 12 24c4.531-7.188 8-12.2 8-16.398C20 3.403 16.199 0 12 0zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg> Ver en Google Maps</a>
+      <a href="https://wa.me/526183973897?text=Hola%2C%20me%20interesa%20el%20punto%20de%20entrega%3A%20%22Oxxo%22%20Santa%20Mar%C3%ADa%20%287%3A30%20pm%29" target="_blank" class="btn-wa"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> Apartar lugar</a>
     </div>
 
     <div class="card">
@@ -431,13 +445,17 @@
       </div>
       <div class="title">&quot;Oxxo&quot; Calle Zacatecas</div>
       <div class="desc">🕒 8:00 pm</div>
-      <a href="https://maps.app.goo.gl/RTqGAe8Y6gtEfvD97" target="_blank" class="btn-maps"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="white" d="M12 0C7.802 0 4 3.403 4 7.602 4 11.8 7.469 16.812 12 24c4.531-7.188 8-12.2 8-16.398C20 3.403 16.199 0 12 0zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg> Ver en Google Maps</a>
-      <a href="https://wa.me/526183973897?text=Hola%2C%20me%20interesa%20el%20punto%20de%20entrega%3A%20%22Oxxo%22%20Calle%20Zacatecas%20%288%3A00%20pm%29" target="_blank" class="btn-wa"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="white" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> Apartar lugar</a>
+      <a href="https://maps.app.goo.gl/RTqGAe8Y6gtEfvD97" target="_blank" class="btn-maps"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="currentColor" d="M12 0C7.802 0 4 3.403 4 7.602 4 11.8 7.469 16.812 12 24c4.531-7.188 8-12.2 8-16.398C20 3.403 16.199 0 12 0zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg> Ver en Google Maps</a>
+      <a href="https://wa.me/526183973897?text=Hola%2C%20me%20interesa%20el%20punto%20de%20entrega%3A%20%22Oxxo%22%20Calle%20Zacatecas%20%288%3A00%20pm%29" target="_blank" class="btn-wa"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0;"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> Apartar lugar</a>
     </div>
   </div>
 
-  <div class="info-box delivery">
-    🛵 <strong>ENTREGA A DOMICILIO:</strong> Contamos con servicio a través de las plataformas digitales como Didi, Uber y Bolt. ¡Mándanos mensaje para cotizar tu envío!
+  <div class="delivery-card">
+    <div class="delivery-emoji">🛵</div>
+    <div>
+      <strong>Entrega a domicilio</strong>
+      <p>Contamos con servicio a través de plataformas como Didi, Uber y Bolt. ¡Mándanos mensaje para cotizar tu envío!</p>
+    </div>
   </div>
 
   <!-- FOOTER -->
@@ -448,6 +466,21 @@
     <a href="/puntos_entrega">Puntos de entrega</a></p>
     <p style="margin-top:8px;">© 2026 Alushe Store. Todos los derechos reservados.</p>
   </footer>
+
+  <script>
+    // Reveal en cascada al hacer scroll (transform/opacity → GPU)
+    (function () {
+      const cards = document.querySelectorAll('.card');
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) { setTimeout(() => e.target.classList.add('in'), i * 50); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.12 });
+      cards.forEach(c => io.observe(c));
+      // seguridad: revelar todo si algo falla
+      setTimeout(() => cards.forEach(c => c.classList.add('in')), 1500);
+    })();
+  </script>
 
 </body>
 </html>
