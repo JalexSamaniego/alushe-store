@@ -1510,30 +1510,32 @@
           <h3>🤖 Cómo sincronizar</h3>
           <div class="sync-paso">
             <div class="sync-num">1</div>
-            <div class="sync-paso-txt">Abre <strong>CMD</strong> en tu computadora (búscalo como "Símbolo del sistema")</div>
+            <div class="sync-paso-txt">Abre la app con doble clic en:<br>
+              <code>C:\AlusheStore\Iniciar_AlusheSync.bat</code>
+            </div>
           </div>
           <div class="sync-paso">
             <div class="sync-num">2</div>
-            <div class="sync-paso-txt">Navega a la carpeta del script:<br>
-              <code>cd C:\AlusheStore\Scripts\dist</code>
-            </div>
+            <div class="sync-paso-txt">En la ventana de la app, presiona <strong>▶ INICIAR SYNC</strong></div>
           </div>
           <div class="sync-paso">
             <div class="sync-num">3</div>
-            <div class="sync-paso-txt">Ejecuta el script:<br>
-              <code>python script_alushe_git.py</code>
-            </div>
+            <div class="sync-paso-txt">Se abre Chrome. Inicia sesión en Facebook si te lo pide, ve a
+              <strong>Marketplace → Mis artículos en venta</strong> y presiona
+              <strong>✓ LISTO — EXTRAER</strong> en la app</div>
           </div>
           <div class="sync-paso">
             <div class="sync-num">4</div>
-            <div class="sync-paso-txt">Inicia sesión en Facebook si te lo pide, navega a Marketplace → Tus ventas y presiona <strong>ENTER</strong> en la terminal</div>
+            <div class="sync-paso-txt">La app hace el scroll sola y va listando los productos. Presiona
+              <strong>■ DETENER</strong> cuando ya aparecieron todos (también se detiene sola al llegar al final)</div>
           </div>
           <div class="sync-paso">
             <div class="sync-num">5</div>
-            <div class="sync-paso-txt">Al terminar recibirás una <strong>notificación por WhatsApp</strong> 📱 y el historial se actualizará aquí automáticamente</div>
+            <div class="sync-paso-txt">Revisa los productos extraídos en la ventana de confirmación y acéptalos.
+              El historial de abajo se actualiza automáticamente</div>
           </div>
           <button class="sync-copy-btn" onclick="copiarComando()">
-            📋 Copiar comando
+            📋 Copiar ruta de la app
           </button>
         </div>
 
@@ -2649,13 +2651,13 @@
     // ═══════════════════════════════════════
     // SINCRONIZACIÓN — Vista y Historial
     // ═══════════════════════════════════════
-    const COMANDO_SYNC = 'cd C:\\AlusheStore\\Scripts\\dist && python script_alushe_git.py';
+    const RUTA_SYNC = 'C:\\AlusheStore\\Iniciar_AlusheSync.bat';
 
     function copiarComando() {
-      navigator.clipboard.writeText(COMANDO_SYNC).then(() => {
-        toast('📋 Comando copiado al portapapeles', 'success');
+      navigator.clipboard.writeText(RUTA_SYNC).then(() => {
+        toast('📋 Ruta copiada — pégala en el explorador de archivos', 'success');
       }).catch(() => {
-        toast('No se pudo copiar. Cópialo manualmente.', 'error');
+        toast('No se pudo copiar. Cópiala manualmente.', 'error');
       });
     }
 
