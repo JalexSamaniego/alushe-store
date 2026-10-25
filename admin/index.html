@@ -1265,6 +1265,14 @@
 
         <div class="seccion-label">Más opciones</div>
 
+        <button class="accion-secundaria" onclick="irAInventario()">
+          <div class="accion-secundaria-izq">
+            <div class="accion-secundaria-icono">📦</div>
+            <div>Inventario y stock</div>
+          </div>
+          <span class="accion-secundaria-flecha">›</span>
+        </button>
+
         <button class="accion-secundaria" onclick="irAGestionar()">
           <div class="accion-secundaria-izq">
             <div class="accion-secundaria-icono">📋</div>
@@ -1399,6 +1407,24 @@
               <option value="Disponible">Disponible</option>
               <option value="Agotado">Agotado</option>
             </select>
+          </div>
+
+          <!-- INVENTARIO -->
+          <div class="field">
+            <label class="field-label">Costo unitario <span style="color:var(--ink-lt);font-weight:600;">· opcional</span></label>
+            <div class="precio-wrap"><span class="precio-prefijo">MX$</span>
+              <input type="text" inputmode="numeric" id="f-costo" class="field-input precio-input" placeholder="0" maxlength="7"></div>
+            <div class="field-hint">Sirve para calcular el valor real del inventario.</div>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <div class="field" style="flex:1;">
+              <label class="field-label">Stock inicial</label>
+              <input type="text" inputmode="numeric" id="f-stock" class="field-input" placeholder="0" maxlength="5">
+            </div>
+            <div class="field" style="flex:1;">
+              <label class="field-label">Stock mínimo</label>
+              <input type="text" inputmode="numeric" id="f-stock-min" class="field-input" placeholder="0" maxlength="5">
+            </div>
           </div>
 
           <!-- IMAGEN -->
@@ -1670,6 +1696,41 @@
         <p class="subtitulo-vista" style="margin-top:16px;font-size:12px;">✅ Los cambios se publican al instante en la página pública de puntos de entrega.</p>
       </section>
 
+      <!-- ───── INVENTARIO ───── -->
+      <section class="vista" id="vista-inventario">
+        <h1 class="titulo-vista">Inventario</h1>
+        <p class="subtitulo-vista" id="inv-subtitulo">Control de existencias y stock</p>
+
+        <div class="stats-grid" style="grid-template-columns:repeat(2,1fr);">
+          <div class="stat-tile">
+            <div class="stat-tile-num" id="inv-unidades">—</div>
+            <div class="stat-tile-label">Unidades en stock</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-tile-num" id="inv-valor" style="font-size:18px;">—</div>
+            <div class="stat-tile-label">Valor (costo)</div>
+          </div>
+        </div>
+
+        <div class="buscador-wrap">
+          <span class="buscador-ico">🔍</span>
+          <input type="text" id="inv-buscador" class="buscador-admin" placeholder="Buscar producto..." oninput="filtrarInventario()">
+        </div>
+
+        <div class="filtros-row">
+          <button class="filtro-chip activo" data-invfiltro="todos"     onclick="cambiarFiltroInv(this)">Todos</button>
+          <button class="filtro-chip rojo"   data-invfiltro="bajo"      onclick="cambiarFiltroInv(this)">Stock bajo</button>
+          <button class="filtro-chip rojo"   data-invfiltro="sin"       onclick="cambiarFiltroInv(this)">Sin stock</button>
+          <button class="filtro-chip"        data-invfiltro="sincosto"  onclick="cambiarFiltroInv(this)">Sin costo</button>
+        </div>
+
+        <div class="lista-header">
+          <div class="lista-contador" id="inv-contador">—</div>
+        </div>
+
+        <div id="inv-lista"><div class="cargando-lista">⏳ Cargando...</div></div>
+      </section>
+
     </main>
 
     <!-- ───── NAVEGACIÓN INFERIOR ───── -->
@@ -1848,6 +1909,61 @@
     </div>
   </div>
 
+  <!-- Modal movimiento de inventario -->
+  <div class="modal-edit-overlay" id="modal-inv" onclick="cerrarInvModal(event)">
+    <div class="modal-edit" id="modal-inv-contenido">
+      <div class="modal-edit-handle"></div>
+      <div class="modal-edit-header">
+        <div class="modal-edit-titulo" id="inv-modal-titulo">Producto</div>
+        <button class="modal-edit-cerrar" onclick="cerrarInvModalDirecto()">✕</button>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-bottom:18px;">
+        <div style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;">
+          <div style="font-family:'Montserrat';font-size:24px;font-weight:800;color:var(--ink);" id="inv-modal-stock">0</div>
+          <div style="font-size:10px;font-weight:700;color:var(--ink-lt);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">Stock actual</div>
+        </div>
+        <div style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;">
+          <div style="font-family:'Montserrat';font-size:18px;font-weight:800;color:var(--ink);margin-top:3px;" id="inv-modal-valor">MX$0</div>
+          <div style="font-size:10px;font-weight:700;color:var(--ink-lt);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">Valor (costo)</div>
+        </div>
+      </div>
+
+      <div class="img-tabs">
+        <button type="button" class="img-tab activo" data-invtipo="entrada" onclick="invSetTipo('entrada')">＋ Entrada</button>
+        <button type="button" class="img-tab" data-invtipo="salida" onclick="invSetTipo('salida')">－ Salida</button>
+        <button type="button" class="img-tab" data-invtipo="ajuste" onclick="invSetTipo('ajuste')">✎ Ajustar</button>
+      </div>
+
+      <div class="field">
+        <label class="field-label" id="inv-cant-label">Cantidad a agregar <span class="req">*</span></label>
+        <input type="text" inputmode="numeric" id="inv-cant" class="field-input" placeholder="0">
+      </div>
+      <div class="field">
+        <label class="field-label">Motivo (opcional)</label>
+        <input type="text" id="inv-motivo" class="field-input" placeholder="Compra, venta, merma, conteo…">
+      </div>
+      <button type="button" class="btn-guardar" id="inv-btn-guardar" style="width:100%;" onclick="guardarMovimiento()">Registrar movimiento</button>
+
+      <div class="seccion-label" style="margin-top:22px;">Datos del producto</div>
+      <div style="display:flex;gap:10px;">
+        <div class="field" style="flex:1;margin-bottom:10px;">
+          <label class="field-label">Costo unitario</label>
+          <div class="precio-wrap"><span class="precio-prefijo">MX$</span>
+            <input type="text" inputmode="numeric" id="inv-costo" class="field-input precio-input" placeholder="0"></div>
+        </div>
+        <div class="field" style="flex:1;margin-bottom:10px;">
+          <label class="field-label">Stock mínimo</label>
+          <input type="text" inputmode="numeric" id="inv-min" class="field-input" placeholder="0">
+        </div>
+      </div>
+      <button type="button" class="btn-cancelar" style="width:100%;" onclick="guardarDatosInv()">Guardar costo / mínimo</button>
+
+      <div class="seccion-label" style="margin-top:22px;">Historial de movimientos</div>
+      <div id="inv-historial"><div style="font-size:12px;color:var(--ink-lt);">Cargando…</div></div>
+    </div>
+  </div>
+
   <!-- toast -->
   <div class="toast" id="toast"></div>
 
@@ -1952,6 +2068,9 @@
             cargarStats();
             if (document.getElementById('vista-gestionar').classList.contains('activa') && !modoLote) {
               cargarProductos();
+            }
+            if (document.getElementById('vista-inventario').classList.contains('activa')) {
+              cargarInventario();
             }
           }, 700);
         })
@@ -2059,21 +2178,28 @@
     // Extrae el valor numérico de un precio ("MX$1,200" o "3xMX$100" → 1200 / 100)
     function precioNumerico(precio) {
       if (!precio) return 0;
-      const m = String(precio).match(/MX\$([\d,]+)/);
-      return m ? parseFloat(m[1].replace(/,/g, '')) : 0;
+      const s = String(precio).replace(/,/g, '');
+      const nums = s.match(/\d+(?:\.\d+)?/g);
+      if (!nums) return 0;
+      // Multipack ("3xMX$100" / "3x$100 MXN") → precio del paquete (segundo número)
+      if (/\d\s*x/i.test(s) && nums.length >= 2) return parseFloat(nums[1]);
+      // Formato normal ("$40 MXN", "MX$1,200") → el precio es el número
+      return parseFloat(nums[nums.length - 1]);
     }
 
     async function cargarStats() {
       try {
-        const { data, error } = await sb.from('productos').select('nombre, estado, precio, categoria, url_imagen, url_github, fecha');
+        const { data, error } = await sb.from('productos').select('id, nombre, estado, precio, categoria, url_imagen, url_github, fecha, stock, costo, stock_minimo');
         if (error) throw error;
         animarNum('stat-total', data.length);
         animarNum('stat-disp', data.filter(p => p.estado === 'Disponible').length);
         animarNum('stat-agot', data.filter(p => p.estado === 'Agotado').length);
 
-        // Valor del inventario
-        const valor = data.reduce((s, p) => s + precioNumerico(p.precio), 0);
-        document.getElementById('dash-valor').textContent = 'MX$' + valor.toLocaleString('en-US');
+        // Valor real del inventario = Σ (stock × costo)
+        const valor = data.reduce((s, p) => s + (Number(p.stock) || 0) * (Number(p.costo) || 0), 0);
+        const unidades = data.reduce((s, p) => s + (Number(p.stock) || 0), 0);
+        document.getElementById('dash-valor').innerHTML = 'MX$' + valor.toLocaleString('en-US', { maximumFractionDigits: 0 }) +
+          '<span style="display:block;font-size:11px;font-weight:600;color:var(--ink-lt);margin-top:2px;">' + unidades.toLocaleString('en-US') + ' unidades en stock</span>';
 
         // Desglose por categoría
         const conteo = {};
@@ -2091,6 +2217,8 @@
         // Pendientes accionables
         const agot   = data.filter(p => p.estado === 'Agotado');
         const sinImg = data.filter(p => !(p.url_imagen || p.url_github));
+        const stockBajo = data.filter(p => (Number(p.stock_minimo) || 0) > 0 && (Number(p.stock) || 0) <= (Number(p.stock_minimo) || 0));
+        const sinStock  = data.filter(p => (Number(p.stock) || 0) <= 0);
         const recientes = data.filter(p => p.fecha).sort((a, b) => (b.fecha || '').localeCompare(a.fecha || '')).slice(0, 5);
         window._sinImagenLista = sinImg.map(p => p.nombre);
         const pend = document.getElementById('dash-pendientes');
@@ -2098,6 +2226,8 @@
           pend.innerHTML =
             '<div class="seccion-label">Pendientes</div>'+
             '<div style="display:flex;gap:8px;flex-wrap:wrap;">'+
+              '<button onclick="irAInventario(\'bajo\')" style="display:flex;align-items:center;gap:6px;background:#fff7e6;border:1px solid #ffe3a3;color:#b26b00;border-radius:10px;padding:10px 14px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;">📉 '+stockBajo.length+' stock bajo</button>'+
+              '<button onclick="irAInventario(\'sin\')" style="display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--line);color:var(--ink-mid);border-radius:10px;padding:10px 14px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;">📦 '+sinStock.length+' sin stock</button>'+
               '<button onclick="irAGestionar(\'Agotado\')" style="display:flex;align-items:center;gap:6px;background:#fff0f3;border:1px solid #ffd4de;color:#d11;border-radius:10px;padding:10px 14px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;">🔴 '+agot.length+' agotados</button>'+
               '<button onclick="verSinImagen()" style="display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--line);color:var(--ink-mid);border-radius:10px;padding:10px 14px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;">🖼 '+sinImg.length+' sin imagen</button>'+
             '</div>'+
@@ -2302,15 +2432,26 @@
         // 1) subir imagen a Supabase Storage
         const urlImagen = await subirImagenSupabase(imagenBlob, nombre);
 
-        // 2) insertar / actualizar en Supabase
-        const { error } = await sb.from('productos').upsert({
+        // 2) leer campos de inventario
+        const costoRaw = document.getElementById('f-costo').value.replace(/[^0-9.]/g, '');
+        const costo    = costoRaw === '' ? null : parseFloat(costoRaw);
+        const stockMin = parseInt(document.getElementById('f-stock-min').value.replace(/[^0-9]/g, '')) || 0;
+        const stockIni = parseInt(document.getElementById('f-stock').value.replace(/[^0-9]/g, '')) || 0;
+
+        // 3) insertar / actualizar en Supabase (devolviendo el id)
+        const { data: upData, error } = await sb.from('productos').upsert({
           nombre, precio, categoria, estado,
           url_imagen: urlImagen, url_github: urlImagen,
           fecha: new Date().toISOString().split('T')[0],
           fuente: 'manual',
-        }, { onConflict: 'nombre' });
+          costo, stock_minimo: stockMin,
+        }, { onConflict: 'nombre' }).select('id').single();
 
         if (!error) {
+          // 4) registrar el stock inicial como movimiento (deja bitácora)
+          if (stockIni > 0 && upData && upData.id) {
+            try { await sb.rpc('registrar_movimiento', { p_producto_id: upData.id, p_tipo: 'ajuste', p_cantidad: stockIni, p_motivo: 'inventario inicial' }); } catch (e) {}
+          }
           toast('✅ Producto guardado en el catálogo', 'success');
           cargarStats();
           // Mostrar pantalla de éxito con opciones (sin obligar a relogin/salir)
@@ -2439,7 +2580,8 @@
     // ── Esc cierra modales abiertos ──
     document.addEventListener('keydown', (e) => {
       if (e.key !== 'Escape') return;
-      if (document.getElementById('modal-edit').classList.contains('abierto')) cerrarModalEditDirecto();
+      if (document.getElementById('modal-inv').classList.contains('abierto')) cerrarInvModalDirecto();
+      else if (document.getElementById('modal-edit').classList.contains('abierto')) cerrarModalEditDirecto();
       else if (document.getElementById('modal-eliminar').classList.contains('abierto')) cerrarModalEliminar();
       else if (document.getElementById('modal-cuenta').classList.contains('abierto')) cerrarModalCuenta();
     });
@@ -3341,6 +3483,169 @@
       await sb.from('puntos_entrega').update({ orden: b.orden }).eq('id', a.id);
       await sb.from('puntos_entrega').update({ orden: a.orden }).eq('id', b.id);
       cargarPuntos();
+    }
+
+    // ════════════════════════════════════════
+    // INVENTARIO Y STOCK
+    // ════════════════════════════════════════
+    let invData = [];
+    let invFiltro = 'todos';
+    let _invBusqDeb = null;
+    let invProductoActual = null;
+    let invTipo = 'entrada';
+
+    async function irAInventario(filtro) {
+      irA('inventario');
+      if (filtro) {
+        invFiltro = filtro;
+        document.querySelectorAll('#vista-inventario .filtro-chip').forEach(c => c.classList.toggle('activo', c.dataset.invfiltro === filtro));
+      }
+      await cargarInventario();
+    }
+
+    async function cargarInventario() {
+      const lista = document.getElementById('inv-lista');
+      lista.innerHTML = skeletonRows(6);
+      const { data, error } = await sb.from('productos')
+        .select('id,nombre,precio,url_github,url_imagen,estado,stock,costo,stock_minimo').order('nombre');
+      if (error) { lista.innerHTML = `<div class="sin-productos"><div class="sin-productos-emoji">⚠️</div>Error: ${error.message}</div>`; return; }
+      invData = data;
+      actualizarResumenInv();
+      renderInvLista();
+    }
+
+    function actualizarResumenInv() {
+      const unidades = invData.reduce((s, p) => s + (Number(p.stock) || 0), 0);
+      const valor    = invData.reduce((s, p) => s + (Number(p.stock) || 0) * (Number(p.costo) || 0), 0);
+      document.getElementById('inv-unidades').textContent = unidades.toLocaleString('en-US');
+      document.getElementById('inv-valor').textContent = 'MX$' + valor.toLocaleString('en-US', { maximumFractionDigits: 0 });
+    }
+
+    function invPasaFiltro(p) {
+      const st = Number(p.stock) || 0, min = Number(p.stock_minimo) || 0;
+      if (invFiltro === 'bajo')     return min > 0 && st <= min;
+      if (invFiltro === 'sin')      return st <= 0;
+      if (invFiltro === 'sincosto') return p.costo == null;
+      return true;
+    }
+
+    function cambiarFiltroInv(btn) {
+      document.querySelectorAll('#vista-inventario .filtro-chip').forEach(c => c.classList.remove('activo'));
+      btn.classList.add('activo');
+      invFiltro = btn.dataset.invfiltro;
+      renderInvLista();
+    }
+    function filtrarInventario() { clearTimeout(_invBusqDeb); _invBusqDeb = setTimeout(renderInvLista, 220); }
+
+    function renderInvLista() {
+      const lista = document.getElementById('inv-lista');
+      const busq = norm(document.getElementById('inv-buscador').value.trim());
+      const res = invData.filter(p => invPasaFiltro(p) && (!busq || norm(p.nombre).includes(busq)));
+      document.getElementById('inv-contador').textContent = `${res.length} de ${invData.length} productos`;
+      if (!res.length) { lista.innerHTML = `<div class="sin-productos"><div class="sin-productos-emoji">😕</div>Sin resultados</div>`; return; }
+      lista.innerHTML = res.map(p => {
+        const st = Number(p.stock) || 0, min = Number(p.stock_minimo) || 0;
+        const bajo = (min > 0 && st <= min) || st <= 0;
+        const img = p.url_github || p.url_imagen;
+        const thumb = img
+          ? `<img class="prod-thumb" src="${img}" alt="" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"><div class="prod-thumb-placeholder" style="display:none;">🛍️</div>`
+          : `<div class="prod-thumb-placeholder">🛍️</div>`;
+        const costoTxt = p.costo != null ? 'Costo MX$' + Number(p.costo).toLocaleString('en-US') : '<span style="color:var(--red);">Sin costo</span>';
+        return `
+        <div class="prod-item" onclick="abrirInvModal(${p.id})" style="cursor:pointer;">
+          ${thumb}
+          <div class="prod-info">
+            <div class="prod-nombre">${escHtml(p.nombre)}</div>
+            <div class="prod-meta">
+              <span style="font-weight:800;color:${bajo ? 'var(--red)' : 'var(--ink)'};">${st} pz</span>
+              <span class="prod-precio">${costoTxt}</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+            ${bajo ? '<span style="font-size:10px;font-weight:800;color:var(--red);background:#fff0f3;padding:3px 7px;border-radius:20px;">BAJO</span>' : ''}
+            <span class="accion-secundaria-flecha">›</span>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    // ── Modal de movimiento ──
+    function abrirInvModal(id) {
+      const p = invData.find(x => x.id === id);
+      if (!p) return;
+      invProductoActual = p;
+      document.getElementById('inv-modal-titulo').textContent = p.nombre;
+      document.getElementById('inv-modal-stock').textContent = Number(p.stock) || 0;
+      document.getElementById('inv-modal-valor').textContent = 'MX$' + ((Number(p.stock) || 0) * (Number(p.costo) || 0)).toLocaleString('en-US', { maximumFractionDigits: 0 });
+      document.getElementById('inv-costo').value = p.costo != null ? String(p.costo).replace(/\.00$/, '') : '';
+      document.getElementById('inv-min').value = Number(p.stock_minimo) || 0;
+      document.getElementById('inv-cant').value = '';
+      document.getElementById('inv-motivo').value = '';
+      invSetTipo('entrada');
+      document.getElementById('modal-inv').classList.add('abierto');
+      document.body.style.overflow = 'hidden';
+      cargarInvHistorial(id);
+    }
+    function cerrarInvModal(e) { if (e && e.target !== document.getElementById('modal-inv')) return; cerrarInvModalDirecto(); }
+    function cerrarInvModalDirecto() { document.getElementById('modal-inv').classList.remove('abierto'); document.body.style.overflow = ''; invProductoActual = null; }
+
+    function invSetTipo(tipo) {
+      invTipo = tipo;
+      document.querySelectorAll('#modal-inv .img-tab').forEach(b => b.classList.toggle('activo', b.dataset.invtipo === tipo));
+      const txt = tipo === 'entrada' ? 'Cantidad a agregar' : tipo === 'salida' ? 'Cantidad a descontar' : 'Nuevo stock total';
+      document.getElementById('inv-cant-label').innerHTML = txt + ' <span class="req">*</span>';
+    }
+
+    async function guardarMovimiento() {
+      const p = invProductoActual; if (!p) return;
+      const cant = parseInt(document.getElementById('inv-cant').value.replace(/[^0-9]/g, ''));
+      if (isNaN(cant)) { toast('Captura la cantidad', 'error'); return; }
+      const motivo = document.getElementById('inv-motivo').value.trim() || null;
+      const btn = document.getElementById('inv-btn-guardar'); const prev = btn.textContent;
+      btn.disabled = true; btn.textContent = 'Guardando...';
+      try {
+        const { data, error } = await sb.rpc('registrar_movimiento', { p_producto_id: p.id, p_tipo: invTipo, p_cantidad: cant, p_motivo: motivo });
+        if (error) throw error;
+        p.stock = data;
+        document.getElementById('inv-modal-stock').textContent = data;
+        document.getElementById('inv-modal-valor').textContent = 'MX$' + ((Number(data) || 0) * (Number(p.costo) || 0)).toLocaleString('en-US', { maximumFractionDigits: 0 });
+        document.getElementById('inv-cant').value = ''; document.getElementById('inv-motivo').value = '';
+        toast('✅ Stock actualizado: ' + data + ' pz', 'success');
+        renderInvLista(); actualizarResumenInv(); cargarInvHistorial(p.id); cargarStats();
+      } catch (e) { toast('Error: ' + (e.message || e), 'error'); }
+      finally { btn.disabled = false; btn.textContent = prev; }
+    }
+
+    async function guardarDatosInv() {
+      const p = invProductoActual; if (!p) return;
+      const costoRaw = document.getElementById('inv-costo').value.replace(/[^0-9.]/g, '');
+      const minRaw = document.getElementById('inv-min').value.replace(/[^0-9]/g, '');
+      const costo = costoRaw === '' ? null : parseFloat(costoRaw);
+      const stock_minimo = minRaw === '' ? 0 : parseInt(minRaw);
+      const { error } = await sb.from('productos').update({ costo, stock_minimo }).eq('id', p.id);
+      if (error) { toast('Error: ' + error.message, 'error'); return; }
+      p.costo = costo; p.stock_minimo = stock_minimo;
+      document.getElementById('inv-modal-valor').textContent = 'MX$' + ((Number(p.stock) || 0) * (Number(costo) || 0)).toLocaleString('en-US', { maximumFractionDigits: 0 });
+      toast('✅ Datos guardados', 'success');
+      renderInvLista(); actualizarResumenInv(); cargarStats();
+    }
+
+    async function cargarInvHistorial(id) {
+      const cont = document.getElementById('inv-historial');
+      const { data, error } = await sb.from('movimientos_inventario').select('*').eq('producto_id', id).order('creado', { ascending: false }).limit(20);
+      if (error) { cont.innerHTML = '<div style="font-size:12px;color:var(--ink-lt);">No se pudo cargar.</div>'; return; }
+      if (!data.length) { cont.innerHTML = '<div style="font-size:12px;color:var(--ink-lt);">Sin movimientos todavía.</div>'; return; }
+      const ico = { entrada: '🟢', salida: '🔴', ajuste: '🔵' };
+      cont.innerHTML = data.map(m => {
+        const f = new Date(m.creado);
+        const fecha = f.toLocaleDateString('es-MX', { day: '2-digit', month: 'short' }) + ' ' + f.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+        const signo = m.tipo === 'entrada' ? '+' : (m.tipo === 'salida' ? '−' : '=');
+        return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:12px;">
+          <span>${ico[m.tipo] || ''}</span>
+          <div style="flex:1;"><b>${signo}${m.cantidad}</b> → ${m.stock_nuevo} pz ${m.motivo ? ('· ' + escHtml(m.motivo)) : ''}
+            <div style="color:var(--ink-lt);font-size:10px;margin-top:1px;">${fecha} · ${escHtml(m.usuario || '')}</div></div>
+        </div>`;
+      }).join('');
     }
 
   </script>
