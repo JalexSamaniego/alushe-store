@@ -888,8 +888,11 @@
       renderPanelCarrito();
     }
 
-    function quitarDelCarrito(nombre) {
-      carrito = carrito.filter(p => p.nombre !== nombre);
+    // Quita por posición, no por nombre: los nombres traen comillas
+    // (Talla "L") y al interpolarlos en el onclick rompían el atributo.
+    function quitarDelCarrito(idx) {
+      if (idx < 0 || idx >= carrito.length) return;
+      carrito.splice(idx, 1);
       guardarCarritoLS();
       actualizarCarritoUI();
       actualizarBotonesCards();
@@ -905,11 +908,11 @@
         enviar.href = '#';
         return;
       }
-      lista.innerHTML = carrito.map(p => `
+      lista.innerHTML = carrito.map((p, i) => `
         <div class="carrito-item">
-          <div class="carrito-item-nombre">${p.nombre}</div>
-          <div class="carrito-item-precio">${p.precio}</div>
-          <button class="carrito-item-quitar" onclick="quitarDelCarrito('${p.nombre.replace(/'/g,"\\'")}')">×</button>
+          <div class="carrito-item-nombre">${escBanner(p.nombre)}</div>
+          <div class="carrito-item-precio">${escBanner(p.precio)}</div>
+          <button class="carrito-item-quitar" onclick="quitarDelCarrito(${i})" aria-label="Quitar del pedido">×</button>
         </div>
       `).join('');
       const total = carrito.reduce((s, p) => s + p.precioNum, 0);

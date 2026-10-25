@@ -2223,12 +2223,16 @@
         const sinStock  = data.filter(p => (Number(p.stock) || 0) <= 0);
         const recientes = data.filter(p => p.fecha).sort((a, b) => (b.fecha || '').localeCompare(a.fecha || '')).slice(0, 5);
         window._sinImagenLista = sinImg.map(p => p.nombre);
+        // Sin mínimos configurados, "0 stock bajo" da una falsa tranquilidad:
+        // el contador no es que esté todo bien, es que no hay nada que medir.
+        const hayMinimos = data.some(p => (Number(p.stock_minimo) || 0) > 0);
+        const txtBajo = hayMinimos ? stockBajo.length + ' stock bajo' : 'sin mínimos definidos';
         const pend = document.getElementById('dash-pendientes');
         if (pend) {
           pend.innerHTML =
             '<div class="seccion-label">Pendientes</div>'+
             '<div style="display:flex;gap:8px;flex-wrap:wrap;">'+
-              '<button onclick="irAInventario(\'bajo\')" style="display:flex;align-items:center;gap:6px;background:#fff7e6;border:1px solid #ffe3a3;color:#b26b00;border-radius:10px;padding:10px 14px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;">📉 '+stockBajo.length+' stock bajo</button>'+
+              '<button onclick="irAInventario(\'bajo\')" style="display:flex;align-items:center;gap:6px;background:#fff7e6;border:1px solid #ffe3a3;color:#b26b00;border-radius:10px;padding:10px 14px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;">📉 '+txtBajo+'</button>'+
               '<button onclick="irAInventario(\'sin\')" style="display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--line);color:var(--ink-mid);border-radius:10px;padding:10px 14px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;">📦 '+sinStock.length+' sin stock</button>'+
               '<button onclick="irAGestionar(\'Agotado\')" style="display:flex;align-items:center;gap:6px;background:#fff0f3;border:1px solid #ffd4de;color:#d11;border-radius:10px;padding:10px 14px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;">🔴 '+agot.length+' agotados</button>'+
               '<button onclick="verSinImagen()" style="display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--line);color:var(--ink-mid);border-radius:10px;padding:10px 14px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;">🖼 '+sinImg.length+' sin imagen</button>'+
@@ -3544,7 +3548,21 @@
       const busq = norm(document.getElementById('inv-buscador').value.trim());
       const res = invData.filter(p => invPasaFiltro(p) && (!busq || norm(p.nombre).includes(busq)));
       document.getElementById('inv-contador').textContent = `${res.length} de ${invData.length} productos`;
-      if (!res.length) { lista.innerHTML = `<div class="sin-productos"><div class="sin-productos-emoji">😕</div>Sin resultados</div>`; return; }
+      if (!res.length) {
+        // "Stock bajo" depende de stock_minimo, que es opt-in por producto.
+        // Si nadie lo tiene configurado el filtro nunca puede encontrar nada:
+        // hay que decirlo, en vez de un "Sin resultados" que parece una falla.
+        const sinMinimos = invFiltro === 'bajo' &&
+          !invData.some(p => (Number(p.stock_minimo) || 0) > 0);
+        lista.innerHTML = sinMinimos
+          ? `<div class="sin-productos">
+               <div class="sin-productos-emoji">📏</div>
+               Ningún producto tiene <b>stock mínimo</b> configurado, así que no hay nada que avisar.<br>
+               Abre un producto y define su mínimo para que aparezca aquí en cuanto baje.
+             </div>`
+          : `<div class="sin-productos"><div class="sin-productos-emoji">😕</div>Sin resultados</div>`;
+        return;
+      }
       lista.innerHTML = res.map(p => {
         const st = Number(p.stock) || 0, min = Number(p.stock_minimo) || 0;
         const bajo = (min > 0 && st <= min) || st <= 0;
