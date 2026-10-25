@@ -1155,9 +1155,16 @@
         <input type="email" id="login-email" class="login-input"
                placeholder="correo@ejemplo.com" autocomplete="username" required
                style="margin-bottom:10px;">
-        <input type="password" id="login-pwd" class="login-input"
-               placeholder="••••••••" autocomplete="current-password" required>
+        <div style="position:relative;">
+          <input type="password" id="login-pwd" class="login-input"
+                 placeholder="••••••••" autocomplete="current-password" required
+                 style="padding-right:44px;">
+          <button type="button" onclick="toggleVerPwd()" title="Ver / ocultar contraseña"
+                  style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;opacity:.55;line-height:1;">👁</button>
+        </div>
         <button type="submit" class="login-btn" id="login-btn">Entrar</button>
+        <a href="#" onclick="resetPwd();return false;"
+           style="display:inline-block;margin-top:14px;font-size:12px;color:var(--ink-lt);font-weight:600;text-decoration:none;">¿Olvidaste tu contraseña?</a>
         <div class="login-error" id="login-error"></div>
         <div class="login-bloqueo" id="login-bloqueo"></div>
       </form>
@@ -1228,6 +1235,8 @@
           <div class="dash-widget-label">Productos por categoría</div>
           <div id="dash-cats-lista"></div>
         </div>
+
+        <div class="dash-pendientes" id="dash-pendientes"></div>
 
         <button class="accion-grande" onclick="irANuevo()">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -1606,6 +1615,26 @@
             <label class="field-label">Link de Google Maps</label>
             <input type="url" class="field-input" id="pf-maps" placeholder="https://maps.app.goo.gl/...">
           </div>
+          <div class="field">
+            <label class="field-label">Foto de referencia</label>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <img id="pf-ref-prev" alt="" style="display:none;width:46px;height:46px;border-radius:8px;object-fit:cover;flex-shrink:0;border:1px solid var(--line);">
+              <input type="url" class="field-input" id="pf-ref" placeholder="URL de la foto" oninput="prevPuntoImg('ref')">
+              <label class="btn-cambiar-img" style="white-space:nowrap;cursor:pointer;">📷 Subir
+                <input type="file" accept="image/*" style="display:none;" onchange="subirPuntoImg('ref', this)">
+              </label>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label">Croquis / mapa</label>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <img id="pf-croquis-prev" alt="" style="display:none;width:46px;height:46px;border-radius:8px;object-fit:cover;flex-shrink:0;border:1px solid var(--line);">
+              <input type="url" class="field-input" id="pf-croquis" placeholder="URL del croquis" oninput="prevPuntoImg('croquis')">
+              <label class="btn-cambiar-img" style="white-space:nowrap;cursor:pointer;">📷 Subir
+                <input type="file" accept="image/*" style="display:none;" onchange="subirPuntoImg('croquis', this)">
+              </label>
+            </div>
+          </div>
           <div style="display:flex;gap:10px;margin-top:14px;">
             <button class="btn-guardar" onclick="guardarPunto()" style="flex:2;display:flex;align-items:center;justify-content:center;gap:6px;">
               ✓ Guardar punto
@@ -1620,19 +1649,7 @@
           + Agregar punto de entrega
         </button>
 
-        <div class="code-export" id="punto-code-block" style="display:none;">
-          <div class="code-export-label">
-            <span>📋 JSON GENERADO — PEGAR EN puntos_entrega.json</span>
-          </div>
-          <pre id="punto-code-pre"></pre>
-          <button class="code-copy-btn" onclick="copiarPuntosJSON()">📋 Copiar JSON</button>
-        </div>
-
-        <div style="margin-top:16px;">
-          <button class="btn-guardar" onclick="generarPuntosJSON()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;">
-            📋 Generar JSON para copiar
-          </button>
-        </div>
+        <p class="subtitulo-vista" style="margin-top:16px;font-size:12px;">✅ Los cambios se publican al instante en la página pública de puntos de entrega.</p>
       </section>
 
     </main>
@@ -1835,9 +1852,9 @@
     const RL_KEY = 'alushe_admin_rl';
 
     // ─── Subir imagen a Supabase Storage ────────
-    async function subirImagenSupabase(blob, nombre) {
+    async function subirImagenSupabase(blob, nombre, prefix = '') {
       const slug = nombre.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
-      const filename = slug + '_' + Date.now() + '.jpg';
+      const filename = prefix + slug + '_' + Date.now() + '.jpg';
       const { error } = await sb.storage.from('catalogo-images').upload(filename, blob, {
         contentType: 'image/jpeg', upsert: true
       });
@@ -1977,6 +1994,22 @@
 
     actualizarBloqueoUI();
 
+    // Ver / ocultar y recuperar contraseña
+    function toggleVerPwd() {
+      const i = document.getElementById('login-pwd');
+      i.type = i.type === 'password' ? 'text' : 'password';
+    }
+    async function resetPwd() {
+      const email = document.getElementById('login-email').value.trim();
+      const errEl = document.getElementById('login-error');
+      const okEl  = document.getElementById('login-bloqueo');
+      if (!email) { errEl.textContent = 'Escribe tu correo arriba y vuelve a tocar el enlace.'; return; }
+      const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + '/admin/' });
+      errEl.textContent = '';
+      if (!error) okEl.textContent = '📧 Si el correo existe, te enviamos un enlace para restablecer tu contraseña.';
+      else errEl.textContent = 'No se pudo enviar: ' + error.message;
+    }
+
     // ═══════════════════════════════════════
     // NAVEGACIÓN ENTRE VISTAS
     // ═══════════════════════════════════════
@@ -1987,6 +2020,7 @@
       document.querySelectorAll('.bottom-nav-item').forEach(b =>
         b.classList.toggle('activo', b.dataset.nav === vista));
       if (vista === 'banners') cargarBanners();
+      if (vista === 'entrega') cargarPuntos();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -2013,7 +2047,7 @@
 
     async function cargarStats() {
       try {
-        const { data, error } = await sb.from('productos').select('estado, precio, categoria');
+        const { data, error } = await sb.from('productos').select('nombre, estado, precio, categoria, url_imagen, url_github, fecha');
         if (error) throw error;
         animarNum('stat-total', data.length);
         animarNum('stat-disp', data.filter(p => p.estado === 'Disponible').length);
@@ -2035,6 +2069,25 @@
             <span class="dash-cat-bar"><span class="dash-cat-fill" style="width:${Math.round(n / max * 100)}%"></span></span>
             <span class="dash-cat-num">${n}</span>
           </div>`).join('') || '<div style="font-size:12px;color:var(--ink-lt);margin-top:8px;">Sin productos aún.</div>';
+
+        // Pendientes accionables
+        const agot   = data.filter(p => p.estado === 'Agotado');
+        const sinImg = data.filter(p => !(p.url_imagen || p.url_github));
+        const recientes = data.filter(p => p.fecha).sort((a, b) => (b.fecha || '').localeCompare(a.fecha || '')).slice(0, 5);
+        window._sinImagenLista = sinImg.map(p => p.nombre);
+        const pend = document.getElementById('dash-pendientes');
+        if (pend) {
+          pend.innerHTML =
+            '<div class="seccion-label">Pendientes</div>'+
+            '<div style="display:flex;gap:8px;flex-wrap:wrap;">'+
+              '<button onclick="irAGestionar(\'Agotado\')" style="display:flex;align-items:center;gap:6px;background:#fff0f3;border:1px solid #ffd4de;color:#d11;border-radius:10px;padding:10px 14px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;">🔴 '+agot.length+' agotados</button>'+
+              '<button onclick="verSinImagen()" style="display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--line);color:var(--ink-mid);border-radius:10px;padding:10px 14px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;">🖼 '+sinImg.length+' sin imagen</button>'+
+            '</div>'+
+            (recientes.length
+              ? '<div class="seccion-label" style="margin-top:16px;">Últimos agregados</div>'+
+                recientes.map(p => '<div style="display:flex;justify-content:space-between;gap:10px;font-size:12px;padding:7px 0;border-bottom:1px solid var(--line);"><span style="font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+escHtml(p.nombre)+'</span><span style="color:var(--ink-lt);white-space:nowrap;">'+escHtml(p.fecha || '')+'</span></div>').join('')
+              : '');
+        }
       } catch {
         document.getElementById('stat-total').textContent = '—';
       }
@@ -2077,11 +2130,17 @@
 
       ctx.drawImage(imgEl, sx, sy, min, min, 0, 0, tam, tam);
 
-      canvas.toBlob(b => {
-        imagenBlob = b;
-        document.getElementById('img-preview').classList.add('con-imagen');
-        actualizarPreviewCard();
-      }, 'image/jpeg', 0.85);
+      try {
+        canvas.toBlob(b => {
+          if (!b) { toast('Esa imagen no permite recorte (CORS). Mejor sube el archivo.', 'error'); quitarImagen(); return; }
+          imagenBlob = b;
+          document.getElementById('img-preview').classList.add('con-imagen');
+          actualizarPreviewCard();
+        }, 'image/jpeg', 0.85);
+      } catch (e) {
+        toast('Esa imagen no permite recorte (CORS). Mejor sube el archivo.', 'error');
+        quitarImagen();
+      }
     }
 
     function quitarImagen() {
@@ -2498,8 +2557,18 @@
     let imagenEditBlob      = null;
 
     // Navegar a gestionar: cargar productos
-    async function irAGestionar() {
+    function verSinImagen() {
+      const l = window._sinImagenLista || [];
+      if (!l.length) { toast('✅ Todos los productos tienen imagen', 'success'); return; }
+      alert('🖼 ' + l.length + ' producto(s) sin imagen:\n\n• ' + l.slice(0, 40).join('\n• ') + (l.length > 40 ? '\n…' : ''));
+    }
+
+    async function irAGestionar(estado) {
       irA('gestionar');
+      if (estado) {
+        filtroEstado = estado;
+        document.querySelectorAll('.filtro-chip').forEach(c => c.classList.toggle('activo', c.dataset.filtro === estado));
+      }
       await cargarProductos();
     }
 
@@ -3005,14 +3074,18 @@
         card.className = 'banner-editor-card';
         const tipoOpts = ['promo','aviso','nuevo'].map(t =>
           '<option value="'+t+'"'+(b.tipo===t?' selected':'')+'>'+
-          {promo:'🟢 Promo (verde)',aviso:'🔵 Aviso (azul)',nuevo:'🟠 Nuevo (naranja)'}[t]+'</option>'
+          {promo:'🟢 Promo (gradiente animado)',aviso:'⚫ Aviso (oscuro)',nuevo:'🟠 Nuevo (cálido)'}[t]+'</option>'
         ).join('');
         const v = s => escHtml(s).replace(/"/g, '&quot;');
         card.innerHTML =
           '<div class="banner-editor-header">'+
             '<span class="banner-editor-num">'+(i+1)+'</span>'+
             'Banner '+(i+1)+
-            '<button class="banner-editor-collapse" onclick="toggleBannerForm('+i+')">Editar ↕</button>'+
+            '<span style="margin-left:auto;display:inline-flex;gap:6px;">'+
+              '<button onclick="moverBanner('+i+',-1)" title="Subir" '+(i===0?'disabled':'')+' style="background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:4px 10px;font-size:12px;font-weight:700;color:var(--ink-lt);cursor:pointer;">↑</button>'+
+              '<button onclick="moverBanner('+i+',1)" title="Bajar" '+(i===bannersData.length-1?'disabled':'')+' style="background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:4px 10px;font-size:12px;font-weight:700;color:var(--ink-lt);cursor:pointer;">↓</button>'+
+              '<button class="banner-editor-collapse" style="margin-left:0;" onclick="toggleBannerForm('+i+')">Editar ↕</button>'+
+            '</span>'+
           '</div>'+
           '<p class="preview-label">VISTA PREVIA EN VIVO</p>'+
           '<div class="banner-preview-live '+b.tipo+'" id="bprev-'+i+'">'+
@@ -3076,6 +3149,15 @@
       } else toast('Error: ' + error.message, 'error');
     }
 
+    async function moverBanner(i, dir) {
+      const j = i + dir;
+      if (j < 0 || j >= bannersData.length) return;
+      const a = bannersData[i], b = bannersData[j];
+      await sb.from('banners').update({ orden: b.orden }).eq('id', a.id);
+      await sb.from('banners').update({ orden: a.orden }).eq('id', b.id);
+      cargarBanners();
+    }
+
     async function agregarBanner() {
       const orden = bannersData.length ? Math.max(...bannersData.map(b => b.orden || 0)) + 1 : 1;
       const { error } = await sb.from('banners').insert({
@@ -3096,21 +3178,56 @@
     // ════════════════════════════════════════
     // FASE 4B — PUNTOS DE ENTREGA
     // ════════════════════════════════════════
-    let puntosData = JSON.parse(localStorage.getItem('alushe_puntos') || 'null') || [
-      { id:'guadalajara_factor', nombre:'"Guadalajara" Factor', hora:'4:00 pm', maps_url:'https://maps.app.goo.gl/S5Rf4VzhrjDkAnDe6' },
-      { id:'catedral', nombre:'Zona Centro "Catedral"', hora:'4:30 pm', maps_url:'https://maps.app.goo.gl/99kjyTA6yEKn3c737' },
-      { id:'santuario_libro', nombre:'Santuario "Libro"', hora:'5:00 pm', maps_url:'https://maps.app.goo.gl/c6xkrWRUiBZtoHgaA' },
-      { id:'plaza_galas', nombre:'Plaza Galas "Office Depot"', hora:'5:30 pm', maps_url:'https://maps.app.goo.gl/1kfNca72vWncHhm48' },
-      { id:'oxxo_luz_esperanza', nombre:'"Oxxo" Luz y Esperanza', hora:'5:30 pm', maps_url:'https://maps.app.goo.gl/BqtiNzuEhs1AGMqa6' },
-      { id:'oxxo_morga', nombre:'"Oxxo" Morga', hora:'6:00 pm', maps_url:'https://maps.app.goo.gl/zcHsmC8ZJMC4Njs47' },
-      { id:'guadalajara_puentes', nombre:'"Guadalajara" Puentes Gemelos', hora:'6:30 pm', maps_url:'https://maps.app.goo.gl/9EDMhMzFvNnot8116' },
-      { id:'alsuper_ojo_agua', nombre:'"Alsúper" Ojo de Agua', hora:'7:00 pm', maps_url:'https://maps.app.goo.gl/j5kWsf4Qyo88yV6T6' },
-      { id:'oxxo_santa_maria', nombre:'"Oxxo" Santa María', hora:'7:30 pm', maps_url:'https://maps.app.goo.gl/2es8XfLCFhMnxpvx9' },
-      { id:'oxxo_zacatecas', nombre:'"Oxxo" Calle Zacatecas', hora:'8:00 pm', maps_url:'https://maps.app.goo.gl/RTqGAe8Y6gtEfvD97' }
-    ];
-    let editandoPunto = -1;
+    let puntosData = [];
+    let editandoPunto = null;   // id en edición, o null para nuevo
 
-    function guardarPuntos() { localStorage.setItem('alushe_puntos', JSON.stringify(puntosData)); }
+    async function cargarPuntos() {
+      const lista = document.getElementById('puntos-lista');
+      if (lista) lista.innerHTML = skeletonRows(4);
+      const { data, error } = await sb.from('puntos_entrega').select('*').order('orden');
+      if (error) {
+        if (lista) lista.innerHTML = `<div class="historial-vacio"><div class="historial-vacio-emoji">⚠️</div>
+          No se pudieron cargar los puntos (¿falta crear la tabla <code>puntos_entrega</code>?).</div>`;
+        return;
+      }
+      puntosData = data;
+      renderPuntos();
+    }
+
+    // Previsualizar / subir imágenes de un punto (referencia o croquis)
+    function prevPuntoImg(tipo) {
+      const url = document.getElementById('pf-'+tipo).value.trim();
+      const img = document.getElementById('pf-'+tipo+'-prev');
+      if (url) { img.src = url; img.style.display = 'block'; } else { img.style.display = 'none'; }
+    }
+    function _resizeImg(file, maxW) {
+      return new Promise((res, rej) => {
+        const img = new Image();
+        img.onload = () => {
+          const c = document.createElement('canvas');
+          const scale = Math.min(1, maxW / img.naturalWidth);
+          c.width = Math.round(img.naturalWidth * scale);
+          c.height = Math.round(img.naturalHeight * scale);
+          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+          c.toBlob(b => b ? res(b) : rej(new Error('No se pudo procesar la imagen')), 'image/jpeg', 0.85);
+        };
+        img.onerror = () => rej(new Error('Imagen inválida'));
+        img.src = URL.createObjectURL(file);
+      });
+    }
+    async function subirPuntoImg(tipo, inputEl) {
+      const f = inputEl.files[0];
+      if (!f) return;
+      toast('Subiendo imagen…');
+      try {
+        const blob = await _resizeImg(f, 1000);
+        const url = await subirImagenSupabase(blob, 'punto_' + tipo, 'puntos/');
+        document.getElementById('pf-'+tipo).value = url;
+        prevPuntoImg(tipo);
+        toast('✅ Imagen subida');
+      } catch (e) { toast('Error: ' + e.message, 'error'); }
+      inputEl.value = '';
+    }
 
     function generarIdDesdeNombre(nombre) {
       return nombre.toLowerCase()
@@ -3121,11 +3238,11 @@
     function renderPuntos() {
       const lista = document.getElementById('puntos-lista');
       if (!lista) return;
-      lista.innerHTML = '';
       if (!puntosData.length) {
         lista.innerHTML = '<div class="historial-vacio"><div class="historial-vacio-emoji">📍</div>No hay puntos. Agrega el primero.</div>';
         return;
       }
+      lista.innerHTML = '';
       puntosData.forEach((p, i) => {
         const card = document.createElement('div');
         card.className = 'punto-card';
@@ -3133,87 +3250,80 @@
           '<div class="punto-card-header">'+
             '<div class="punto-icono">📍</div>'+
             '<div class="punto-info">'+
-              '<div class="punto-nombre">'+p.nombre+'</div>'+
-              '<div class="punto-hora">🕐 '+p.hora+'</div>'+
+              '<div class="punto-nombre">'+escHtml(p.nombre)+'</div>'+
+              '<div class="punto-hora">🕐 '+escHtml(p.hora)+'</div>'+
             '</div>'+
             '<div class="punto-acciones">'+
-              '<button class="punto-btn" onclick="editarPunto('+i+')" title="Editar">✏️</button>'+
-              '<button class="punto-btn danger" onclick="eliminarPunto('+i+')" title="Eliminar">🗑</button>'+
+              '<button class="punto-btn" onclick="moverPunto('+i+',-1)" title="Subir"'+(i===0?' disabled':'')+'>↑</button>'+
+              '<button class="punto-btn" onclick="moverPunto('+i+',1)" title="Bajar"'+(i===puntosData.length-1?' disabled':'')+'>↓</button>'+
+              '<button class="punto-btn" onclick="editarPunto(\''+p.id+'\')" title="Editar">✏️</button>'+
+              '<button class="punto-btn danger" onclick="eliminarPunto(\''+p.id+'\')" title="Eliminar">🗑</button>'+
             '</div>'+
           '</div>'+
-          (p.maps_url ? '<a class="punto-maps-link" href="'+p.maps_url+'" target="_blank">🗺 Ver en Google Maps</a>' : '');
+          (p.maps_url ? '<a class="punto-maps-link" href="'+escHtml(p.maps_url)+'" target="_blank">🗺 Ver en Google Maps</a>' : '');
         lista.appendChild(card);
       });
     }
 
-    function abrirPuntoForm(editIdx) {
-      editandoPunto = (editIdx !== undefined) ? editIdx : -1;
+    function abrirPuntoForm(id) {
+      editandoPunto = id || null;
+      const p = editandoPunto ? puntosData.find(x => x.id === editandoPunto) : null;
+      document.getElementById('pf-nombre').value  = p ? p.nombre : '';
+      document.getElementById('pf-hora').value    = p ? p.hora : '';
+      document.getElementById('pf-maps').value    = p ? (p.maps_url || '') : '';
+      document.getElementById('pf-ref').value     = p ? (p.ref_img || '') : '';
+      document.getElementById('pf-croquis').value = p ? (p.croquis_img || '') : '';
+      prevPuntoImg('ref'); prevPuntoImg('croquis');
+      document.getElementById('punto-form-titulo-txt').textContent = editandoPunto ? 'Editar punto' : 'Nuevo punto';
       const form = document.getElementById('punto-form');
-      if (editandoPunto >= 0) {
-        const p = puntosData[editandoPunto];
-        document.getElementById('pf-nombre').value = p.nombre;
-        document.getElementById('pf-hora').value = p.hora;
-        document.getElementById('pf-maps').value = p.maps_url || '';
-        document.getElementById('punto-form-titulo-txt').textContent = 'Editar punto';
-      } else {
-        document.getElementById('pf-nombre').value = '';
-        document.getElementById('pf-hora').value = '';
-        document.getElementById('pf-maps').value = '';
-        document.getElementById('punto-form-titulo-txt').textContent = 'Nuevo punto';
-      }
       form.classList.add('visible');
       form.scrollIntoView({ behavior: 'smooth' });
     }
 
     function cerrarPuntoForm() {
       document.getElementById('punto-form').classList.remove('visible');
-      editandoPunto = -1;
+      editandoPunto = null;
     }
 
-    function editarPunto(i) { abrirPuntoForm(i); }
+    function editarPunto(id) { abrirPuntoForm(id); }
 
-    function eliminarPunto(i) {
-      if (!confirm('¿Eliminar "'+puntosData[i].nombre+'"?')) return;
-      puntosData.splice(i, 1);
-      guardarPuntos();
-      renderPuntos();
-      toast('🗑 Punto eliminado', '');
+    async function eliminarPunto(id) {
+      const p = puntosData.find(x => x.id === id);
+      if (!p) return;
+      if (!confirm('¿Eliminar "'+p.nombre+'"?')) return;
+      const { error } = await sb.from('puntos_entrega').delete().eq('id', id);
+      if (!error) { toast('🗑 Punto eliminado', 'success'); cargarPuntos(); }
+      else toast('Error: ' + error.message, 'error');
     }
 
-    function guardarPunto() {
-      const nombre = document.getElementById('pf-nombre').value.trim();
-      const hora = document.getElementById('pf-hora').value.trim();
-      const maps_url = document.getElementById('pf-maps').value.trim();
+    async function guardarPunto() {
+      const nombre      = document.getElementById('pf-nombre').value.trim();
+      const hora        = document.getElementById('pf-hora').value.trim();
+      const maps_url    = document.getElementById('pf-maps').value.trim();
+      const ref_img     = document.getElementById('pf-ref').value.trim();
+      const croquis_img = document.getElementById('pf-croquis').value.trim();
       if (!nombre || !hora) { toast('⚠ Nombre y horario son obligatorios', 'error'); return; }
-      const punto = { id: generarIdDesdeNombre(nombre), nombre, hora, maps_url };
-      if (editandoPunto >= 0) { puntosData[editandoPunto] = punto; toast('✓ Punto actualizado', 'success'); }
-      else { puntosData.push(punto); toast('✓ Punto agregado', 'success'); }
-      guardarPuntos();
-      cerrarPuntoForm();
-      renderPuntos();
+      const id = editandoPunto || generarIdDesdeNombre(nombre);
+      const fila = { id, nombre, hora, maps_url, ref_img, croquis_img, activo: true };
+      if (!editandoPunto) {
+        fila.orden = puntosData.length ? Math.max(...puntosData.map(p => p.orden || 0)) + 1 : 1;
+      }
+      const { error } = await sb.from('puntos_entrega').upsert(fila, { onConflict: 'id' });
+      if (!error) {
+        toast(editandoPunto ? '✓ Punto actualizado' : '✓ Punto agregado', 'success');
+        cerrarPuntoForm();
+        cargarPuntos();
+      } else toast('Error: ' + error.message, 'error');
     }
 
-    function generarPuntosJSON() {
-      const json = JSON.stringify(puntosData, null, 2);
-      document.getElementById('punto-code-pre').textContent = json;
-      document.getElementById('punto-code-block').style.display = 'block';
-      document.getElementById('punto-code-block').scrollIntoView({ behavior: 'smooth' });
+    async function moverPunto(i, dir) {
+      const j = i + dir;
+      if (j < 0 || j >= puntosData.length) return;
+      const a = puntosData[i], b = puntosData[j];
+      await sb.from('puntos_entrega').update({ orden: b.orden }).eq('id', a.id);
+      await sb.from('puntos_entrega').update({ orden: a.orden }).eq('id', b.id);
+      cargarPuntos();
     }
-
-    function copiarPuntosJSON() {
-      const json = document.getElementById('punto-code-pre').textContent;
-      navigator.clipboard.writeText(json).then(() => toast('✓ JSON copiado al portapapeles', 'success'));
-    }
-
-    // Hook: render when banners/entrega vistas activate
-    document.addEventListener('DOMContentLoaded', function() {
-      const _origIrA = window.irA;
-      window.irA = function(vista) {
-        _origIrA(vista);
-        if (vista === 'banners') setTimeout(renderBanners, 50);
-        if (vista === 'entrega') setTimeout(renderPuntos, 50);
-      };
-    });
 
   </script>
 </body>
