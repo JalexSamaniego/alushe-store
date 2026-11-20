@@ -21,7 +21,7 @@
   <meta name="twitter:description" content="Productos locales e importados. Entregas y envíos a domicilio en Durango, Dgo.">
   <meta name="twitter:image" content="https://alushe.store/assets/images/favicon.png">
   <title>Alushe Store</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
@@ -569,10 +569,98 @@
       .lp-banner-slide.promo, .lp-banner-slide.promo::after, .about-mosaic img { animation:none !important; }
       .hero-inner { transform:none !important; opacity:1 !important; }
     }
+
+    /* ═══════════ CONCEPTO C — HOLOGRÁFICO (paleta del logo) ═══════════ */
+    :root{
+      --mono:'DM Mono', ui-monospace, 'Courier New', monospace;
+      --rainbow: linear-gradient(90deg,#ff2e9a,#ff7a1a,#ffc21a,#3cc35a,#12bccb,#2e7dff,#7b3ff2,#ff2e9a);
+    }
+    @keyframes flow { to { background-position:200% center; } }
+    @keyframes spin360 { to { transform: rotate(360deg); } }
+    @keyframes draw { to { stroke-dashoffset:0; } }
+    .holo { background:var(--rainbow); background-size:200% auto; -webkit-background-clip:text; background-clip:text; color:transparent; animation:flow 6s linear infinite; }
+
+    /* 1 · saludo dinámico */
+    .hero-greet { font-family:var(--mono); font-size:13px; font-weight:400; color:var(--ink-mid); margin-bottom:16px; min-height:17px; opacity:0; animation:fadeUp .7s .05s ease forwards; }
+
+    /* 2 · subrayado dibujado a mano en la palabra destacada */
+    .hero-title em.holo { background:var(--rainbow); background-size:200% auto; -webkit-background-clip:text; background-clip:text; color:transparent; animation:flow 6s linear infinite; font-style:italic; font-weight:700; }
+    .u-wrap { position:relative; display:inline-block; }
+    .u-wrap svg { position:absolute; left:-3%; bottom:-0.16em; width:106%; height:0.3em; overflow:visible; }
+    .u-wrap path { fill:none; stroke:url(#holoGrad); stroke-width:6; stroke-linecap:round; stroke-dasharray:440; stroke-dashoffset:440; animation:draw 1.2s .6s cubic-bezier(.6,0,.3,1) forwards; }
+
+    /* 3 + 8 · tags editoriales: mono + número holográfico + regla */
+    .section-tag { font-family:var(--mono); font-size:11px; font-weight:400; letter-spacing:.5px; text-transform:uppercase; display:inline-flex; align-items:center; gap:10px; }
+    .section-tag .st-num { font-weight:500; background:var(--rainbow); background-size:200% auto; -webkit-background-clip:text; background-clip:text; color:transparent; animation:flow 6s linear infinite; }
+    .section-tag::after { content:''; width:44px; height:1px; background:currentColor; opacity:.35; }
+
+    /* 4 · marquee protagonista */
+    .marquee-wrap { padding:16px 0; }
+    .marquee-item { font-family:var(--mono); font-size:15px; font-weight:400; letter-spacing:.5px; text-transform:none; color:var(--cream); gap:16px; }
+    .marquee-sep { background:var(--rainbow); background-size:200% auto; -webkit-background-clip:text; background-clip:text; color:transparent; animation:flow 6s linear infinite; font-size:13px; }
+    .marquee-item .mo { color:transparent; -webkit-text-stroke:1px rgba(246,245,202,.6); }
+
+    /* NUEVO badge holográfico + acento superior en card al hover */
+    .nuevo-badge { background:var(--rainbow) !important; background-size:200% auto !important; color:#fff !important; animation:flow 6s linear infinite; }
+    .nuevo-card::after { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--rainbow); background-size:200% auto; animation:flow 6s linear infinite; opacity:0; transition:opacity .25s; z-index:3; }
+    .nuevo-card:hover::after { opacity:1; }
+
+    /* cat-cards: borde arcoíris al hover (sección oscura) */
+    .cat-card { position:relative; }
+    .cat-card::after { content:''; position:absolute; inset:0; border-radius:var(--radius); padding:1.5px; background:var(--rainbow); background-size:200% auto; -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0); -webkit-mask-composite:xor; mask-composite:exclude; opacity:0; transition:opacity .25s; animation:flow 6s linear infinite; pointer-events:none; }
+    .cat-card:hover::after { opacity:1; }
+
+    /* 5 · sello giratorio */
+    .sello-holo { position:absolute; width:128px; height:128px; z-index:3; pointer-events:none; }
+    .sello-holo svg { width:100%; height:100%; animation:spin360 20s linear infinite; }
+    .sello-ring { fill:none; stroke:url(#holoGrad); stroke-width:2; }
+    .sello-txt { font-family:var(--mono); font-size:8.3px; letter-spacing:1.5px; fill:var(--ink-mid); text-transform:uppercase; }
+    .sello-star { font-size:22px; fill:url(#holoGrad); }
+    .hero .sello-holo { right:5%; bottom:12%; }
+    @media (max-width:900px){ .hero .sello-holo { display:none; } }
+
+    /* 6 · divisor zig-zag hacia la sección oscura */
+    .cats-section { position:relative; }
+    .cats-section::before {
+      content:''; position:absolute; left:0; right:0; top:0; height:18px; transform:translateY(-99%);
+      background:var(--ink);
+      -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50%/20px 100% repeat-x;
+              mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50%/20px 100% repeat-x;
+    }
+
+    /* 7 · ticket / recibo de puntos de entrega */
+    .ticket { max-width:460px; margin:48px 0 0; background:var(--white); border:1px solid rgba(26,26,24,.1); border-radius:16px 16px 0 0; padding:26px 26px 0; box-shadow:0 18px 40px rgba(26,26,24,.08); font-family:var(--mono); position:relative; }
+    .ticket-head { display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:500; letter-spacing:1px; text-transform:uppercase; padding-bottom:6px; color:var(--ink); }
+    .ticket-head .tk-star { font-size:16px; }
+    .ticket-sub { font-size:11px; color:var(--ink-lt); letter-spacing:.5px; padding-bottom:14px; border-bottom:1px dashed rgba(26,26,24,.2); }
+    .tk-row { display:flex; align-items:baseline; gap:8px; padding:10px 0; font-size:13px; border-bottom:1px dashed rgba(26,26,24,.12); }
+    .tk-row .tk-n { color:var(--ink-lt); font-size:11px; min-width:1.6em; }
+    .tk-row .tk-name { color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:55%; }
+    .tk-row .tk-dots { flex:1; border-bottom:1px dotted rgba(26,26,24,.3); transform:translateY(-3px); }
+    .tk-row .tk-hora { color:var(--ink-mid); white-space:nowrap; }
+    .ticket-foot { display:flex; justify-content:space-between; font-size:12px; font-weight:500; letter-spacing:1px; text-transform:uppercase; padding:14px 0; color:var(--ink); }
+    .ticket-note { font-size:10.5px; color:var(--ink-lt); padding-bottom:20px; line-height:1.7; }
+    .ticket::after { content:''; position:absolute; left:0; right:0; bottom:-9px; height:9px; background:var(--white); -webkit-mask: conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) 50%/18px 100% repeat-x; mask: conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) 50%/18px 100% repeat-x; }
+
+    @media (prefers-reduced-motion: reduce){
+      .holo, .hero-title em.holo, .section-tag .st-num, .marquee-sep, .nuevo-badge, .nuevo-card::after, .cat-card::after { animation:none !important; }
+      .sello-holo svg { animation:none !important; }
+      .u-wrap path { stroke-dashoffset:0 !important; animation:none !important; }
+    }
   </style>
 </head>
 <body>
   <div class="noise" aria-hidden="true"></div>
+
+  <!-- Degradado holográfico compartido (subrayado + sello) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <linearGradient id="holoGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ff2e9a"/><stop offset=".18" stop-color="#ff7a1a"/>
+      <stop offset=".38" stop-color="#ffc21a"/><stop offset=".55" stop-color="#3cc35a"/>
+      <stop offset=".72" stop-color="#12bccb"/><stop offset=".88" stop-color="#2e7dff"/>
+      <stop offset="1" stop-color="#7b3ff2"/>
+    </linearGradient>
+  </defs></svg>
 
   <!-- NAV -->
   <nav>
@@ -588,10 +676,11 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-inner">
+      <p class="hero-greet" id="hero-greet">Hola 👋</p>
       <div class="hero-eyebrow"><span>📍</span> Durango, Dgo.</div>
       <h1 class="hero-title">
         <span class="title-line">Tu tienda</span>
-        <em class="title-line">favorita,</em>
+        <span class="title-line"><span class="u-wrap"><em class="holo">favorita,</em><svg viewBox="0 0 300 22" aria-hidden="true"><path d="M4,14 C70,4 150,22 210,8 C240,2 270,10 296,6"/></svg></span></span>
         <span class="title-line">en línea.</span>
       </h1>
       <p class="hero-sub">Productos locales e importados con entregas y envíos a domicilio en toda la ciudad.</p>
@@ -599,6 +688,14 @@
         <a href="./catalogo" class="btn-primary">Ver catálogo →</a>
         <a href="#entregas" class="btn-secondary">Puntos de entrega</a>
       </div>
+    </div>
+    <div class="sello-holo" aria-hidden="true">
+      <svg viewBox="0 0 128 128">
+        <defs><path id="selloPath" d="M64,64 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/></defs>
+        <circle class="sello-ring" cx="64" cy="64" r="60"/>
+        <text class="sello-txt"><textPath href="#selloPath" startOffset="0">ALUSHE STORE · DURANGO, DGO. · ENVÍOS A DOMICILIO · </textPath></text>
+        <text class="sello-star" x="64" y="72" text-anchor="middle">✦</text>
+      </svg>
     </div>
     <div class="hero-scroll">
       <span>Scroll</span>
@@ -609,8 +706,8 @@
   <!-- MARQUEE -->
   <div class="marquee-wrap" aria-hidden="true">
     <div class="marquee-track">
-      <div class="marquee-item">Durango, Dgo. <span class="marquee-sep">✦</span> 100+ productos <span class="marquee-sep">✦</span> Envíos a domicilio <span class="marquee-sep">✦</span> Nuevas llegadas <span class="marquee-sep">✦</span> Atención por WhatsApp <span class="marquee-sep">✦</span> Productos importados <span class="marquee-sep">✦</span> 10 puntos de entrega <span class="marquee-sep">✦</span></div>
-      <div class="marquee-item" aria-hidden="true">Durango, Dgo. <span class="marquee-sep">✦</span> 100+ productos <span class="marquee-sep">✦</span> Envíos a domicilio <span class="marquee-sep">✦</span> Nuevas llegadas <span class="marquee-sep">✦</span> Atención por WhatsApp <span class="marquee-sep">✦</span> Productos importados <span class="marquee-sep">✦</span> 10 puntos de entrega <span class="marquee-sep">✦</span></div>
+      <div class="marquee-item"><span>Durango, Dgo.</span><span class="marquee-sep">✦</span><span class="mq-prod">187 productos</span><span class="marquee-sep">✦</span><span class="mo">Envíos a domicilio</span><span class="marquee-sep">✦</span><span>Nuevas llegadas</span><span class="marquee-sep">✦</span><span class="mo">WhatsApp</span><span class="marquee-sep">✦</span><span>Productos importados</span><span class="marquee-sep">✦</span></div>
+      <div class="marquee-item" aria-hidden="true"><span>Durango, Dgo.</span><span class="marquee-sep">✦</span><span class="mq-prod">187 productos</span><span class="marquee-sep">✦</span><span class="mo">Envíos a domicilio</span><span class="marquee-sep">✦</span><span>Nuevas llegadas</span><span class="marquee-sep">✦</span><span class="mo">WhatsApp</span><span class="marquee-sep">✦</span><span>Productos importados</span><span class="marquee-sep">✦</span></div>
     </div>
   </div>
 
@@ -664,7 +761,7 @@
         </div>
       </div>
       <div class="reveal">
-        <div class="section-tag">Quiénes somos</div>
+        <div class="section-tag"><span class="st-num">01</span> Quiénes somos</div>
         <h2 class="section-title">Productos que llegan<br>hasta tu puerta.</h2>
         <p class="section-body">
           Somos Alushe Store, una tienda duranguense con productos locales e importados seleccionados para ti. Desde insumos del día a día hasta artículos especiales — todo con la comodidad de entregas a domicilio en Durango.
@@ -682,7 +779,7 @@
   <!-- CATEGORÍAS -->
   <div class="cats-section" id="categorias">
     <div class="cats-inner">
-      <div class="section-tag reveal">Lo que encontrarás</div>
+      <div class="section-tag reveal"><span class="st-num">02</span> Lo que encontrarás</div>
       <h2 class="section-title reveal" style="color:var(--cream);">Todo en un<br>solo lugar.</h2>
       <div class="cats-grid">
         <a href="./catalogo" class="cat-card reveal">
@@ -731,39 +828,18 @@
   <!-- PUNTOS DE ENTREGA -->
   <section id="entregas">
     <div class="reveal">
-      <div class="section-tag">Dónde encontrarnos</div>
+      <div class="section-tag"><span class="st-num">03</span> Dónde encontrarnos</div>
       <h2 class="section-title">Entrega rápida<br>en Durango.</h2>
-      <p class="section-body">Contamos con 10 puntos de entrega distribuidos en la ciudad para que recibas tu pedido donde más te convenga.</p>
+      <p class="section-body">Recoge en el punto más cercano o pide envío a domicilio. Coordinamos todo por WhatsApp.</p>
     </div>
-    <div class="entrega-grid">
-      <div class="entrega-card reveal">
-        <div class="entrega-icon">🚚</div>
-        <div>
-          <h3>Envío a domicilio</h3>
-          <p>Llevamos tu pedido directamente a la puerta de tu casa en Durango.</p>
-        </div>
+    <div class="ticket reveal">
+      <div class="ticket-head"><span>Alushe Store</span><span class="tk-star holo">✦</span><span>Puntos de entrega</span></div>
+      <div class="ticket-sub">Durango, Dgo. · Lunes a Sábado</div>
+      <div class="ticket-rows" id="ticket-rows">
+        <div class="tk-row"><span class="tk-name">Cargando puntos…</span></div>
       </div>
-      <div class="entrega-card reveal">
-        <div class="entrega-icon">📍</div>
-        <div>
-          <h3>10 puntos de entrega</h3>
-          <p>Recoge en el punto más cercano a ti. Coordinamos por WhatsApp.</p>
-        </div>
-      </div>
-      <div class="entrega-card reveal">
-        <div class="entrega-icon">💬</div>
-        <div>
-          <h3>Coordinación fácil</h3>
-          <p>Escríbenos por WhatsApp y te confirmamos disponibilidad y entrega en minutos.</p>
-        </div>
-      </div>
-      <div class="entrega-card reveal">
-        <div class="entrega-icon">🗺️</div>
-        <div>
-          <h3>Ver mapa de puntos</h3>
-          <p>Consulta las ubicaciones exactas, horarios y referencias de cada punto.</p>
-        </div>
-      </div>
+      <div class="ticket-foot"><span>Total</span><span id="ticket-total">— puntos</span></div>
+      <div class="ticket-note">Pago en efectivo o tarjeta · Entregas programadas con 1 día de anticipación · También enviamos por Didi, Uber y Bolt.</div>
     </div>
     <div class="entrega-cta reveal">
       <a href="./puntos_entrega" class="btn-primary">Ver todos los puntos →</a>
@@ -773,7 +849,7 @@
   <!-- CONTACTO / REDES -->
   <div class="contact-section" id="contacto">
     <div class="contact-inner">
-      <div class="section-tag reveal">Encuéntranos</div>
+      <div class="section-tag reveal"><span class="st-num">04</span> Encuéntranos</div>
       <h2 class="section-title reveal">Síguenos y<br>escríbenos.</h2>
       <p class="section-body reveal">Estamos activos en redes sociales y respondemos rápido por WhatsApp. ¡Escríbenos!</p>
       <div class="social-grid reveal">
@@ -875,7 +951,7 @@
       try {
         const [prodRes, puntosRes, bannersRes] = await Promise.all([
           sb.from('productos').select('nombre,precio,url_imagen,url_github,estado,categoria,fecha').order('fecha', { ascending: false }),
-          sb.from('puntos_entrega').select('id', { count: 'exact', head: true }).eq('activo', true),
+          sb.from('puntos_entrega').select('nombre,hora,orden').eq('activo', true).order('orden'),
           sb.from('banners').select('*').order('orden'),
         ]);
         const productos = prodRes.data || [];
@@ -883,10 +959,12 @@
           liveStats.productos  = productos.length;
           liveStats.categorias = new Set(productos.map(p => (p.categoria || '').trim()).filter(Boolean)).size;
         }
-        if (typeof puntosRes.count === 'number' && puntosRes.count > 0) liveStats.puntos = puntosRes.count;
+        const puntos = puntosRes.data || [];
+        if (puntos.length) liveStats.puntos = puntos.length;
         renderNuevos(productos);
         renderMosaico(productos);
         renderPromo(bannersRes.data || []);
+        renderTicket(puntos);
         actualizarTextosLive();
       } catch (e) {
         renderNuevos([]);  // oculta la sección si no hay conexión
@@ -956,11 +1034,36 @@
       if (slides.length > 1) timer = setInterval(() => ir(actual + 1), 4500);
     }
 
+    // 7 · ticket de puntos de entrega
+    function renderTicket(puntos) {
+      const rows = document.getElementById('ticket-rows');
+      const tot = document.getElementById('ticket-total');
+      if (!rows) return;
+      if (!puntos || !puntos.length) {
+        rows.innerHTML = '<div class="tk-row"><span class="tk-name">Consulta los puntos en la página de entregas.</span></div>';
+        if (tot) tot.textContent = '10 puntos';
+        return;
+      }
+      const show = puntos.slice(0, 7);
+      rows.innerHTML = show.map((p, i) =>
+        `<div class="tk-row"><span class="tk-n">${String(i + 1).padStart(2, '0')}</span><span class="tk-name">${esc(p.nombre)}</span><span class="tk-dots"></span><span class="tk-hora">${esc(p.hora || '')}</span></div>`
+      ).join('') + (puntos.length > 7 ? `<div class="tk-row"><span class="tk-n">+</span><span class="tk-name">${puntos.length - 7} punto(s) más</span></div>` : '');
+      if (tot) tot.textContent = puntos.length + ' puntos';
+    }
+
     function actualizarTextosLive() {
-      document.querySelectorAll('.marquee-item').forEach(m => { m.innerHTML = m.innerHTML.replace('100+ productos', liveStats.productos + ' productos'); });
+      document.querySelectorAll('.mq-prod').forEach(el => { el.textContent = liveStats.productos + ' productos'; });
       const cta = document.querySelector('.cta-band p');
       if (cta) cta.textContent = `Más de ${liveStats.productos} productos esperándote en el catálogo.`;
     }
+
+    // 1 · saludo dinámico por hora
+    (function () {
+      const h = new Date().getHours();
+      const s = h < 12 ? 'Buenos días' : h < 19 ? 'Buenas tardes' : 'Buenas noches';
+      const el = document.getElementById('hero-greet');
+      if (el) el.innerHTML = s + ' 👋 <b class="holo">¿qué buscas hoy?</b>';
+    })();
 
     cargarLanding();
   </script>
