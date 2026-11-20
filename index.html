@@ -22,6 +22,7 @@
   <meta name="twitter:image" content="https://alushe.store/assets/images/favicon.png">
   <title>Alushe Store</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --cream:   #f6f5ca;
@@ -508,6 +509,66 @@
       .hero-btns { flex-direction: column; align-items: center; }
       .btn-primary, .btn-secondary { width: 100%; max-width: 300px; justify-content: center; }
     }
+
+    /* ── HERO INNER (parallax) ─────────────────────────── */
+    .hero-inner { display: flex; flex-direction: column; align-items: center; will-change: transform, opacity; }
+
+    /* ── PROMO BANNER (Supabase) ───────────────────────── */
+    .lp-promo { max-width: 1100px; margin: 28px auto 0; padding: 0 24px; }
+    .lp-banner-wrap { position: relative; overflow: hidden; border-radius: 20px; box-shadow: 0 10px 30px rgba(26,26,24,.08); }
+    .lp-banner-track { display: flex; transition: transform .5s cubic-bezier(.4,0,.2,1); }
+    .lp-banner-slide { min-width: 100%; border-radius: 20px; padding: 22px 26px; display: flex; align-items: center; gap: 18px; position: relative; overflow: hidden; }
+    .lp-banner-slide.promo { color: #fff; background: linear-gradient(120deg,#13251a,#1a7a3f,#25D366,#1a7a3f,#13251a); background-size: 300% 100%; animation: bgrad 9s ease infinite; }
+    @keyframes bgrad { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+    .lp-banner-slide.promo::after { content:''; position:absolute; top:0; left:-60%; width:40%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent); transform:skewX(-18deg); animation:bsweep 3.5s ease-in-out infinite; }
+    @keyframes bsweep { 0%{left:-60%} 60%,100%{left:130%} }
+    .lp-banner-slide.aviso { background: var(--ink); color: var(--cream); }
+    .lp-banner-slide.aviso::before { content:''; position:absolute; top:-40px; right:-20px; width:220px; height:220px; border-radius:50%; background:radial-gradient(circle,rgba(74,111,165,.4),transparent 70%); }
+    .lp-banner-slide.nuevo { color:#fff; background: linear-gradient(120deg,#b8400a 0%,#f07030 100%); }
+    .lp-b-emoji { width:52px; height:52px; flex-shrink:0; border-radius:14px; background:rgba(255,255,255,.16); display:flex; align-items:center; justify-content:center; font-size:26px; z-index:1; }
+    .lp-b-txt { flex:1; min-width:0; z-index:1; }
+    .lp-b-titulo { font-family:'Montserrat'; font-size:16px; font-weight:800; letter-spacing:-.2px; line-height:1.3; margin-bottom:3px; }
+    .lp-b-sub { font-size:12px; font-weight:300; opacity:.85; }
+    .lp-b-tag { background:rgba(255,255,255,.22); font-family:'Montserrat'; font-size:10px; font-weight:800; padding:5px 11px; border-radius:50px; white-space:nowrap; flex-shrink:0; text-transform:uppercase; letter-spacing:.5px; align-self:flex-start; z-index:1; }
+    .lp-banner-dots { display:flex; justify-content:center; gap:6px; margin-top:12px; }
+    .lp-banner-dot { width:6px; height:6px; border-radius:50%; background:rgba(26,26,24,.2); cursor:pointer; transition:all .25s; border:none; padding:0; }
+    .lp-banner-dot.activo { background:var(--green); width:18px; border-radius:4px; }
+
+    /* ── RECIÉN LLEGADOS ───────────────────────────────── */
+    .nuevos-section { max-width:1100px; margin:0 auto; padding:72px 24px 24px; }
+    .nuevos-head { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:28px; }
+    .nuevos-head .section-title { margin-bottom:0; }
+    .nuevos-vertodo { font-size:13px; font-weight:500; color:var(--ink-mid); text-decoration:none; white-space:nowrap; border-bottom:1px solid rgba(26,26,24,.25); padding-bottom:2px; transition:color .2s,border-color .2s; }
+    .nuevos-vertodo:hover { color:var(--ink); border-color:var(--ink); }
+    .nuevos-scroller { display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x mandatory; padding:4px 4px 20px; margin:0 -4px; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+    .nuevos-scroller::-webkit-scrollbar { display:none; }
+    .nuevos-scroller.dragging { scroll-snap-type:none; cursor:grabbing; }
+    .nuevo-card { flex:0 0 190px; scroll-snap-align:start; background:var(--white); border:1px solid rgba(26,26,24,.08); border-radius:16px; overflow:hidden; text-decoration:none; color:var(--ink); display:flex; flex-direction:column; transition:transform .28s ease, box-shadow .28s ease; }
+    .nuevo-card:hover { transform:translateY(-6px); box-shadow:0 14px 32px rgba(26,26,24,.12); }
+    .nuevo-media { position:relative; aspect-ratio:1; overflow:hidden; background:linear-gradient(145deg,#f3f2e4,#eceadb); }
+    .nuevo-media img { width:100%; height:100%; object-fit:cover; transition:transform .5s ease; }
+    .nuevo-card:hover .nuevo-media img { transform:scale(1.06); }
+    .nuevo-badge { position:absolute; top:10px; left:10px; background:var(--green); color:#063; font-family:'Montserrat'; font-size:9px; font-weight:800; letter-spacing:.5px; padding:4px 9px; border-radius:50px; text-transform:uppercase; }
+    .nuevo-body { padding:12px 13px 14px; display:flex; flex-direction:column; gap:6px; flex:1; }
+    .nuevo-nombre { font-size:12.5px; font-weight:500; line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:34px; }
+    .nuevo-precio { font-family:'Montserrat'; font-size:16px; font-weight:800; color:var(--ink); margin-top:auto; }
+    .nuevo-skel { flex:0 0 190px; height:272px; border-radius:16px; background:linear-gradient(90deg,#ececdd 25%,#f5f4e6 50%,#ececdd 75%); background-size:200% 100%; animation:lpshimmer 1.4s infinite; }
+    @keyframes lpshimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+    @media (max-width:560px){ .nuevo-card, .nuevo-skel { flex-basis:150px; } }
+
+    /* ── ABOUT MOSAIC ──────────────────────────────────── */
+    .about-mosaic { position:absolute; inset:0; display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:6px; padding:6px; }
+    .about-mosaic > div { overflow:hidden; border-radius:14px; background:rgba(246,245,202,.08); }
+    .about-mosaic img { width:100%; height:100%; object-fit:cover; animation:kenburns 16s ease-in-out infinite alternate; }
+    .about-mosaic > div:nth-child(2) img { animation-delay:-4s; }
+    .about-mosaic > div:nth-child(3) img { animation-delay:-8s; }
+    .about-mosaic > div:nth-child(4) img { animation-delay:-12s; }
+    @keyframes kenburns { from{transform:scale(1)} to{transform:scale(1.12)} }
+
+    @media (prefers-reduced-motion: reduce) {
+      .lp-banner-slide.promo, .lp-banner-slide.promo::after, .about-mosaic img { animation:none !important; }
+      .hero-inner { transform:none !important; opacity:1 !important; }
+    }
   </style>
 </head>
 <body>
@@ -526,16 +587,18 @@
 
   <!-- HERO -->
   <section class="hero">
-    <div class="hero-eyebrow"><span>📍</span> Durango, Dgo.</div>
-    <h1 class="hero-title">
-      <span class="title-line">Tu tienda</span>
-      <em class="title-line">favorita,</em>
-      <span class="title-line">en línea.</span>
-    </h1>
-    <p class="hero-sub">Productos locales e importados con entregas y envíos a domicilio en toda la ciudad.</p>
-    <div class="hero-btns">
-      <a href="./catalogo" class="btn-primary">Ver catálogo →</a>
-      <a href="#entregas" class="btn-secondary">Puntos de entrega</a>
+    <div class="hero-inner">
+      <div class="hero-eyebrow"><span>📍</span> Durango, Dgo.</div>
+      <h1 class="hero-title">
+        <span class="title-line">Tu tienda</span>
+        <em class="title-line">favorita,</em>
+        <span class="title-line">en línea.</span>
+      </h1>
+      <p class="hero-sub">Productos locales e importados con entregas y envíos a domicilio en toda la ciudad.</p>
+      <div class="hero-btns">
+        <a href="./catalogo" class="btn-primary">Ver catálogo →</a>
+        <a href="#entregas" class="btn-secondary">Puntos de entrega</a>
+      </div>
     </div>
     <div class="hero-scroll">
       <span>Scroll</span>
@@ -551,18 +614,40 @@
     </div>
   </div>
 
+  <!-- PROMO (desde Supabase) -->
+  <div class="lp-promo" id="lp-promo" style="display:none;">
+    <div class="lp-banner-wrap">
+      <div class="lp-banner-track" id="lp-banner-track"></div>
+    </div>
+    <div class="lp-banner-dots" id="lp-banner-dots"></div>
+  </div>
+
+  <!-- RECIÉN LLEGADOS (desde Supabase) -->
+  <section class="nuevos-section" id="nuevos">
+    <div class="nuevos-head reveal">
+      <div>
+        <div class="section-tag">Recién llegados</div>
+        <h2 class="section-title">Lo más nuevo.</h2>
+      </div>
+      <a href="./catalogo" class="nuevos-vertodo">Ver todo →</a>
+    </div>
+    <div class="nuevos-scroller" id="nuevos-scroller">
+      <div class="nuevo-skel"></div><div class="nuevo-skel"></div><div class="nuevo-skel"></div><div class="nuevo-skel"></div><div class="nuevo-skel"></div>
+    </div>
+  </section>
+
   <!-- STATS -->
   <div class="stats">
     <div class="stat reveal">
-      <div class="stat-num">10</div>
+      <div class="stat-num" data-key="puntos" data-fallback="10">0</div>
       <div class="stat-label">Puntos de entrega</div>
     </div>
     <div class="stat reveal">
-      <div class="stat-num">100+</div>
+      <div class="stat-num" data-key="productos" data-fallback="144">0</div>
       <div class="stat-label">Productos disponibles</div>
     </div>
     <div class="stat reveal">
-      <div class="stat-num">7</div>
+      <div class="stat-num" data-key="categorias" data-fallback="8">0</div>
       <div class="stat-label">Categorías</div>
     </div>
   </div>
@@ -572,6 +657,7 @@
     <div class="about-grid">
       <div class="about-visual reveal">
         <div class="about-visual-inner">🛍️</div>
+        <div class="about-mosaic" id="about-mosaic"></div>
         <div class="about-visual-badge">
           <p>Ubicación</p>
           <strong>Durango, Dgo. 📦</strong>
@@ -734,10 +820,22 @@
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    // Nav compacto al hacer scroll
+    // Nav compacto + parallax del hero (un solo handler con rAF)
+    const navEl = document.querySelector('nav');
+    const heroInner = document.querySelector('.hero-inner');
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let _tick = false;
     window.addEventListener('scroll', () => {
-      document.querySelector('nav').style.padding =
-        window.scrollY > 50 ? '12px 32px' : '18px 32px';
+      if (_tick) return; _tick = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        navEl.style.padding = y > 50 ? '12px 32px' : '18px 32px';
+        if (heroInner && !reduceMotion && y < window.innerHeight) {
+          heroInner.style.transform = `translateY(${y * 0.22}px)`;
+          heroInner.style.opacity = Math.max(0, 1 - y / 650);
+        }
+        _tick = false;
+      });
     });
 
     // Counter animation para stats
@@ -751,22 +849,120 @@
       })(start);
     }
 
-    const statNums = document.querySelectorAll('.stat-num');
-    const statData = Array.from(statNums).map(el => {
-      const raw = el.textContent.trim();
-      return { num: parseInt(raw), suffix: raw.replace(/[0-9]/g, '') };
-    });
+    // ═══════════════════════════════════════
+    // DATOS EN VIVO DESDE SUPABASE
+    // ═══════════════════════════════════════
+    const SB_URL = 'https://wzixskdrpdqgtvucnsbf.supabase.co';
+    const SB_KEY = 'sb_publishable_JtOAt4xSg7RxIhmxygFKAQ_0jNYENUE';
+    const sb = supabase.createClient(SB_URL, SB_KEY);
 
+    const liveStats = { puntos: 10, productos: 144, categorias: 8 };
+
+    function esc(s){ return (s||'').toString().replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+    // Contadores (se activan tras cargar datos, con fallback)
     const counterObs = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
-        const idx = Array.from(statNums).indexOf(entry.target);
-        if (idx !== -1) animateCount(entry.target, statData[idx].num, statData[idx].suffix, 1400);
-        counterObs.unobserve(entry.target);
+        const el = entry.target;
+        const target = liveStats[el.dataset.key] ?? (parseInt(el.dataset.fallback) || 0);
+        animateCount(el, target, '', 1400);
+        counterObs.unobserve(el);
       });
     }, { threshold: 0.6 });
 
-    statNums.forEach(el => counterObs.observe(el));
+    async function cargarLanding() {
+      try {
+        const [prodRes, puntosRes, bannersRes] = await Promise.all([
+          sb.from('productos').select('nombre,precio,url_imagen,url_github,estado,categoria,fecha').order('fecha', { ascending: false }),
+          sb.from('puntos_entrega').select('id', { count: 'exact', head: true }).eq('activo', true),
+          sb.from('banners').select('*').order('orden'),
+        ]);
+        const productos = prodRes.data || [];
+        if (productos.length) {
+          liveStats.productos  = productos.length;
+          liveStats.categorias = new Set(productos.map(p => (p.categoria || '').trim()).filter(Boolean)).size;
+        }
+        if (typeof puntosRes.count === 'number' && puntosRes.count > 0) liveStats.puntos = puntosRes.count;
+        renderNuevos(productos);
+        renderMosaico(productos);
+        renderPromo(bannersRes.data || []);
+        actualizarTextosLive();
+      } catch (e) {
+        renderNuevos([]);  // oculta la sección si no hay conexión
+      }
+      // activar contadores (con datos reales o fallback)
+      document.querySelectorAll('.stat-num').forEach(el => counterObs.observe(el));
+    }
+
+    function renderNuevos(productos) {
+      const sc = document.getElementById('nuevos-scroller');
+      if (!productos || !productos.length) { document.getElementById('nuevos')?.remove(); return; }
+      const disp = productos.filter(p => (p.estado || '') !== 'Agotado');
+      const lista = (disp.length ? disp : productos).slice(0, 12);
+      sc.innerHTML = lista.map(p => {
+        const img = (p.url_github || '').trim() || (p.url_imagen || '').trim();
+        const media = img ? `<img src="${esc(img)}" alt="" loading="lazy">` : '';
+        return `<a class="nuevo-card" href="./catalogo?producto=${encodeURIComponent(p.nombre)}">
+          <div class="nuevo-media">${media}<span class="nuevo-badge">✦ Nuevo</span></div>
+          <div class="nuevo-body"><div class="nuevo-nombre">${esc(p.nombre)}</div><div class="nuevo-precio">${esc(p.precio)}</div></div>
+        </a>`;
+      }).join('');
+      if (matchMedia('(pointer:fine)').matches) initDragScroll(sc);
+    }
+
+    function initDragScroll(el) {
+      let down = false, startX = 0, startL = 0;
+      el.addEventListener('pointerdown', e => { down = true; el.classList.add('dragging'); startX = e.clientX; startL = el.scrollLeft; });
+      el.addEventListener('pointermove', e => { if (down) el.scrollLeft = startL - (e.clientX - startX); });
+      const end = () => { down = false; el.classList.remove('dragging'); };
+      el.addEventListener('pointerup', end);
+      el.addEventListener('pointerleave', end);
+    }
+
+    function renderMosaico(productos) {
+      const el = document.getElementById('about-mosaic');
+      if (!el) return;
+      const imgs = (productos || []).map(p => (p.url_github || '').trim() || (p.url_imagen || '').trim()).filter(Boolean);
+      if (imgs.length < 4) { el.remove(); return; }  // deja el fondo oscuro de respaldo
+      const step = Math.max(1, Math.floor(imgs.length / 4));
+      const pick = [0, 1, 2, 3].map(i => imgs[(i * step) % imgs.length]);
+      el.innerHTML = pick.map(u => `<div><img src="${esc(u)}" alt="" loading="lazy"></div>`).join('');
+    }
+
+    function renderPromo(banners) {
+      if (!banners || !banners.length) return;
+      const wrap = document.getElementById('lp-promo');
+      const track = document.getElementById('lp-banner-track');
+      const dotsEl = document.getElementById('lp-banner-dots');
+      track.innerHTML = banners.map(b => `
+        <div class="lp-banner-slide ${['promo','aviso','nuevo'].includes(b.tipo) ? b.tipo : 'promo'}">
+          <div class="lp-b-emoji">${esc(b.emoji)}</div>
+          <div class="lp-b-txt"><div class="lp-b-titulo">${esc(b.titulo)}</div><div class="lp-b-sub">${esc(b.sub)}</div></div>
+          ${b.tag ? `<div class="lp-b-tag">${esc(b.tag)}</div>` : ''}
+        </div>`).join('');
+      wrap.style.display = 'block';
+      const slides = track.querySelectorAll('.lp-banner-slide');
+      dotsEl.innerHTML = '';
+      let actual = 0, timer = null;
+      slides.forEach((_, i) => { const d = document.createElement('button'); d.className = 'lp-banner-dot' + (i === 0 ? ' activo' : ''); d.addEventListener('click', () => ir(i)); dotsEl.appendChild(d); });
+      function ir(idx) {
+        actual = (idx + slides.length) % slides.length;
+        track.style.transform = `translateX(-${actual * 100}%)`;
+        dotsEl.querySelectorAll('.lp-banner-dot').forEach((d, i) => d.classList.toggle('activo', i === actual));
+        clearInterval(timer);
+        if (slides.length > 1) timer = setInterval(() => ir(actual + 1), 4500);
+      }
+      if (slides.length > 1) timer = setInterval(() => ir(actual + 1), 4500);
+    }
+
+    function actualizarTextosLive() {
+      document.querySelectorAll('.marquee-item').forEach(m => { m.innerHTML = m.innerHTML.replace('100+ productos', liveStats.productos + ' productos'); });
+      const cta = document.querySelector('.cta-band p');
+      if (cta) cta.textContent = `Más de ${liveStats.productos} productos esperándote en el catálogo.`;
+    }
+
+    cargarLanding();
   </script>
 </body>
 </html>
