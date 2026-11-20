@@ -21,7 +21,7 @@
   <meta name="twitter:image" content="https://alushe.store/assets/images/favicon.png">
   <link rel="icon" type="image/png" href="/assets/images/favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Playfair+Display:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Playfair+Display:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     @property --ang { syntax:'<angle>'; inherits:false; initial-value:0deg; }
@@ -341,9 +341,55 @@
       *, *::before, *::after { animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
       .card { opacity:1; transform:none; }
     }
+
+    /* ═══════════ CONCEPTO C — HOLOGRÁFICO (paleta del logo) ═══════════ */
+    :root{ --mono:'DM Mono', ui-monospace, 'Courier New', monospace;
+      --rainbow: linear-gradient(90deg,#ff2e9a,#ff7a1a,#ffc21a,#3cc35a,#12bccb,#2e7dff,#7b3ff2,#ff2e9a); }
+    @keyframes flow { to { background-position:200% center; } }
+    @keyframes drawc { to { stroke-dashoffset:0; } }
+    .holo { background:var(--rainbow); background-size:200% auto; -webkit-background-clip:text; background-clip:text; color:transparent; animation:flow 6s linear infinite; }
+
+    /* saludo dinámico */
+    .cat-greet { font-family:var(--mono); font-size:12.5px; font-weight:400; color:var(--ink-mid); margin-bottom:12px; }
+
+    /* tag editorial mono + guion arcoíris */
+    .tag { font-family:var(--mono); text-transform:uppercase; }
+    .tag::before { background:var(--rainbow); background-size:200% auto; animation:flow 6s linear infinite; width:22px; height:2px; }
+
+    /* título: palabra holográfica + subrayado dibujado a mano */
+    .cat-title em.holo { color:transparent; background:var(--rainbow); background-size:200% auto; -webkit-background-clip:text; background-clip:text; animation:flow 6s linear infinite; font-style:italic; }
+    .u-wrap { position:relative; display:inline-block; }
+    .u-wrap svg { position:absolute; left:-3%; bottom:-0.16em; width:106%; height:0.3em; overflow:visible; }
+    .u-wrap path { fill:none; stroke:url(#holoGrad); stroke-width:5; stroke-linecap:round; stroke-dasharray:440; stroke-dashoffset:440; animation:drawc 1.2s .5s cubic-bezier(.6,0,.3,1) forwards; }
+
+    /* marquee protagonista */
+    .marquee-track span { font-family:var(--mono); font-size:14px; font-weight:400; letter-spacing:.5px; text-transform:none; color:var(--cream); padding:0 14px; }
+    .marquee-track .mq-s { background:var(--rainbow); background-size:200% auto; -webkit-background-clip:text; background-clip:text; color:transparent; animation:flow 6s linear infinite; }
+    .marquee-track .mo { color:transparent; -webkit-text-stroke:1px rgba(246,245,202,.6); }
+
+    /* NUEVO badge holográfico */
+    .badge-nuevo { background:var(--rainbow) !important; background-size:200% auto; color:#fff !important; animation:flow 6s linear infinite !important; }
+
+    /* borde giratorio arcoíris en novedades */
+    .card.es-nuevo::after { background:conic-gradient(from var(--ang), #ff2e9a, #ff7a1a, #ffc21a, #3cc35a, #12bccb, #2e7dff, #7b3ff2, #ff2e9a) !important; }
+
+    @media (prefers-reduced-motion: reduce){
+      .holo,.cat-title em.holo,.tag::before,.marquee-track .mq-s,.badge-nuevo { animation:none !important; }
+      .u-wrap path { stroke-dashoffset:0 !important; animation:none !important; }
+    }
   </style>
 </head>
 <body>
+
+  <!-- Degradado holográfico compartido (subrayado) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <linearGradient id="holoGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ff2e9a"/><stop offset=".18" stop-color="#ff7a1a"/>
+      <stop offset=".38" stop-color="#ffc21a"/><stop offset=".55" stop-color="#3cc35a"/>
+      <stop offset=".72" stop-color="#12bccb"/><stop offset=".88" stop-color="#2e7dff"/>
+      <stop offset="1" stop-color="#7b3ff2"/>
+    </linearGradient>
+  </defs></svg>
 
   <!-- NAV -->
   <nav>
@@ -358,15 +404,16 @@
   <!-- MARQUEE -->
   <div class="marquee-wrap" aria-hidden="true">
     <div class="marquee-track">
-      <span>Durango, Dgo.</span><span class="mq-s">✦</span><span>100+ productos</span><span class="mq-s">✦</span><span>Envíos a domicilio</span><span class="mq-s">✦</span><span>Nuevas llegadas</span><span class="mq-s">✦</span><span>Atención por WhatsApp</span><span class="mq-s">✦</span><span>Productos importados</span><span class="mq-s">✦</span>
-      <span>Durango, Dgo.</span><span class="mq-s">✦</span><span>100+ productos</span><span class="mq-s">✦</span><span>Envíos a domicilio</span><span class="mq-s">✦</span><span>Nuevas llegadas</span><span class="mq-s">✦</span><span>Atención por WhatsApp</span><span class="mq-s">✦</span><span>Productos importados</span><span class="mq-s">✦</span>
+      <span>Durango, Dgo.</span><span class="mq-s">✦</span><span class="mq-prod">100+ productos</span><span class="mq-s">✦</span><span class="mo">Envíos a domicilio</span><span class="mq-s">✦</span><span>Nuevas llegadas</span><span class="mq-s">✦</span><span class="mo">WhatsApp</span><span class="mq-s">✦</span><span>Productos importados</span><span class="mq-s">✦</span>
+      <span>Durango, Dgo.</span><span class="mq-s">✦</span><span class="mq-prod">100+ productos</span><span class="mq-s">✦</span><span class="mo">Envíos a domicilio</span><span class="mq-s">✦</span><span>Nuevas llegadas</span><span class="mq-s">✦</span><span class="mo">WhatsApp</span><span class="mq-s">✦</span><span>Productos importados</span><span class="mq-s">✦</span>
     </div>
   </div>
 
   <!-- INTRO -->
   <div class="intro">
+    <p class="cat-greet" id="cat-greet">Hola 👋</p>
     <div class="tag">Catálogo</div>
-    <h1 class="cat-title">Todo, en un <em>solo lugar.</em></h1>
+    <h1 class="cat-title">Todo, en un <span class="u-wrap"><em class="holo">solo lugar.</em><svg viewBox="0 0 300 22" aria-hidden="true"><path d="M4,14 C70,4 150,22 210,8 C240,2 270,10 296,6"/></svg></span></h1>
     <p class="cat-sub">Productos locales e importados con entrega a domicilio en Durango. Pide por WhatsApp en segundos.</p>
   </div>
 
@@ -956,6 +1003,7 @@
           Fecha:      r.fecha || '',
         }));
         const cats = [...new Set(todosLosProductos.map(p => (p.Categoria||'').trim()).filter(Boolean))].sort();
+        document.querySelectorAll('.mq-prod').forEach(el => el.textContent = todosLosProductos.length + ' productos');
         renderChips(cats);
         aplicarFiltros();
         actualizarBotonesCards();
@@ -979,6 +1027,15 @@
     }
 
     actualizarCarritoUI();
+
+    // Saludo dinámico por hora
+    (function () {
+      const h = new Date().getHours();
+      const s = h < 12 ? 'Buenos días' : h < 19 ? 'Buenas tardes' : 'Buenas noches';
+      const el = document.getElementById('cat-greet');
+      if (el) el.innerHTML = s + ' 👋 <b class="holo">explora el catálogo</b>';
+    })();
+
     cargarCatalogo();
 
     // ── REALTIME: refresca solo cuando cambia el inventario ──
