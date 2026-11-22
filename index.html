@@ -617,6 +617,21 @@
     .sello-txt { font-family:var(--mono); font-size:8.3px; letter-spacing:1.5px; fill:var(--ink-mid); text-transform:uppercase; }
     .sello-star { font-size:22px; fill:url(#holoGrad); }
     .hero .sello-holo { right:5%; bottom:12%; }
+
+    /* Osito holográfico: el trazo exacto del logo como máscara sobre el arcoíris */
+    .osito { display:inline-block; width:1em; height:1em; vertical-align:middle;
+      background:var(--rainbow); background-size:200% auto; animation:flow 6s linear infinite;
+      -webkit-mask:url(assets/images/osito.png) center/contain no-repeat;
+              mask:url(assets/images/osito.png) center/contain no-repeat; }
+    .sello-osito { position:absolute; left:50%; top:50%; width:50px; height:50px; margin:-25px 0 0 -25px;
+      animation:flow 6s linear infinite, ositoSway 3.2s ease-in-out infinite; }
+    @keyframes ositoSway { 0%,100%{ transform:rotate(-10deg) scale(1); } 50%{ transform:rotate(10deg) scale(1.08); } }
+    .osito.osito-w { background:#fff; animation:ositoPop 2.4s ease-in-out infinite; width:13px; height:13px; }
+    .nuevo-badge { display:inline-flex; align-items:center; gap:4px; }
+    .tk-star.osito { width:26px; height:26px; animation:flow 6s linear infinite, ositoPop 2.4s ease-in-out infinite; }
+    .marquee-sep.osito-sep { background:none; animation:none; display:inline-flex; align-items:center; }
+    .marquee-sep .osito { width:24px; height:24px; animation:flow 6s linear infinite, ositoPop 2.4s ease-in-out infinite; }
+    @keyframes ositoPop { 0%,100%{ transform:scale(.85) rotate(-8deg); opacity:.75; } 50%{ transform:scale(1.1) rotate(8deg); opacity:1; } }
     @media (max-width:900px){ .hero .sello-holo { display:none; } }
 
     /* 6 · divisor zig-zag hacia la sección oscura */
@@ -644,7 +659,7 @@
 
     @media (prefers-reduced-motion: reduce){
       .holo, .hero-title em.holo, .section-tag .st-num, .marquee-sep, .nuevo-badge, .nuevo-card::after, .cat-card::after { animation:none !important; }
-      .sello-holo svg { animation:none !important; }
+      .sello-holo svg, .osito { animation:none !important; }
       .u-wrap path { stroke-dashoffset:0 !important; animation:none !important; }
     }
   </style>
@@ -693,9 +708,9 @@
       <svg viewBox="0 0 128 128">
         <defs><path id="selloPath" d="M64,64 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/></defs>
         <circle class="sello-ring" cx="64" cy="64" r="60"/>
-        <text class="sello-txt"><textPath href="#selloPath" startOffset="0">ALUSHE STORE · DURANGO, DGO. · ENVÍOS A DOMICILIO · </textPath></text>
-        <text class="sello-star" x="64" y="72" text-anchor="middle">✦</text>
+        <text class="sello-txt"><textPath href="#selloPath" startOffset="0" textLength="286" lengthAdjust="spacingAndGlyphs">ALUSHE STORE · DURANGO, DGO. · ENVÍOS A DOMICILIO · </textPath></text>
       </svg>
+      <span class="osito sello-osito"></span>
     </div>
     <div class="hero-scroll">
       <span>Scroll</span>
@@ -706,8 +721,8 @@
   <!-- MARQUEE -->
   <div class="marquee-wrap" aria-hidden="true">
     <div class="marquee-track">
-      <div class="marquee-item"><span>Durango, Dgo.</span><span class="marquee-sep">✦</span><span class="mq-prod">187 productos</span><span class="marquee-sep">✦</span><span class="mo">Envíos a domicilio</span><span class="marquee-sep">✦</span><span>Nuevas llegadas</span><span class="marquee-sep">✦</span><span class="mo">WhatsApp</span><span class="marquee-sep">✦</span><span>Productos importados</span><span class="marquee-sep">✦</span></div>
-      <div class="marquee-item" aria-hidden="true"><span>Durango, Dgo.</span><span class="marquee-sep">✦</span><span class="mq-prod">187 productos</span><span class="marquee-sep">✦</span><span class="mo">Envíos a domicilio</span><span class="marquee-sep">✦</span><span>Nuevas llegadas</span><span class="marquee-sep">✦</span><span class="mo">WhatsApp</span><span class="marquee-sep">✦</span><span>Productos importados</span><span class="marquee-sep">✦</span></div>
+      <div class="marquee-item"><span>Durango, Dgo.</span><span class="marquee-sep osito-sep"><span class="osito"></span></span><span class="mq-prod">187 productos</span><span class="marquee-sep osito-sep"><span class="osito"></span></span><span class="mo">Envíos a domicilio</span><span class="marquee-sep osito-sep"><span class="osito"></span></span><span>Nuevas llegadas</span><span class="marquee-sep osito-sep"><span class="osito"></span></span><span class="mo">WhatsApp</span><span class="marquee-sep osito-sep"><span class="osito"></span></span><span>Productos importados</span><span class="marquee-sep osito-sep"><span class="osito"></span></span></div>
+      <div class="marquee-item" aria-hidden="true"><span>Durango, Dgo.</span><span class="marquee-sep osito-sep"><span class="osito"></span></span><span class="mq-prod">187 productos</span><span class="marquee-sep osito-sep"><span class="osito"></span></span><span class="mo">Envíos a domicilio</span><span class="marquee-sep osito-sep"><span class="osito"></span></span><span>Nuevas llegadas</span><span class="marquee-sep osito-sep"><span class="osito"></span></span><span class="mo">WhatsApp</span><span class="marquee-sep osito-sep"><span class="osito"></span></span><span>Productos importados</span><span class="marquee-sep osito-sep"><span class="osito"></span></span></div>
     </div>
   </div>
 
@@ -833,7 +848,7 @@
       <p class="section-body">Recoge en el punto más cercano o pide envío a domicilio. Coordinamos todo por WhatsApp.</p>
     </div>
     <div class="ticket reveal">
-      <div class="ticket-head"><span>Alushe Store</span><span class="tk-star holo">✦</span><span>Puntos de entrega</span></div>
+      <div class="ticket-head"><span>Alushe Store</span><span class="tk-star osito"></span><span>Puntos de entrega</span></div>
       <div class="ticket-sub">Durango, Dgo. · Lunes a Sábado</div>
       <div class="ticket-rows" id="ticket-rows">
         <div class="tk-row"><span class="tk-name">Cargando puntos…</span></div>
@@ -982,7 +997,7 @@
         const img = (p.url_github || '').trim() || (p.url_imagen || '').trim();
         const media = img ? `<img src="${esc(img)}" alt="" loading="lazy">` : '';
         return `<a class="nuevo-card" href="./catalogo?producto=${encodeURIComponent(p.nombre)}">
-          <div class="nuevo-media">${media}<span class="nuevo-badge">✦ Nuevo</span></div>
+          <div class="nuevo-media">${media}<span class="nuevo-badge"><i class="osito osito-w"></i>Nuevo</span></div>
           <div class="nuevo-body"><div class="nuevo-nombre">${esc(p.nombre)}</div><div class="nuevo-precio">${esc(p.precio)}</div></div>
         </a>`;
       }).join('');

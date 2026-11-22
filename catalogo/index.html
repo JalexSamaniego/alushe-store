@@ -173,6 +173,7 @@
 
     /* BADGES */
     .badge-agotado { position:absolute; top:10px; left:10px; background:var(--red); color:#fff; font-family:'Montserrat'; font-size:10px; font-weight:800; padding:4px 10px; border-radius:var(--r-pill); text-transform:uppercase; letter-spacing:.5px; z-index:3; }
+    .badge-agotado ~ .badge-cat, .badge-nuevo ~ .badge-cat { top:38px; left:10px; right:auto; }
     .badge-cat { position:absolute; top:10px; right:10px; background:rgba(252,251,240,.92); backdrop-filter:blur(4px); color:var(--ink-mid); font-family:'Montserrat'; font-size:10px; font-weight:700; padding:4px 10px; border-radius:var(--r-pill); z-index:3; max-width:100px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
     .badge-nuevo { position:absolute; top:10px; left:10px; background:var(--green); color:#063; font-family:'Montserrat'; font-size:10px; font-weight:800; padding:4px 10px; border-radius:var(--r-pill); text-transform:uppercase; letter-spacing:.5px; z-index:3; animation:nuevoPulso 2.2s ease-in-out infinite; }
     @keyframes nuevoPulso { 0%,100%{box-shadow:0 2px 6px rgba(37,211,102,.35)} 50%{box-shadow:0 2px 16px rgba(37,211,102,.7)} }
@@ -368,13 +369,21 @@
     .marquee-track .mo { color:transparent; -webkit-text-stroke:1px rgba(246,245,202,.6); }
 
     /* NUEVO badge holográfico */
-    .badge-nuevo { background:var(--rainbow) !important; background-size:200% auto; color:#fff !important; animation:flow 6s linear infinite !important; }
+    .badge-nuevo { background:var(--rainbow) !important; background-size:200% auto; color:#fff !important; animation:flow 6s linear infinite !important; display:inline-flex; align-items:center; gap:4px; }
+
+    /* Osito holográfico (trazo exacto del logo como máscara) */
+    .osito { display:inline-block; width:1em; height:1em; vertical-align:middle; background:var(--rainbow); background-size:200% auto; animation:flow 6s linear infinite;
+      -webkit-mask:url(../assets/images/osito.png) center/contain no-repeat; mask:url(../assets/images/osito.png) center/contain no-repeat; }
+    .marquee-track .mq-s { display:inline-flex; align-items:center; background:none; animation:none; }
+    .mq-s .osito { width:22px; height:22px; animation:flow 6s linear infinite, ositoPop 2.4s ease-in-out infinite; }
+    .osito.osito-w { background:#fff; animation:ositoPop 2.4s ease-in-out infinite; width:13px; height:13px; }
+    @keyframes ositoPop { 0%,100%{ transform:scale(.85) rotate(-8deg); opacity:.8; } 50%{ transform:scale(1.1) rotate(8deg); opacity:1; } }
 
     /* borde giratorio arcoíris en novedades */
     .card.es-nuevo::after { background:conic-gradient(from var(--ang), #ff2e9a, #ff7a1a, #ffc21a, #3cc35a, #12bccb, #2e7dff, #7b3ff2, #ff2e9a) !important; }
 
     @media (prefers-reduced-motion: reduce){
-      .holo,.cat-title em.holo,.tag::before,.marquee-track .mq-s,.badge-nuevo { animation:none !important; }
+      .holo,.cat-title em.holo,.tag::before,.marquee-track .mq-s,.badge-nuevo,.osito { animation:none !important; }
       .u-wrap path { stroke-dashoffset:0 !important; animation:none !important; }
     }
   </style>
@@ -404,8 +413,8 @@
   <!-- MARQUEE -->
   <div class="marquee-wrap" aria-hidden="true">
     <div class="marquee-track">
-      <span>Durango, Dgo.</span><span class="mq-s">✦</span><span class="mq-prod">100+ productos</span><span class="mq-s">✦</span><span class="mo">Envíos a domicilio</span><span class="mq-s">✦</span><span>Nuevas llegadas</span><span class="mq-s">✦</span><span class="mo">WhatsApp</span><span class="mq-s">✦</span><span>Productos importados</span><span class="mq-s">✦</span>
-      <span>Durango, Dgo.</span><span class="mq-s">✦</span><span class="mq-prod">100+ productos</span><span class="mq-s">✦</span><span class="mo">Envíos a domicilio</span><span class="mq-s">✦</span><span>Nuevas llegadas</span><span class="mq-s">✦</span><span class="mo">WhatsApp</span><span class="mq-s">✦</span><span>Productos importados</span><span class="mq-s">✦</span>
+      <span>Durango, Dgo.</span><span class="mq-s"><i class="osito"></i></span><span class="mq-prod">100+ productos</span><span class="mq-s"><i class="osito"></i></span><span class="mo">Envíos a domicilio</span><span class="mq-s"><i class="osito"></i></span><span>Nuevas llegadas</span><span class="mq-s"><i class="osito"></i></span><span class="mo">WhatsApp</span><span class="mq-s"><i class="osito"></i></span><span>Productos importados</span><span class="mq-s"><i class="osito"></i></span>
+      <span>Durango, Dgo.</span><span class="mq-s"><i class="osito"></i></span><span class="mq-prod">100+ productos</span><span class="mq-s"><i class="osito"></i></span><span class="mo">Envíos a domicilio</span><span class="mq-s"><i class="osito"></i></span><span>Nuevas llegadas</span><span class="mq-s"><i class="osito"></i></span><span class="mo">WhatsApp</span><span class="mq-s"><i class="osito"></i></span><span>Productos importados</span><span class="mq-s"><i class="osito"></i></span>
     </div>
   </div>
 
@@ -691,7 +700,7 @@
 
       const badgeIzq = agotado
         ? `<div class="badge-agotado">Agotado</div>`
-        : (nuevo ? `<div class="badge-nuevo">✦ Nuevo</div>` : '');
+        : (nuevo ? `<div class="badge-nuevo"><i class="osito osito-w"></i>Nuevo</div>` : '');
 
       const card = document.createElement('div');
       card.className = 'card' + (!agotado && nuevo ? ' es-nuevo' : '');

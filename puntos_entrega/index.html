@@ -96,7 +96,15 @@
     .marquee-wrap { max-width: 1100px; margin: 6px auto 20px; overflow: hidden; background: var(--ink); border-radius: 12px; padding: 11px 0; }
     .marquee-track { display: flex; width: max-content; animation: mqmove 26s linear infinite; }
     .marquee-track span { font-family: 'Montserrat'; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(246,245,202,.55); padding: 0 16px; white-space: nowrap; }
-    .marquee-track .mq-s { color: var(--green); }
+    .marquee-track .mq-s { display:inline-flex; align-items:center; }
+
+    /* Osito holográfico (trazo exacto del logo como máscara) */
+    @keyframes flow { to { background-position:200% center; } }
+    @keyframes ositoPop { 0%,100%{ transform:scale(.85) rotate(-8deg); opacity:.8; } 50%{ transform:scale(1.1) rotate(8deg); opacity:1; } }
+    .osito { display:inline-block; width:20px; height:20px; vertical-align:middle;
+      background:linear-gradient(90deg,#ff2e9a,#ff7a1a,#ffc21a,#3cc35a,#12bccb,#2e7dff,#7b3ff2,#ff2e9a); background-size:200% auto;
+      animation:flow 6s linear infinite, ositoPop 2.4s ease-in-out infinite;
+      -webkit-mask:url(../assets/images/osito.png) center/contain no-repeat; mask:url(../assets/images/osito.png) center/contain no-repeat; }
     @keyframes mqmove { to { transform: translateX(-50%); } }
 
     /* ── INTRO ─────────────────────────────── */
@@ -217,8 +225,8 @@
   <!-- MARQUEE -->
   <div class="marquee-wrap" aria-hidden="true">
     <div class="marquee-track">
-      <span>Durango, Dgo.</span><span class="mq-s">✦</span><span>10 puntos de entrega</span><span class="mq-s">✦</span><span>Envíos a domicilio</span><span class="mq-s">✦</span><span>Lunes a sábado</span><span class="mq-s">✦</span><span>Coordina por WhatsApp</span><span class="mq-s">✦</span>
-      <span>Durango, Dgo.</span><span class="mq-s">✦</span><span>10 puntos de entrega</span><span class="mq-s">✦</span><span>Envíos a domicilio</span><span class="mq-s">✦</span><span>Lunes a sábado</span><span class="mq-s">✦</span><span>Coordina por WhatsApp</span><span class="mq-s">✦</span>
+      <span>Durango, Dgo.</span><span class="mq-s"><i class="osito"></i></span><span>10 puntos de entrega</span><span class="mq-s"><i class="osito"></i></span><span>Envíos a domicilio</span><span class="mq-s"><i class="osito"></i></span><span>Lunes a sábado</span><span class="mq-s"><i class="osito"></i></span><span>Coordina por WhatsApp</span><span class="mq-s"><i class="osito"></i></span>
+      <span>Durango, Dgo.</span><span class="mq-s"><i class="osito"></i></span><span>10 puntos de entrega</span><span class="mq-s"><i class="osito"></i></span><span>Envíos a domicilio</span><span class="mq-s"><i class="osito"></i></span><span>Lunes a sábado</span><span class="mq-s"><i class="osito"></i></span><span>Coordina por WhatsApp</span><span class="mq-s"><i class="osito"></i></span>
     </div>
   </div>
 
